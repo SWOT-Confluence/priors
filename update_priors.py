@@ -136,6 +136,7 @@ class Priors:
         """Generate and update priors based on arguments."""
 
         # Create SoS object to manage SoS operations
+        print("Copy and create new version of the SoS.")
         sos = Sos(self.cont, self.run_type, self.sos_dir)
         sos.copy_sos()
         sos.create_new_version()
@@ -144,20 +145,26 @@ class Priors:
         # Determine run type and add requested gage priors
         if self.run_type == "constrained":
             if "grdc" in self.priors_list:
+                print("Updating GRDC priors.")
                 self.execute_grdc(sos_file)
 
             if "usgs" in self.priors_list and self.cont == "na":
+                print("Updating USGS priors.")
                 self.execute_usgs(sos_file)
 
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
+            print("Updating geoBAM priors.")
             self.execute_gbpriors(sos_file)
 
         # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
         sos.upload_file()
 
-        # Overwrite GRADES with gage priors
-        sos.overwrite_grades()
+        if self.run_type == "constrained":
+            # Overwrite GRADES with gage priors
+            print("Overwriting GRADES data with gaged priors.")
+            sos.overwrite_grades()
 
 def main():
     """Main method to generate, retrieve, and overwrite priors."""
@@ -166,6 +173,7 @@ def main():
     try:
         run_type = sys.argv[1]
         prior_ops = sys.argv[2:]
+        print(f"Running on {run_type} data product and pulling the following: {', '.join(prior_ops)}")
     except IndexError:
         print("Please enter appropriate command line arguments which MUST include run_type.")
         print("Program exit.")
