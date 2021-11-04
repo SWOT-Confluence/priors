@@ -45,7 +45,6 @@ RUN apt update && apt upgrade -y && apt -y install r-base r-base-dev \
 
 # Stage 2 - Python packages
 FROM stage1 as stage2
-# RUN apt update && apt -y install python3.8-venv
 COPY requirements.txt /app/requirements.txt
 RUN /usr/bin/python3 -m venv /app/env
 RUN /app/env/bin/pip install -r /app/requirements.txt
