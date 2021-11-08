@@ -81,8 +81,6 @@ class USGSPull:
         ALLt=pd.date_range(start=self.start_date,end=self.end_date)
         gage_read = USGSRead(self.usgs_targets)
         dataUSGS, reachID = gage_read.read()
-        dataUSGS = dataUSGS[:5]
-        reachID = reachID[:5]
         
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
