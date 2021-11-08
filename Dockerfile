@@ -5,6 +5,7 @@ RUN echo "America/New_York" | tee /etc/timezone \
 	&& apt upgrade -y \
 	&& DEBIAN_FRONTEND=noninteractive apt install -y \
 		build-essential \
+		curl \
 		gcc \
 		gfortran \
         locales \
@@ -21,10 +22,18 @@ RUN echo "America/New_York" | tee /etc/timezone \
 		tzdata \
     && locale-gen en_US.UTF-8 \
 	&& apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
-	&& echo 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' >> /etc/apt/sources.list
+	&& echo 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' >> /etc/apt/sources.list \
+	&& /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 
-# Stage 1 - R and R packages (geoBAM)
+# Stage 1 - AWS CLI
 FROM stage0 as stage1
+RUN /usr/bin/unzip awscliv2.zip 
+RUN ./aws/install 
+RUN /usr/local/bin/aws configure set default.region us-west-2
+COPY credentials /root/.aws/credentials
+
+# Stage 2 - R and R packages (geoBAM)
+FROM stage1 as stage2
 COPY remove_packages.R /app/remove_packages.R
 RUN apt update && apt upgrade -y && apt -y install r-base r-base-dev \
 	&& rm -rf /var/lib/apt/lists/* \
@@ -43,19 +52,19 @@ RUN apt update && apt upgrade -y && apt -y install r-base r-base-dev \
     && /usr/bin/Rscript -e "install.packages('R.utils', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)'
 
-# Stage 2 - Python packages
-FROM stage1 as stage2
+# Stage 3 - Python packages
+FROM stage2 as stage3
 COPY requirements.txt /app/requirements.txt
 RUN /usr/bin/python3 -m venv /app/env
 RUN /app/env/bin/pip install -r /app/requirements.txt
 
-# Stage 3 - Copy priors code
-FROM stage2 as stage3
+# Stage 4 - Copy priors code
+FROM stage3 as stage4
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
 
-# Stage 4 - Execute algorithm
-FROM stage3 as stage4
+# Stage 5 - Execute algorithm
+FROM stage4 as stage5
 LABEL version="1.0" \
 	description="Containerized priors module." \
 	"confluence.contact"="ntebaldi@umass.edu" \

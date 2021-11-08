@@ -4,7 +4,8 @@ aioitertools==0.8.0
 async-timeout==3.0.1
 attrs==21.2.0
 backports.zoneinfo==0.2.1
-botocore==1.20.106
+boto3==1.19.10
+botocore==1.22.11
 certifi==2021.10.8
 cffi==1.15.0
 cftime==1.5.1
@@ -27,6 +28,7 @@ pytz-deprecation-shim==0.1.0.post0
 requests==2.26.0
 rpy2==3.4.5
 s3fs==2021.10.1
+s3transfer==0.5.0
 six==1.16.0
 typing-extensions==3.10.0.2
 tzdata==2021.5

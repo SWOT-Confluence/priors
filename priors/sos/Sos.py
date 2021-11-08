@@ -1,11 +1,12 @@
 # Standard imports
-from datetime import datetime
+from datetime import datetime, timezone
 import glob
 from os import scandir
 from pathlib import Path
 from shutil import copy
 
 # Third-party imports
+import boto3
 from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
@@ -22,6 +23,8 @@ class Sos:
         references Confluence S3 buckets
     continent: str
         continent abbreviation to id SoS file
+    MOD_TIME: int
+        nunber of seconds since last modification 
     overwritten_indexes: list
         list of integer index values where grades data was overwritten
     overwritten_source: list
@@ -32,6 +35,8 @@ class Sos:
         path to SoS directory on local storage
     sos_file: Path
         path to SoS file
+    SUFFIX: str
+        ending name of the SoS
     VERS_LENGTH: int
         number of integers in SoS identifier
     version: str
@@ -48,6 +53,8 @@ class Sos:
     """
 
     LOCAL_SOS = Path("/home/nikki/Documents/confluence/data/sos/sos")    # Path to temporary local SoS
+    SUFFIX = "_sword_v11_SOS_priors.nc"
+    MOD_TIME = 7200
     VERS_LENGTH = 4
 
     def __init__(self, continent, run_type, sos_dir):
@@ -76,11 +83,42 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
+
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket(name="confluence-sos")
         
-        dirs = self.confluence_fs.ls(f"confluence-sos/{self.run_type}")
-        curr_dir = max(dirs)
-        file = self.confluence_fs.glob(f"{curr_dir}/{self.continent}*.nc")[0]
-        self.confluence_fs.download(file, f"{str(self.sos_dir)}/{file.split('/')[-1]}")
+        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
+        dirs.sort()
+        current = dirs[-1]
+        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        
+        try:
+            if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
+                obj = self._locate_previous_version(dirs, current, s3)
+        except s3.meta.client.exceptions.ClientError as error:
+            obj = self._locate_previous_version(dirs, current, s3)
+            
+        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        
+    def _locate_previous_version(self, dirs, current, s3):
+        """Locate the previous version of a file in the dirs list.
+        
+        Parameter
+        ---------
+        dirs: list
+            list of string names of directories in S3  
+        current: str
+            name of current directory
+        s3: boto3.resources.factory.s3.ServiceResource
+            s3 resource that represents SoS bucket
+        
+        Returns
+        -------
+        s3 Object representing previous version of file
+        """
+        
+        dirs.remove(current)
+        return s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{dirs[-1]}/{self.continent}{self.SUFFIX}")
 
     def copy_local(self):
         """Temporary copy local method."""
