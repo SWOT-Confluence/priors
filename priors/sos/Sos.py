@@ -52,7 +52,7 @@ class Sos:
         Uploads new version to Confluence S3 bucket
     """
 
-    LOCAL_SOS = Path("/home/nikki/Documents/confluence/data/sos/sos")    # Path to temporary local SoS
+    LOCAL_SOS = Path("/data/sos")    # Path to temporary local SoS
     SUFFIX = "_sword_v11_SOS_priors.nc"
     MOD_TIME = 7200
     VERS_LENGTH = 4
@@ -92,12 +92,14 @@ class Sos:
         current = dirs[-1]
         obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         
-        try:
-            if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
+        if current != "0000":
+            try:
+                if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
+                    obj = self._locate_previous_version(dirs, current, s3)
+            except s3.meta.client.exceptions.ClientError as error:
                 obj = self._locate_previous_version(dirs, current, s3)
-        except s3.meta.client.exceptions.ClientError as error:
-            obj = self._locate_previous_version(dirs, current, s3)
-            
+        
+        print(f"Downloading: {obj.key}")
         obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
         
     def _locate_previous_version(self, dirs, current, s3):
@@ -139,7 +141,8 @@ class Sos:
             Path to new SoS file on local storage
         """
 
-        self.sos_file = Path(glob.glob(f"{str(self.sos_dir)}/{self.continent}*.nc")[0])
+        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
+        print(f"Creating new version of: {self.sos_file}")
         sos = Dataset(self.sos_file, 'a')
 
         self.version = str(int(sos.version) + 1)
