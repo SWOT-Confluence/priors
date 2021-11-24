@@ -53,7 +53,7 @@ class Sos:
     """
 
     LOCAL_SOS = Path("/data/sos")    # Path to temporary local SoS
-    SUFFIX = "_sword_v11_SOS_priors.nc"
+    SUFFIX = "_sword_v11_SOS"
     MOD_TIME = 7200
     VERS_LENGTH = 4
 
@@ -90,7 +90,7 @@ class Sos:
         dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
         dirs.sort()
         current = dirs[-1]
-        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
         
         if current != "0000":
             try:
@@ -100,7 +100,7 @@ class Sos:
                 obj = self._locate_previous_version(dirs, current, s3)
         
         print(f"Downloading: {obj.key}")
-        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
         
     def _locate_previous_version(self, dirs, current, s3):
         """Locate the previous version of a file in the dirs list.
@@ -120,7 +120,7 @@ class Sos:
         """
         
         dirs.remove(current)
-        return s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{dirs[-1]}/{self.continent}{self.SUFFIX}")
+        return s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{dirs[-1]}/{self.continent}{self.SUFFIX}_priors.nc")
 
     def copy_local(self):
         """Temporary copy local method."""
@@ -130,7 +130,7 @@ class Sos:
             dirs = [ entry.name for entry in entries ]
             curr_dir = max(dirs)
         file = glob.glob(f"{str(sos_dir / curr_dir)}/{self.continent}*.nc")[0]
-        copy(file, self.sos_dir)
+        copy(file, self.sos_dir / f"{self.continent}{self.SUFFIX}.nc")
 
     def create_new_version(self):
         """Create new version of the SoS file.
@@ -141,7 +141,7 @@ class Sos:
             Path to new SoS file on local storage
         """
 
-        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
+        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}.nc")
         print(f"Creating new version of: {self.sos_file}")
         sos = Dataset(self.sos_file, 'a')
 
@@ -227,4 +227,4 @@ class Sos:
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.version
         sos_ds.close()
-        self.confluence_fs.put(str(self.sos_file), f"confluence-sos/{self.run_type}/{vers}/{self.sos_file.name}")
+        self.confluence_fs.put(str(self.sos_file), f"confluence-sos/{self.run_type}/{vers}/{self.sos_file.stem}_priors.nc")
