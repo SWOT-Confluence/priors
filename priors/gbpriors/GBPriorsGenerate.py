@@ -340,26 +340,27 @@ class GBPriorsGenerate:
             reach_id = int(swot_file.name.split('_')[0])
             sos_ri = np.where(self.sos_dict["reach_id"] == reach_id)
             
-            if sos_ri[0].size > 0:    # TODO discrepancies between SWORD v11 and SWOT (SAC test data)
-                qhat = self.sos_dict["qhat"][sos_ri[0]]
-                swot_data = extract_swot(swot_file, qhat)
-                if swot_data["reach"]:
-                    gb = GB(swot_data["reach"])
-                    data = gb.bam_data_reach()
-                    # if reach_id == 77449100061: print(data)
-                    priors = gb.bam_priors(data)
-                    self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
-                
-                # TODO discrepancies between SWORD v11 and SWOT (SAC test data)
-                # if swot_data["node"]:
-                    # gb = GB(swot_data["node"])
-                    # data = gb.bam_data_node()
-                    # priors = gb.bam_priors(data)
-                    # sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
-                    # self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
+            qhat = self.sos_dict["qhat"][sos_ri[0]]
+            swot_data = extract_swot(swot_file, qhat)
+            if swot_data["reach"]:
+                gb = GB(swot_data["reach"])
+                data = gb.bam_data_reach()
+                priors = gb.bam_priors(data)
+                self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
+            
+            if swot_data["node"]:
+                gb = GB(swot_data["node"])
+                data = gb.bam_data_node()
+                priors = gb.bam_priors(data)
+                sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
+                self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
         
         self.gb_dict["reach"] = reach_temp_dict
         self.gb_dict["node"] = node_temp_dict
+        
+        import pickle
+        with open("gb_data", "wb") as pf:
+            pickle.dump(self.gb_dict, pf)
 
 def extract_sos(sos_file):
         """Reads in data from the SoS and stores in sos_dict attribute.

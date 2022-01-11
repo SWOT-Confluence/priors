@@ -52,7 +52,7 @@ class Sos:
         Uploads new version to Confluence S3 bucket
     """
 
-    LOCAL_SOS = Path("/data/sos")    # Path to temporary local SoS
+    LOCAL_SOS = Path("")    # Path to temporary local SoS
     SUFFIX = "_sword_v11_SOS"
     MOD_TIME = 7200
     VERS_LENGTH = 4
