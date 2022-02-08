@@ -166,8 +166,7 @@ class Sos:
             for rid in usgs_reach_ids:
                 self._overwrite_prior(rid, sos, "usgs")
         
-        if sos.version == "0001":
-            self._create_dims_vars(sos)
+        self._create_dims_vars(sos)
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
         sos["model"]["overwritten_source"][:] = stringtochar(np.array(self.overwritten_source, dtype="S4"))
