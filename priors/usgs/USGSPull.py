@@ -118,7 +118,7 @@ class USGSPull:
                     for j in range((len(T))):
                         thisT=np.where(ALLt==np.datetime64(T[j]))
                         Qwrite[i,thisT]=Q[j]
-                        Twrite[i,thisT]=date.toordinal(T[j])+1
+                        Twrite[i,thisT]=date.toordinal(T[j])
                     # with df pulled in run some stats
                     #basic stats
                     Qmean[i]=np.nanmean(Q)
