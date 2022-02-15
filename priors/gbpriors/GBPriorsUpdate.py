@@ -52,7 +52,25 @@ class GBPriorsUpdate:
         self.__update_level(rch_grp, "reach")
         nod_grp = sos["gbpriors"]["node"]
         self.__update_level(nod_grp, "node")
+        self.__write_overwritten_indices(sos)
         sos.close()
+        
+    def __write_overwritten_indices(self, sos):
+        """Write location of where gbpriors were overwritten.
+        
+        Parameters
+        ----------
+        sos: netcdf4.Dataset
+            SOS dataset to write to
+        """
+        
+        oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+        oi.comment = "Indexes of geoBAM priors that were overwritten."
+        oi[:] = self.gb_dict["reach"]["overwritten_indexes"]
+        
+        oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",))
+        oi.comment = "Indexes of geoBAM priors that were overwritten."
+        oi[:] = self.gb_dict["node"]["overwritten_indexes"]
 
     def __update_level(self, grp, level):
         """Updates data in the SoS.
