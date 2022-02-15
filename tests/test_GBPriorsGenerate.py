@@ -186,6 +186,7 @@ class TestGBPriorsGenerate(unittest.TestCase):
         self.assertAlmostEqual(10, priors["dAerr_sd"][23541])
         self.assertAlmostEqual(0.25, priors["sigma_man"][23541])
         self.assertAlmostEqual(0.22, priors["sigma_amhg"][23541])
+        self.assertEqual(1, priors["overwritten_indexes"][23541])
 
         # Assert node results
         priors = gen.gb_dict["node"]
@@ -244,3 +245,5 @@ class TestGBPriorsGenerate(unittest.TestCase):
         assert_array_almost_equal(e_sman, priors["sigma_man"][self.N_IND])
         e_samhg = np.full((62,), 0.22)
         assert_array_almost_equal(e_samhg, priors["sigma_amhg"][self.N_IND])
+        e_oi = np.full(len(self.N_IND), 1, dtype=np.int32)
+        assert_array_equal(e_oi, priors["overwritten_indexes"][self.N_IND])

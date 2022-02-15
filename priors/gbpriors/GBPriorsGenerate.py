@@ -85,98 +85,109 @@ class GBPriorsGenerate:
         """
         
         self.gb_dict = {}
+        self.sos_file = sos_file
         self.sos_dict = extract_sos(sos_file)
         self.swot_dir = swot_dir
 
-    def __create_node_temp_dict(self, num_reaches, num_nodes):
+    def __create_node_temp_dict(self, num_nodes):
         """Create a dict to initialize numpy arrays for node-level priors."""
-
-        return {
-            "river_type" : np.full((num_nodes), fill_value=np.nan),
-            "lowerbound_A0" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_A0" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logn" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logn" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_b" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_b" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logWb" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logWb" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logDb" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logDb" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logr" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logr" : np.full((num_reaches), fill_value=np.nan),
-            "logA0_hat" : np.full((num_nodes), fill_value=np.nan),
-            "logn_hat" : np.full((num_nodes), fill_value=np.nan),
-            "b_hat" : np.full((num_nodes), fill_value=np.nan),
-            "logWb_hat" : np.full((num_nodes), fill_value=np.nan),
-            "logDb_hat" : np.full((num_nodes), fill_value=np.nan),
-            "logr_hat" : np.full((num_nodes), fill_value=np.nan),
-            "logA0_sd" : np.full((num_nodes), fill_value=np.nan),
-            "logn_sd" : np.full((num_nodes), fill_value=np.nan),
-            "b_sd" : np.full((num_nodes), fill_value=np.nan),
-            "logWb_sd" : np.full((num_nodes), fill_value=np.nan),
-            "logDb_sd" : np.full((num_nodes), fill_value=np.nan),
-            "logr_sd" : np.full((num_nodes), fill_value=np.nan),
-            "lowerbound_logWc" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logWc" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logQc" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logQc" : np.full((num_reaches), fill_value=np.nan),
-            "logWc_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logQc_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logQ_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logWc_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logQc_sd" : np.full((num_reaches), fill_value=np.nan),
-            "Werr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "Serr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "dAerr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "sigma_man" : np.full((num_nodes), fill_value=np.nan),
-            "sigma_amhg" : np.full((num_nodes), fill_value=np.nan)
+        
+        sos = Dataset(self.sos_file, 'r')
+        gbpriors = sos["gbpriors"]["node"]
+        node_dict = {
+            "river_type" : gbpriors["river_type"][:].filled(self.INT_FILL),
+            "lowerbound_A0" : gbpriors["lowerbound_A0"][:].filled(np.nan),
+            "upperbound_A0" : gbpriors["upperbound_A0"][:].filled(np.nan),
+            "lowerbound_logn" : gbpriors["lowerbound_logn"][:].filled(np.nan),
+            "upperbound_logn" : gbpriors["upperbound_logn"][:].filled(np.nan),
+            "lowerbound_b" : gbpriors["lowerbound_b"][:].filled(np.nan),
+            "upperbound_b" : gbpriors["upperbound_b"][:].filled(np.nan),
+            "lowerbound_logWb" : gbpriors["lowerbound_logWb"][:].filled(np.nan),
+            "upperbound_logWb" : gbpriors["upperbound_logWb"][:].filled(np.nan),
+            "lowerbound_logDb" : gbpriors["lowerbound_logDb"][:].filled(np.nan),
+            "upperbound_logDb" : gbpriors["upperbound_logDb"][:].filled(np.nan),
+            "lowerbound_logr" : gbpriors["lowerbound_logr"][:].filled(np.nan),
+            "upperbound_logr" : gbpriors["upperbound_logr"][:].filled(np.nan),
+            "logA0_hat" : gbpriors["logA0_hat"][:].filled(np.nan),
+            "logn_hat" : gbpriors["logn_hat"][:].filled(np.nan),
+            "b_hat" : gbpriors["b_hat"][:].filled(np.nan),
+            "logWb_hat" : gbpriors["logWb_hat"][:].filled(np.nan),
+            "logDb_hat" : gbpriors["logDb_hat"][:].filled(np.nan),
+            "logr_hat" : gbpriors["logr_hat"][:].filled(np.nan),
+            "logA0_sd" : gbpriors["logA0_sd"][:].filled(np.nan),
+            "logn_sd" : gbpriors["logn_sd"][:].filled(np.nan),
+            "b_sd" : gbpriors["b_sd"][:].filled(np.nan),
+            "logWb_sd" : gbpriors["logWb_sd"][:].filled(np.nan),
+            "logDb_sd" : gbpriors["logDb_sd"][:].filled(np.nan),
+            "logr_sd" : gbpriors["logr_sd"][:].filled(np.nan),
+            "lowerbound_logWc" : gbpriors["lowerbound_logWc"][:].filled(np.nan),
+            "upperbound_logWc" : gbpriors["upperbound_logWc"][:].filled(np.nan),
+            "lowerbound_logQc" : gbpriors["lowerbound_logQc"][:].filled(np.nan),
+            "upperbound_logQc" : gbpriors["upperbound_logQc"][:].filled(np.nan),
+            "logWc_hat" : gbpriors["logWc_hat"][:].filled(np.nan),
+            "logQc_hat" : gbpriors["logQc_hat"][:].filled(np.nan),
+            "logQ_sd" : gbpriors["logQ_sd"][:].filled(np.nan),
+            "logWc_sd" : gbpriors["logWc_sd"][:].filled(np.nan),
+            "logQc_sd" : gbpriors["logQc_sd"][:].filled(np.nan),
+            "Werr_sd" : gbpriors["Werr_sd"][:].filled(np.nan),
+            "Serr_sd" : gbpriors["Serr_sd"][:].filled(np.nan),
+            "dAerr_sd" : gbpriors["dAerr_sd"][:].filled(np.nan),
+            "sigma_man" : gbpriors["sigma_man"][:].filled(np.nan),
+            "sigma_amhg" : gbpriors["sigma_amhg"][:].filled(np.nan),
+            "overwritten_indexes": np.zeros((num_nodes), dtype=np.int32)
         }
+        sos.close()
+        return node_dict
 
     def __create_temp_reach_dict(self, num_reaches):
         """Create a dict to initialize numpy arrays for reach-level priors."""
-
-        return {
-            "river_type" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_A0" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_A0" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logn" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logn" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_b" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_b" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logWb" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logWb" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logDb" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logDb" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logr" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logr" : np.full((num_reaches), fill_value=np.nan),
-            "logA0_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logn_hat" : np.full((num_reaches), fill_value=np.nan),
-            "b_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logWb_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logDb_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logr_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logA0_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logn_sd" : np.full((num_reaches), fill_value=np.nan),
-            "b_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logWb_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logDb_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logWc" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logWc" : np.full((num_reaches), fill_value=np.nan),
-            "lowerbound_logQc" : np.full((num_reaches), fill_value=np.nan),
-            "upperbound_logQc" : np.full((num_reaches), fill_value=np.nan),
-            "logWc_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logQc_hat" : np.full((num_reaches), fill_value=np.nan),
-            "logQ_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logWc_sd" : np.full((num_reaches), fill_value=np.nan),
-            "logQc_sd" : np.full((num_reaches), fill_value=np.nan),
-            "Werr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "Serr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "dAerr_sd" : np.full((num_reaches), fill_value=np.nan),
-            "sigma_man" : np.full((num_reaches), fill_value=np.nan),
-            "sigma_amhg" : np.full((num_reaches), fill_value=np.nan)
+        sos = Dataset(self.sos_file, 'r')
+        gbpriors = sos["gbpriors"]["reach"]
+        reach_dict = { 
+            "river_type" : gbpriors["river_type"][:].filled(self.INT_FILL),
+            "lowerbound_A0" : gbpriors["lowerbound_A0"][:].filled(np.nan),
+            "upperbound_A0" : gbpriors["upperbound_A0"][:].filled(np.nan),
+            "lowerbound_logn" : gbpriors["lowerbound_logn"][:].filled(np.nan),
+            "upperbound_logn" : gbpriors["upperbound_logn"][:].filled(np.nan),
+            "lowerbound_b" : gbpriors["lowerbound_b"][:].filled(np.nan),
+            "lowerbound_b" : gbpriors["lowerbound_b"][:].filled(np.nan),
+            "upperbound_b" : gbpriors["upperbound_b"][:].filled(np.nan),
+            "lowerbound_logWb" : gbpriors["lowerbound_logWb"][:].filled(np.nan),
+            "upperbound_logWb" : gbpriors["upperbound_logWb"][:].filled(np.nan),
+            "lowerbound_logDb" : gbpriors["lowerbound_logDb"][:].filled(np.nan),
+            "upperbound_logDb" : gbpriors["upperbound_logDb"][:].filled(np.nan),
+            "lowerbound_logr" : gbpriors["lowerbound_logr"][:].filled(np.nan),
+            "upperbound_logr" : gbpriors["upperbound_logr"][:].filled(np.nan),
+            "logA0_hat" : gbpriors["logA0_hat"][:].filled(np.nan),
+            "logn_hat" : gbpriors["logn_hat"][:].filled(np.nan),
+            "b_hat" : gbpriors["b_hat"][:].filled(np.nan),
+            "logWb_hat" : gbpriors["logWb_hat"][:].filled(np.nan),
+            "logDb_hat" : gbpriors["logDb_hat"][:].filled(np.nan),
+            "logr_hat" : gbpriors["logr_hat"][:].filled(np.nan),
+            "logA0_sd" : gbpriors["logA0_sd"][:].filled(np.nan),
+            "logn_sd" : gbpriors["logn_sd"][:].filled(np.nan),
+            "b_sd" : gbpriors["b_sd"][:].filled(np.nan),
+            "logWb_sd" : gbpriors["logWb_sd"][:].filled(np.nan),
+            "logDb_sd" : gbpriors["logDb_sd"][:].filled(np.nan),
+            "logr_sd" : gbpriors["logr_sd"][:].filled(np.nan),
+            "lowerbound_logWc" : gbpriors["lowerbound_logWc"][:].filled(np.nan),
+            "upperbound_logWc" : gbpriors["upperbound_logWc"][:].filled(np.nan),
+            "lowerbound_logQc" : gbpriors["lowerbound_logQc"][:].filled(np.nan),
+            "upperbound_logQc" : gbpriors["upperbound_logQc"][:].filled(np.nan),
+            "logWc_hat" : gbpriors["logWc_hat"][:].filled(np.nan),
+            "logQc_hat" : gbpriors["logQc_hat"][:].filled(np.nan),
+            "logQ_sd" : gbpriors["logQ_sd"][:].filled(np.nan),
+            "logWc_sd" : gbpriors["logWc_sd"][:].filled(np.nan),
+            "logQc_sd" : gbpriors["logQc_sd"][:].filled(np.nan),
+            "Werr_sd" : gbpriors["Werr_sd"][:].filled(np.nan),
+            "Serr_sd" : gbpriors["Serr_sd"][:].filled(np.nan),
+            "dAerr_sd" : gbpriors["dAerr_sd"][:].filled(np.nan),
+            "sigma_man" : gbpriors["sigma_man"][:].filled(np.nan),
+            "sigma_amhg" : gbpriors["sigma_amhg"][:].filled(np.nan),
+            "overwritten_indexes": np.zeros((num_reaches), dtype=np.int32)
         }
+        sos.close()
+        return reach_dict
 
     def __extract_node_priors(self, priors, prior_dict, rch_i, nod_i, invalid):
         """Extract priors and store them in p_dict by index.
@@ -237,7 +248,8 @@ class GBPriorsGenerate:
         prior_dict["Serr_sd"][rch_i] = np.array(other_priors.rx2("Serr_sd"))
         prior_dict["dAerr_sd"][rch_i] = np.array(other_priors.rx2("dAerr_sd"))
         prior_dict["sigma_man"][nod_i] = self.__insert_invalid_float(np.mean(np.array(other_priors.rx2("sigma_man")), axis=1), invalid)
-        prior_dict["sigma_amhg"][nod_i] = self.__insert_invalid_float(np.mean(np.array(other_priors.rx2("sigma_amhg")), axis=1), invalid)    
+        prior_dict["sigma_amhg"][nod_i] = self.__insert_invalid_float(np.mean(np.array(other_priors.rx2("sigma_amhg")), axis=1), invalid)
+        prior_dict["overwritten_indexes"][nod_i] = np.full(nod_i[0].shape, fill_value=1, dtype=np.int32) 
 
     def __extract_reach_priors(self, priors, prior_dict, index):
         """Extract priors and store them in reach key of the prior_dict by index.
@@ -251,9 +263,8 @@ class GBPriorsGenerate:
         index: int
             integer index to store priors at
         """
-
-        prior_dict["river_type"][index] = np.array(priors.rx2("River_Type"))
         
+        prior_dict["river_type"][index] = np.array(priors.rx2("River_Type"))
         river_priors = priors.rx2("river_type_priors")
         prior_dict["lowerbound_A0"][index] = np.array(river_priors.rx2("lowerbound_A0"))
         prior_dict["upperbound_A0"][index] = np.array(river_priors.rx2("upperbound_A0"))
@@ -295,6 +306,7 @@ class GBPriorsGenerate:
         prior_dict["dAerr_sd"][index] = np.array(other_priors.rx2("dAerr_sd"))
         prior_dict["sigma_man"][index] = np.mean(np.array(other_priors.rx2("sigma_man")))
         prior_dict["sigma_amhg"][index] = np.mean(np.array(other_priors.rx2("sigma_amhg")))
+        prior_dict["overwritten_indexes"][index] = 1
 
     def __insert_invalid_int(self, prior, invalid_indexes):
         """Insert NaN value at invalid indezes in river_priors array."""
@@ -323,15 +335,12 @@ class GBPriorsGenerate:
         return prior
 
     def run_gb(self):
-        """Executes geoBAM on reach and node data and stores priors.
-        
-        TODO: discrepancies between SWORD v11 and SWOT (SAC test data)
-        """
+        """Executes geoBAM on reach and node data and stores priors."""
 
         num_reaches = self.sos_dict["reach_id"].shape[0]
         num_nodes = self.sos_dict["node_id"].shape[0]
         reach_temp_dict = self.__create_temp_reach_dict(num_reaches)
-        node_temp_dict = self.__create_node_temp_dict(num_reaches, num_nodes)
+        node_temp_dict = self.__create_node_temp_dict(num_nodes)
 
         cont = self.sos_dict["cont"]
         swot_files = [ Path(swot_file) for swot_file in glob.glob(f"{self.swot_dir}/{self.CONT_DICT[cont]}*_SWOT.nc") ]
@@ -357,10 +366,6 @@ class GBPriorsGenerate:
         
         self.gb_dict["reach"] = reach_temp_dict
         self.gb_dict["node"] = node_temp_dict
-        
-        import pickle
-        with open("gb_data", "wb") as pf:
-            pickle.dump(self.gb_dict, pf)
 
 def extract_sos(sos_file):
         """Reads in data from the SoS and stores in sos_dict attribute.
