@@ -152,14 +152,14 @@ class Priors:
                 print("Updating USGS priors.")
                 self.execute_usgs(sos_file)
 
+        # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
+        
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
             print("Updating geoBAM priors.")
             self.execute_gbpriors(sos_file)
-
-        # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
 
         if self.run_type == "constrained":
             # Overwrite GRADES with gage priors
@@ -180,7 +180,8 @@ def main():
         sys.exit(1)
 
     # Get continent to run on
-    index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
+    # index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
+    index = 3
     with open(INPUT_DIR / "continent.json") as jsonfile:
         cont = list(json.load(jsonfile)[index].keys())[0]
 
