@@ -180,8 +180,7 @@ def main():
         sys.exit(1)
 
     # Get continent to run on
-    # index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
-    index = 3
+    index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
     with open(INPUT_DIR / "continent.json") as jsonfile:
         cont = list(json.load(jsonfile)[index].keys())[0]
 
