@@ -345,7 +345,8 @@ class GBPriorsGenerate:
         cont = self.sos_dict["cont"]
         swot_files = [ Path(swot_file) for swot_file in glob.glob(f"{self.swot_dir}/{self.CONT_DICT[cont]}*_SWOT.nc") ]
 
-        for swot_file in swot_files:     
+        for swot_file in swot_files:
+            print(f"Running on file: {swot_file.name}")     
             reach_id = int(swot_file.name.split('_')[0])
             sos_ri = np.where(self.sos_dict["reach_id"] == reach_id)
             

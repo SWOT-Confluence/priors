@@ -83,5 +83,5 @@ class GB:
         
         Returns priors object.
         """
-
-        return self.GEOBAM.bam_priors(bamdata = geobam_data, classification = "unsupervised")
+        
+        return self.GEOBAM.bam_priors(bamdata = geobam_data, classification = "expert")
