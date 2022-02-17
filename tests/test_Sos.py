@@ -29,8 +29,9 @@ class test_SoS(unittest.TestCase):
         sos.sos_file = self.USGS_FILE
         sos.overwrite_grades()
 
-        sos_ds = Dataset(self.USGS_FILE, 'r')
+        sos_ds = Dataset(self.USGS_FILE, 'r')        
         self.assertEqual(sos_ds.dimensions["num_reaches"].size, sos_ds["model"]["overwritten_indexes"][:].shape[0])
+        self.assertEqual(sos_ds.dimensions["num_reaches"].size, sos_ds["model"]["bad_priors"][:].shape[0])
         expected_fdq = np.array([917.8038330078125, 436.0790100097656, 314.3160095214844, 247.20599365234375, 203.31500244140625, 171.60000610351562, 146.11500549316406, 124.59400177001953, 106.73135803222642, 91.18000030517578, 78.72100067138672, 66.8280029296875, 56.63399887084961, 46.439998626708984, 37.6609992980957, 29.732999801635742, 22.709999084472656, 17.555999755859375, 13.309000015258789, 8.947999954223633])
         assert_array_almost_equal(expected_fdq, sos_ds["model"]["flow_duration_q"][10870])
         self.assertAlmostEqual(5691.6767578125, sos_ds["model"]["max_q"][10870])
@@ -41,6 +42,8 @@ class test_SoS(unittest.TestCase):
         self.assertAlmostEqual(1718.8299560546875, sos_ds["model"]["two_year_return_q"][10870])
         self.assertEqual(1, sos_ds["model"]["overwritten_indexes"][10870])
         self.assertEqual("grdc", chartostring(np.ma.getdata(sos_ds["model"]["overwritten_source"][10870])))
+        self.assertEqual(1, sos_ds["model"]["bad_priors"][15831])
+        self.assertEqual("usgs", chartostring(np.ma.getdata(sos_ds["model"]["bad_prior_source"][15831])))
 
         sos_ds.close()
         rmtree(self.USGS_FILE.parent)
@@ -55,8 +58,9 @@ class test_SoS(unittest.TestCase):
         sos.sos_file = self.GRDC_FILE
         sos.overwrite_grades()
 
-        sos_ds = Dataset(self.GRDC_FILE, 'r')
+        sos_ds = Dataset(self.GRDC_FILE, 'r')        
         self.assertEqual(sos_ds.dimensions["num_reaches"].size, sos_ds["model"]["overwritten_indexes"][:].shape[0])
+        self.assertEqual(sos_ds.dimensions["num_reaches"].size, sos_ds["model"]["bad_priors"][:].shape[0])
         expected_fdq = np.array([16686.0, 13622.0, 12153.0, 10697.599999999999, 9500.0, 8110.0, 6733.6, 5445.4, 4215.6, 3333.4, 2633.4, 2267.600000000001, 1983.0, 1738.3999999999996, 1603.4, 1360.0, 1220.0, 1082.2, 960.0, 821.0])
         assert_array_almost_equal(expected_fdq, sos_ds["model"]["flow_duration_q"][74436])
         self.assertAlmostEqual(21433.0, sos_ds["model"]["max_q"][74436])
@@ -67,6 +71,8 @@ class test_SoS(unittest.TestCase):
         self.assertAlmostEqual(16750.0, sos_ds["model"]["two_year_return_q"][74436])
         self.assertEqual(1, sos_ds["model"]["overwritten_indexes"][74436])
         self.assertEqual("grdc", chartostring(np.ma.getdata(sos_ds["model"]["overwritten_source"][74436])))
+        self.assertEqual(1, sos_ds["model"]["bad_priors"][68346])
+        self.assertEqual("grdc", chartostring(np.ma.getdata(sos_ds["model"]["bad_prior_source"][68346])))
 
         sos_ds.close()
         rmtree(self.GRDC_FILE.parent)

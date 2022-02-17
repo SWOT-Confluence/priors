@@ -19,15 +19,19 @@ class Sos:
     
     Attributes
     ----------
+    bad_priors: np.array
+        list of either USGS or GRDC q priors that are less than 0.
+    bad_priors_source: np.array
+        list that indicates source of bad prior
     confluence_fs: S3FileSystem
         references Confluence S3 buckets
     continent: str
         continent abbreviation to id SoS file
     MOD_TIME: int
         nunber of seconds since last modification 
-    overwritten_indexes: list
+    overwritten_indexes: np.array
         list of integer index values where grades data was overwritten
-    overwritten_source: list
+    overwritten_source: np.array
         list of either 'usgs' or 'grdc' to indicate source of overwritten data
     run_type: str
         'constrained' or 'unconstrained' data product type
@@ -53,7 +57,6 @@ class Sos:
     """
 
     LOCAL_SOS = Path("")    # Path to temporary local SoS
-    LOCAL_SOS = Path("/data/data/sos/sos-0.0.1/sos_netcdf")    # Path to temporary local SoS
     SUFFIX = "_sword_v11_SOS"
     MOD_TIME = 7200
     VERS_LENGTH = 4
@@ -70,13 +73,15 @@ class Sos:
             path to SoS directory on local storage
         """
 
+        self.bad_prior = np.array([])
+        self.bad_prior_source = np.array([])
         self.confluence_fs = s3fs.S3FileSystem(key=confluence_creds["key"], 
             secret=confluence_creds["secret"], 
             client_kwargs={"region_name": confluence_creds["region"]})
         # self.confluence_fs = None   # Temporary local function
         self.continent = continent
-        self.overwritten_indexes = []
-        self.overwritten_source = []
+        self.overwritten_indexes = np.array([])
+        self.overwritten_source = np.array([])
         self.run_type = run_type
         self.sos_dir = sos_dir
         self.sos_file = None
@@ -158,6 +163,8 @@ class Sos:
 
         sos = Dataset(self.sos_file, 'a')
         
+        self.bad_prior = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
+        self.bad_prior_source = np.full(sos.dimensions["num_reaches"].size, "xxxx", dtype="S4")
         self.overwritten_indexes = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
         self.overwritten_source = np.full(sos.dimensions["num_reaches"].size, "xxxx", dtype="S4")
 
@@ -174,6 +181,9 @@ class Sos:
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
         sos["model"]["overwritten_source"][:] = stringtochar(np.array(self.overwritten_source, dtype="S4"))
+        
+        sos["model"]["bad_priors"][:] = self.bad_prior
+        sos["model"]["bad_prior_source"][:] = stringtochar(np.array(self.bad_prior_source, dtype="S4"))
 
         sos.close()
 
@@ -197,15 +207,42 @@ class Sos:
         
         grades = sos["model"]
         gage = sos["model"][source]
-        grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
-        grades["max_q"][sos_index] = gage["max_q"][gage_index]
-        grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
-        grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
-        grades["min_q"][sos_index] = gage["min_q"][gage_index]
-        grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
-
-        self.overwritten_indexes[sos_index] = 1
-        self.overwritten_source[sos_index] = source
+        if self._isvalid_q(gage, gage_index):
+            grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
+            grades["max_q"][sos_index] = gage["max_q"][gage_index]
+            grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
+            grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
+            grades["min_q"][sos_index] = gage["min_q"][gage_index]
+            grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
+            self.overwritten_indexes[sos_index] = 1
+            self.overwritten_source[sos_index] = source
+        else:
+            self.bad_prior[sos_index] = 1
+            self.bad_prior_source[sos_index] = source
+        
+    def _isvalid_q(self, gage, gage_index):
+        """Test if any q priors in gage data are less than or equal to 0.
+        
+        Parameters
+        ----------
+        gage: netCDF4.Group
+            Gage group that  contains q priors
+        gage_index: int
+            integer index of gage data (corresponds to reach id)
+            
+        Returns
+        -------
+        Boolean indicator of valid (True) or invalid data (False)
+        """
+        
+        keys = ["flow_duration_q", "max_q", "monthly_q", "mean_q", "min_q", "two_year_return_q"]
+        valid = True
+        for key in keys:
+            var = gage[key][gage_index]
+            if np.any(var <= 0) == True:
+                valid = False
+                break
+        return valid
 
     def _create_dims_vars(self, sos):
         """Create dimensions and variables to track overwritten data.
@@ -222,6 +259,12 @@ class Sos:
         sos["model"].createDimension("nchar", 4)
         os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
         os.comment = "Source of gage data that overwrote GRADES priors."
+        
+        bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+        bp.comment = "Indexes of invalid gage priors that were not overwritten."
+        
+        bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+        bps.comment = "Source of invalid gage priors."
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
