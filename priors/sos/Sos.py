@@ -53,6 +53,7 @@ class Sos:
     """
 
     LOCAL_SOS = Path("")    # Path to temporary local SoS
+    LOCAL_SOS = Path("/data/data/sos/sos-0.0.1/sos_netcdf")    # Path to temporary local SoS
     SUFFIX = "_sword_v11_SOS"
     MOD_TIME = 7200
     VERS_LENGTH = 4
@@ -156,6 +157,9 @@ class Sos:
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
 
         sos = Dataset(self.sos_file, 'a')
+        
+        self.overwritten_indexes = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
+        self.overwritten_source = np.full(sos.dimensions["num_reaches"].size, "xxxx", dtype="S4")
 
         grdc_reach_ids = sos["model"]["grdc"]["grdc_reach_id"][:]
         for rid in grdc_reach_ids:
@@ -200,8 +204,8 @@ class Sos:
         grades["min_q"][sos_index] = gage["min_q"][gage_index]
         grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
 
-        self.overwritten_indexes.append(sos_index[0][0])
-        self.overwritten_source.append(source)
+        self.overwritten_indexes[sos_index] = 1
+        self.overwritten_source[sos_index] = source
 
     def _create_dims_vars(self, sos):
         """Create dimensions and variables to track overwritten data.
@@ -212,12 +216,11 @@ class Sos:
             sos NetCDF Dataset
         """
 
-        sos["model"].createDimension("num_overwritten", None)
-        sos["model"].createDimension("nchar", 4)
-
-        oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_overwritten",))
+        oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
         oi.comment = "Indexes of GRADES priors that were overwritten."
-        os = sos["model"].createVariable("overwritten_source", "S1", ("num_overwritten", "nchar"))
+        
+        sos["model"].createDimension("nchar", 4)
+        os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
         os.comment = "Source of gage data that overwrote GRADES priors."
 
     def upload_file(self):
