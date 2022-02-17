@@ -10,7 +10,7 @@ import pandas as pd
 # Local imports
 from priors.usgs.USGSRead import USGSRead
 
-class GagePull:
+class USGSPull:
     """Class that pulls USGS Gage data and appends it to the SoS.
     
     Attributes
