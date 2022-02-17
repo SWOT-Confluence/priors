@@ -10,7 +10,7 @@ import pandas as pd
 # Local imports
 from priors.usgs.USGSRead import USGSRead
 
-class USGSPull:
+class GagePull:
     """Class that pulls USGS Gage data and appends it to the SoS.
     
     Attributes
@@ -100,7 +100,7 @@ class USGSPull:
         for i in range(len(dataUSGS)):
             if df_list[i].empty is False and '00060_Mean' in df_list[i] :        
                 # create boolean from quality flag       
-                Mask=gage_read.flag(df_list[i]['00060_Mean_cd'])
+                Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                 # pull in Q
                 Q=df_list[i]['00060_Mean']
                 Q=Q[Mask]

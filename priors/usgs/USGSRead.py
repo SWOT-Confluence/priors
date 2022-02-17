@@ -29,15 +29,18 @@ class USGSRead:
 
         self.usgs_targets = usgs_targets
 
-    def flag(self, In):
+    def flag(self, Inflag,Inq):
         """Flag USGS data.
         
         Parameters
         ----------
-        In: ?type
-            ?description
+        Inflag: ?list 
+                ?usgsquality flag
+        Inq:    ?list 
+                ?discharge value
         """
-        In = In.replace(np.nan,'*', regex=True)
+        Inflag[Inq<=0]=np.nan
+        In = Inflag.replace(np.nan,'*', regex=True)
 
         # e   Value has been edited or estimated by USGS personnel and is write protected
         # &     Value was computed from affected unit values
