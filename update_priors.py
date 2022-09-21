@@ -63,7 +63,7 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, confluence_creds):
         """
         Parameters
         ----------
@@ -76,7 +76,9 @@ class Priors:
         input_dir: Path
             path to input data directory
         sos_dir: Path
-            path to SoS directory on local storage        
+            path to SoS directory on local storage
+        confluence_creds: dict
+            Dictionary of s3 credentials            
         """
 
         self.cont = cont
@@ -84,6 +86,7 @@ class Priors:
         self.priors_list = priors_list
         self.input_dir = input_dir
         self.sos_dir = sos_dir
+        self.confluence_creds = confluence_creds
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -137,7 +140,7 @@ class Priors:
 
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
-        sos = Sos(self.cont, self.run_type, self.sos_dir)
+        sos = Sos(self.cont, self.run_type, self.sos_dir, self.confluence_creds)
         sos.copy_sos()
         sos.create_new_version()
         sos_file = sos.sos_file
