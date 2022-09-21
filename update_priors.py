@@ -171,8 +171,9 @@ def main():
 
     # Store command line arguments
     try:
-        run_type = sys.argv[1]
-        prior_ops = sys.argv[2:]
+        s3_creds_filename = sys.argv[1]
+        run_type = sys.argv[2]
+        prior_ops = sys.argv[3:]
         print(f"Running on {run_type} data product and pulling the following: {', '.join(prior_ops)}")
     except IndexError:
         print("Please enter appropriate command line arguments which MUST include run_type.")
@@ -184,8 +185,12 @@ def main():
     with open(INPUT_DIR / "continent.json") as jsonfile:
         cont = list(json.load(jsonfile)[index].keys())[0]
 
+    # Get s3 creds for SoS upload
+    with open(INPUT_DIR / s3_creds_filename) as jsonfile:
+        confluence_creds = json.load(jsonfile)
+
     # Retrieve and update priors
-    priors = Priors(cont, run_type, prior_ops, INPUT_DIR, INPUT_DIR / "sos")
+    priors = Priors(cont, run_type, prior_ops, INPUT_DIR, INPUT_DIR / "sos", confluence_creds)
     priors.update()
 
 if __name__ == "__main__":
