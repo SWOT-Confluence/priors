@@ -11,9 +11,6 @@ from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
 
-# Local imports
-from priors.sos.conf import confluence_creds
-
 class Sos:
     """Class that represents the SoS and required ops to create a new version.
     
@@ -61,7 +58,7 @@ class Sos:
     MOD_TIME = 7200
     VERS_LENGTH = 4
 
-    def __init__(self, continent, run_type, sos_dir):
+    def __init__(self, continent, run_type, sos_dir, confluence_creds):
         """
         Parameters
         ----------
