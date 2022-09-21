@@ -36,6 +36,8 @@ class Sos:
         path to SoS directory on local storage
     sos_file: Path
         path to SoS file
+    confluence_creds: dict
+            Dictionary of s3 credentials 
     SUFFIX: str
         ending name of the SoS
     VERS_LENGTH: int
@@ -68,6 +70,8 @@ class Sos:
             'constrained' or 'unconstrained' data product type
         sos_dir: Path
             path to SoS directory on local storage
+        confluence_creds: dict
+            Dictionary of s3 credentials 
         """
 
         self.bad_prior = np.array([])
