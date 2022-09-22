@@ -11,9 +11,6 @@ from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
 
-# Local imports
-from priors.sos.conf import confluence_creds
-
 class Sos:
     """Class that represents the SoS and required ops to create a new version.
     
@@ -39,6 +36,8 @@ class Sos:
         path to SoS directory on local storage
     sos_file: Path
         path to SoS file
+    confluence_creds: dict
+            Dictionary of s3 credentials 
     SUFFIX: str
         ending name of the SoS
     VERS_LENGTH: int
@@ -61,7 +60,7 @@ class Sos:
     MOD_TIME = 7200
     VERS_LENGTH = 4
 
-    def __init__(self, continent, run_type, sos_dir):
+    def __init__(self, continent, run_type, sos_dir, confluence_creds):
         """
         Parameters
         ----------
@@ -71,6 +70,8 @@ class Sos:
             'constrained' or 'unconstrained' data product type
         sos_dir: Path
             path to SoS directory on local storage
+        confluence_creds: dict
+            Dictionary of s3 credentials 
         """
 
         self.bad_prior = np.array([])
