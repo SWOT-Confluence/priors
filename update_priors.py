@@ -35,6 +35,8 @@ from priors.grdc.GRDC import GRDC
 from priors.sos.Sos import Sos
 from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
+from priors.Riggs.RiggsUpdate import Riggs Update
+from priors.Riggs.RiggsPull import Riggs Pull
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
@@ -131,6 +133,23 @@ class Priors:
         usgs_update.read_sos()
         usgs_update.map_data()
         usgs_update.update_data()
+        
+    def execute_Riggs(self, sos_file):
+        """Create and execute Riggs operations.
+
+        Parameters
+        ----------
+        sos_file: Path
+            path to SOS file to update
+        """
+
+        Riggs_file = self.input_dir / "gage" / "Rtarget"
+        Riggs_pull = RiggsPull(Riggs_file, '1980-1-1', datetime.today().strftime("%Y-%m-%d"))
+        Riggs_pull.pull()
+        Riggs_update = RiggsUpdate(sos_file, Riggs_pull.Riggs_dict)
+        Riggs_update.read_sos()
+        Riggs_update.map_data()
+        Riggs_update.update_data()
 
     def update(self):
         """Generate and update priors based on arguments."""

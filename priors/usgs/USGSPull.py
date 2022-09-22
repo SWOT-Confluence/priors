@@ -80,7 +80,7 @@ class USGSPull:
         #define date range block here
         ALLt=pd.date_range(start=self.start_date,end=self.end_date)
         gage_read = USGSRead(self.usgs_targets)
-        dataUSGS, reachID = gage_read.read()
+        dataUSGS, reachID, USGScal = gage_read.read()
         
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
@@ -162,6 +162,7 @@ class USGSPull:
         self.usgs_dict = {
             "dataUSGS": dataUSGS,
             "reachId": reachID,
+            "USGScal": USGScal,
             "Qwrite": Qwrite,
             "Twrite": Twrite,
             "Qmean": Qmean,

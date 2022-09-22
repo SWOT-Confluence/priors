@@ -72,5 +72,7 @@ class USGSRead:
 
         # SWORD Reach ID
         reachID = chartostring(ncf["reach_id"][:].filled(np.nan))
+        # calibration flag
+        USGScal=ncf["CAL"][:].filled(np.nan)
 
-        return dataUSGS, reachID
+        return dataUSGS, reachID, USGScal
