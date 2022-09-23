@@ -7,6 +7,7 @@ from shutil import copy
 
 # Third-party imports
 import boto3
+from boto3.session import Session
 from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
@@ -73,7 +74,7 @@ class Sos:
         confluence_creds: dict
             Dictionary of s3 credentials 
         """
-
+        self.confluence_creds = confluence_creds
         self.bad_prior = np.array([])
         self.bad_prior_source = np.array([])
         self.confluence_fs = s3fs.S3FileSystem(key=confluence_creds["key"], 
@@ -90,10 +91,11 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
-
-        s3 = boto3.resource('s3')
+        session = Session(aws_access_key_id=self.confluence_creds['key'],
+                        aws_secret_access_key=self.confluence_creds['secret'])
+        s3 = session.resource('s3')
         bucket = s3.Bucket(name="confluence-sos")
-        
+        print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
         dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
         dirs.sort()
         current = dirs[-1]
