@@ -154,10 +154,6 @@ class Priors:
             if "usgs" in self.priors_list and self.cont == "na":
                 print("Updating USGS priors.")
                 self.execute_usgs(sos_file)
-
-        # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
         
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
@@ -168,6 +164,12 @@ class Priors:
             # Overwrite GRADES with gage priors
             print("Overwriting GRADES data with gaged priors.")
             sos.overwrite_grades()
+
+
+        # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
+
 
 def main():
     """Main method to generate, retrieve, and overwrite priors."""
