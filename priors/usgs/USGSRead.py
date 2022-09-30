@@ -68,7 +68,7 @@ class USGSRead:
         ncf = Dataset(self.usgs_targets)
         # USGS STAID ID
         dataUSGS = chartostring(ncf["STAID"][:].filled(np.nan))
-        dataUSGS = [ el.strip('n') for el in dataUSGS ]
+        dataUSGS = [ el.strip(' ') for el in dataUSGS ]
 
         # SWORD Reach ID
         reachID = chartostring(ncf["reach_id"][:].filled(np.nan))
