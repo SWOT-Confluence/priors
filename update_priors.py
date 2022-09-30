@@ -127,7 +127,7 @@ class Priors:
             path to SOS file to update
         """
 
-        usgs_file = self.input_dir / "gage" / "USGStargetsV3.nc"
+        usgs_file = self.input_dir / "gage" / "USGStargetsV5.nc"
         usgs_pull = USGSPull(usgs_file, '1980-1-1', datetime.today().strftime("%Y-%m-%d"))
         usgs_pull.pull()
         usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict)
