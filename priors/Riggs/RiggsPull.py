@@ -106,9 +106,18 @@ class RiggsPull:
         if 'WSC' in agencyR: 
             #note "value" here might be a quality filter
             FMr=downloadQ_c(site)
-            with localconverter(ro.default_converter + pandas2ri.converter):
-                  FMr = ro.conversion.rpy2py(FMr)
-                  FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+            if 'FMr' in locals():
+                if len(FMr[0]) == 1:
+                    print("nd")
+                    FMr=[]   
+                else:
+                        with localconverter(ro.default_converter + pandas2ri.converter):
+                            FMr = ro.conversion.rpy2py(FMr)                  
+                            FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+                  
+            else:
+                print("nd")
+                FMr=[]      
             return FMr
         if 'MLIT' in agencyR:
             FMr=downloadQ_j(site, int(self.start_date[0:4]), int(self.end_date[0:4]))
