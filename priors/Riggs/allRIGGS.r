@@ -15,14 +15,14 @@ library(data.table)
 ##Date: 3/15/2022
 #Canada
 library(tidyhydat)
- # x=hy_version()
- # if  (x$Date<Sys.Date()){
- #   fp=hy_dir()
- #   ffp=paste(fp,"/*",sep = "")
- #   unlink(ffp, recursive = T, force = T)
- #   print("hydat version older than today's date. Downloading hydat.")
- #   download_hydat(dl_hydat_here = NULL, ask = FALSE)
- # }
+ x=hy_version()
+ if  (x$Date<Sys.Date()){
+   fp=hy_dir()
+   ffp=paste(fp,"/*",sep = "")
+   unlink(ffp, recursive = T, force = T)
+   print("hydat version older than today's date. Downloading hydat.")
+   download_hydat(dl_hydat_here = NULL, ask = FALSE)
+ }
 
 ##Author: Ryan Riggs
 ##Date: 3/15/2022

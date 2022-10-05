@@ -233,7 +233,7 @@ class RiggsPull:
 
         self.riggs_dict = {
             "data": datariggs,
-            "reachId": reachIDR,
+            "reachId": np.array(reachIDR),
             "RIGGScal": RIGGScal, 
             "Agency": agencyR,
             "Qwrite": Qwrite,
