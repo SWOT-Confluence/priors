@@ -12,6 +12,12 @@ from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
 
+
+def closest(lst, K):
+    # https://www.geeksforgeeks.org/python-find-closest-number-to-k-in-given-list/
+
+    return min(range(len(lst)), key = lambda i: abs(lst[i]-K))
+
 class Sos:
     """Class that represents the SoS and required ops to create a new version.
     
@@ -208,17 +214,48 @@ class Sos:
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == sos["model"][source][f"{source}_reach_id"][:])
         
+        # check to see if more than one gauge was found
+        if len(gage_index[0]) > 1:
+            double_gauge = True 
+
+            # find the mean q for each gauge
+            gage_mean_q_list = [sos["model"][source]["mean_q"][i] for i in gage_index[0]]
+
+            # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
+            # this method of sorting could change
+            winner_index = closest( gage_mean_q_list, sos["model"]["mean_q"][sos_index][0])
+
+        else:
+            double_gauge = False
+
+
+
+
+
+
+
         grades = sos["model"]
         gage = sos["model"][source]
         if self._isvalid_q(gage, gage_index):
-            grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
-            grades["max_q"][sos_index] = gage["max_q"][gage_index]
-            grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
-            grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
-            grades["min_q"][sos_index] = gage["min_q"][gage_index]
-            grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
-            self.overwritten_indexes[sos_index] = 1
-            self.overwritten_source[sos_index] = source
+            if not double_gauge:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+            else:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index][winner_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index][winner_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index][winner_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index][winner_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index][winner_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index][winner_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+
         else:
             self.bad_prior[sos_index] = 1
             self.bad_prior_source[sos_index] = source
