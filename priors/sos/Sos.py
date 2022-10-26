@@ -97,25 +97,27 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
-        session = Session(aws_access_key_id=self.confluence_creds['key'],
-                        aws_secret_access_key=self.confluence_creds['secret'])
-        s3 = session.resource('s3')
-        bucket = s3.Bucket(name="confluence-sos")
-        print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
-        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
-        dirs.sort()
-        current = dirs[-1]
-        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
+
+        print('tried to copy sos')
+        # session = Session(aws_access_key_id=self.confluence_creds['key'],
+        #                 aws_secret_access_key=self.confluence_creds['secret'])
+        # s3 = session.resource('s3')
+        # bucket = s3.Bucket(name="confluence-sos")
+        # print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
+        # dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
+        # dirs.sort()
+        # current = dirs[-1]
+        # obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
         
-        if current != "0000":
-            try:
-                if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
-                    obj = self._locate_previous_version(dirs, current, s3)
-            except s3.meta.client.exceptions.ClientError as error:
-                obj = self._locate_previous_version(dirs, current, s3)
+        # if current != "0000":
+        #     try:
+        #         if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
+        #             obj = self._locate_previous_version(dirs, current, s3)
+        #     except s3.meta.client.exceptions.ClientError as error:
+        #         obj = self._locate_previous_version(dirs, current, s3)
         
-        print(f"Downloading: {obj.key}")
-        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
+        # print(f"Downloading: {obj.key}")
+        # obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
         
     def _locate_previous_version(self, dirs, current, s3):
         """Locate the previous version of a file in the dirs list.
@@ -293,30 +295,23 @@ class Sos:
             sos NetCDF Dataset
         """
 
-        try:
+        if "overwritten_indexes" not in sos["model"].variables:
             oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
             oi.comment = "Indexes of GRADES priors that were overwritten."
-        except:
-            print("overwritten_indexes allready created")
 
-        try:    
+        if "nchar" not in sos["model"].variables:
             sos["model"].createDimension("nchar", 4)
             os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
             os.comment = "Source of gage data that overwrote GRADES priors."
-        except:
-            print('overwritten_source already created')
         
-        try:
+        if "bad_priors" not in sos["model"].variables:
             bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
             bp.comment = "Indexes of invalid gage priors that were not overwritten."
-        except:
-            print("bad priors already created")
-        
-        try:
+
+        if "bad_prior_source" not in sos["model"].variables:
             bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
             bps.comment = "Source of invalid gage priors."
-        except:
-            print("bad_prior_source allready created")
+
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
