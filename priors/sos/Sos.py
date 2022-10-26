@@ -293,18 +293,30 @@ class Sos:
             sos NetCDF Dataset
         """
 
-        oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
-        oi.comment = "Indexes of GRADES priors that were overwritten."
+        try:
+            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi.comment = "Indexes of GRADES priors that were overwritten."
+        except:
+            print("overwritten_indexes allready created")
+
+        try:    
+            sos["model"].createDimension("nchar", 4)
+            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
+            os.comment = "Source of gage data that overwrote GRADES priors."
+        except:
+            print('overwritten_source already created')
         
-        sos["model"].createDimension("nchar", 4)
-        os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
-        os.comment = "Source of gage data that overwrote GRADES priors."
+        try:
+            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+            bp.comment = "Indexes of invalid gage priors that were not overwritten."
+        except:
+            print("bad priors already created")
         
-        bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
-        bp.comment = "Indexes of invalid gage priors that were not overwritten."
-        
-        bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
-        bps.comment = "Source of invalid gage priors."
+        try:
+            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+            bps.comment = "Source of invalid gage priors."
+        except:
+            print("bad_prior_source allready created")
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
