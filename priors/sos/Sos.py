@@ -98,26 +98,25 @@ class Sos:
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
 
-        print('tried to copy sos')
-        # session = Session(aws_access_key_id=self.confluence_creds['key'],
-        #                 aws_secret_access_key=self.confluence_creds['secret'])
-        # s3 = session.resource('s3')
-        # bucket = s3.Bucket(name="confluence-sos")
-        # print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
-        # dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
-        # dirs.sort()
-        # current = dirs[-1]
-        # obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
+        session = Session(aws_access_key_id=self.confluence_creds['key'],
+                        aws_secret_access_key=self.confluence_creds['secret'])
+        s3 = session.resource('s3')
+        bucket = s3.Bucket(name="confluence-sos")
+        print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
+        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
+        dirs.sort()
+        current = dirs[-1]
+        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
         
-        # if current != "0000":
-        #     try:
-        #         if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
-        #             obj = self._locate_previous_version(dirs, current, s3)
-        #     except s3.meta.client.exceptions.ClientError as error:
-        #         obj = self._locate_previous_version(dirs, current, s3)
+        if current != "0000":
+            try:
+                if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
+                    obj = self._locate_previous_version(dirs, current, s3)
+            except s3.meta.client.exceptions.ClientError as error:
+                obj = self._locate_previous_version(dirs, current, s3)
         
-        # print(f"Downloading: {obj.key}")
-        # obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
+        print(f"Downloading: {obj.key}")
+        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
         
     def _locate_previous_version(self, dirs, current, s3):
         """Locate the previous version of a file in the dirs list.
