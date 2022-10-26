@@ -75,4 +75,6 @@ class USGSRead:
         # calibration flag
         USGScal=ncf["CAL"][:].filled(np.nan)
 
+
         return dataUSGS, reachID, USGScal
+

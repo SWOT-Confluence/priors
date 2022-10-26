@@ -7,12 +7,16 @@ from shutil import copy
 
 # Third-party imports
 import boto3
+from boto3.session import Session
 from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
 
-# Local imports
-from priors.sos.conf import confluence_creds
+
+def closest(lst, K):
+    # https://www.geeksforgeeks.org/python-find-closest-number-to-k-in-given-list/
+
+    return min(range(len(lst)), key = lambda i: abs(lst[i]-K))
 
 class Sos:
     """Class that represents the SoS and required ops to create a new version.
@@ -39,6 +43,8 @@ class Sos:
         path to SoS directory on local storage
     sos_file: Path
         path to SoS file
+    confluence_creds: dict
+            Dictionary of s3 credentials 
     SUFFIX: str
         ending name of the SoS
     VERS_LENGTH: int
@@ -61,7 +67,7 @@ class Sos:
     MOD_TIME = 7200
     VERS_LENGTH = 4
 
-    def __init__(self, continent, run_type, sos_dir):
+    def __init__(self, continent, run_type, sos_dir, confluence_creds):
         """
         Parameters
         ----------
@@ -71,8 +77,10 @@ class Sos:
             'constrained' or 'unconstrained' data product type
         sos_dir: Path
             path to SoS directory on local storage
+        confluence_creds: dict
+            Dictionary of s3 credentials 
         """
-
+        self.confluence_creds = confluence_creds
         self.bad_prior = np.array([])
         self.bad_prior_source = np.array([])
         self.confluence_fs = s3fs.S3FileSystem(key=confluence_creds["key"], 
@@ -89,10 +97,11 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
-
-        s3 = boto3.resource('s3')
+        session = Session(aws_access_key_id=self.confluence_creds['key'],
+                        aws_secret_access_key=self.confluence_creds['secret'])
+        s3 = session.resource('s3')
         bucket = s3.Bucket(name="confluence-sos")
-        
+        print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
         dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
         dirs.sort()
         current = dirs[-1]
@@ -205,17 +214,48 @@ class Sos:
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == sos["model"][source][f"{source}_reach_id"][:])
         
+        # check to see if more than one gauge was found
+        if len(gage_index[0]) > 1:
+            double_gauge = True 
+
+            # find the mean q for each gauge
+            gage_mean_q_list = [sos["model"][source]["mean_q"][i] for i in gage_index[0]]
+
+            # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
+            # this method of sorting could change
+            winner_index = closest( gage_mean_q_list, sos["model"]["mean_q"][sos_index][0])
+
+        else:
+            double_gauge = False
+
+
+
+
+
+
+
         grades = sos["model"]
         gage = sos["model"][source]
         if self._isvalid_q(gage, gage_index):
-            grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
-            grades["max_q"][sos_index] = gage["max_q"][gage_index]
-            grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
-            grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
-            grades["min_q"][sos_index] = gage["min_q"][gage_index]
-            grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
-            self.overwritten_indexes[sos_index] = 1
-            self.overwritten_source[sos_index] = source
+            if not double_gauge:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+            else:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index][winner_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index][winner_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index][winner_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index][winner_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index][winner_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index][winner_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+
         else:
             self.bad_prior[sos_index] = 1
             self.bad_prior_source[sos_index] = source
