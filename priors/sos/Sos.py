@@ -97,6 +97,7 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
+
         session = Session(aws_access_key_id=self.confluence_creds['key'],
                         aws_secret_access_key=self.confluence_creds['secret'])
         s3 = session.resource('s3')
@@ -293,18 +294,23 @@ class Sos:
             sos NetCDF Dataset
         """
 
-        oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
-        oi.comment = "Indexes of GRADES priors that were overwritten."
+        if "overwritten_indexes" not in sos["model"].variables:
+            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi.comment = "Indexes of GRADES priors that were overwritten."
+
+        if "nchar" not in sos["model"].variables:
+            sos["model"].createDimension("nchar", 4)
+            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
+            os.comment = "Source of gage data that overwrote GRADES priors."
         
-        sos["model"].createDimension("nchar", 4)
-        os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
-        os.comment = "Source of gage data that overwrote GRADES priors."
-        
-        bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
-        bp.comment = "Indexes of invalid gage priors that were not overwritten."
-        
-        bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
-        bps.comment = "Source of invalid gage priors."
+        if "bad_priors" not in sos["model"].variables:
+            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+            bp.comment = "Indexes of invalid gage priors that were not overwritten."
+
+        if "bad_prior_source" not in sos["model"].variables:
+            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+            bps.comment = "Source of invalid gage priors."
+
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""

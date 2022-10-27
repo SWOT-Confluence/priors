@@ -64,13 +64,23 @@ class GBPriorsUpdate:
             SOS dataset to write to
         """
         
-        oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
-        oi.comment = "Indexes of geoBAM priors that were overwritten."
-        oi[:] = self.gb_dict["reach"]["overwritten_indexes"]
+        # Try excepts here because the variables are only created once
+        if "overwritten_indexes" in sos["gbpriors"]["reach"].variables:
+            oi = sos["gbpriors"]["reach"]["overwritten_indexes"]
+            oi[:] = [self.gb_dict["reach"]["overwritten_indexes"]]
+        else:
+            oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi.comment = "Indexes of geoBAM priors that were overwritten."
+            oi[:] = self.gb_dict["reach"]["overwritten_indexes"]
         
-        oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",))
-        oi.comment = "Indexes of geoBAM priors that were overwritten."
-        oi[:] = self.gb_dict["node"]["overwritten_indexes"]
+        if "overwritten_indexes" in sos["gbpriors"]["node"].variables:
+            oi = sos["gbpriors"]["node"]["overwritten_indexes"]
+            oi[:] = [self.gb_dict["node"]["overwritten_indexes"]]
+
+        else:
+            oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",))
+            oi.comment = "Indexes of geoBAM priors that were overwritten."
+            oi[:] = self.gb_dict["node"]["overwritten_indexes"]
 
     def __update_level(self, grp, level):
         """Updates data in the SoS.
