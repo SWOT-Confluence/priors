@@ -35,8 +35,8 @@ from priors.grdc.GRDC import GRDC
 from priors.sos.Sos import Sos
 from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
-from priors.Riggs.RiggsUpdate import Riggs Update
-from priors.Riggs.RiggsPull import Riggs Pull
+from priors.Riggs.RiggsUpdate import RiggsUpdate
+from priors.Riggs.RiggsPull import RiggsPull
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
@@ -129,8 +129,13 @@ class Priors:
             path to SOS file to update
         """
 
-        usgs_file = self.input_dir / "gage" / "USGStargetsV5.nc"
-        usgs_pull = USGSPull(usgs_file, '1980-1-1', datetime.today().strftime("%Y-%m-%d"))
+        usgs_file = self.input_dir / "gage" / "USGStargetsV5P.nc"
+        today = datetime.today().strftime("%Y-%m-%d")
+
+        #preparing for historical data update
+        # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
+        today_last_year = '1980-1-1'
+        usgs_pull = USGSPull(usgs_file, today_last_year, today)
         usgs_pull.pull()
         usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict)
         usgs_update.read_sos()
@@ -147,9 +152,14 @@ class Priors:
         """
 
         Riggs_file = self.input_dir / "gage" / "Rtarget"
-        Riggs_pull = RiggsPull(Riggs_file, '1980-1-1', datetime.today().strftime("%Y-%m-%d"))
+        today = datetime.today().strftime("%Y-%m-%d")
+
+        #preparing for historical data update
+        # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
+        today_last_year = '1980-1-1'
+        Riggs_pull = RiggsPull(Riggs_file, today_last_year, today)
         Riggs_pull.pull()
-        Riggs_update = RiggsUpdate(sos_file, Riggs_pull.Riggs_dict)
+        Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
         Riggs_update.map_data()
         Riggs_update.update_data()
@@ -173,6 +183,9 @@ class Priors:
             if "usgs" in self.priors_list and self.cont == "na":
                 print("Updating USGS priors.")
                 self.execute_usgs(sos_file)
+
+
+            self.execute_Riggs(sos_file)
         
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
@@ -185,9 +198,9 @@ class Priors:
             sos.overwrite_grades()
 
 
-        # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # # Upload priors results to S3 bucket
+        # print("Uploading new SoS priors version.")
+        # sos.upload_file()
 
 
 def main():

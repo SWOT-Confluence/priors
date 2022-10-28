@@ -13,11 +13,13 @@ from os import walk
 import rpy2.robjects as robjects
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
+
 r=robjects.r
 
 ## Activate R functions 
 # Defining the R script and loading the instance in Python
-r['source']("./Riggs/allRIGGS.R")
+
+r['source']("/app/priors/Riggs/allRIGGS.R")
 # Loading the function we have defined in R.
 downloadQ_b = robjects.globalenv['qdownload_b']
 # Loading the function we have defined in R.
@@ -32,8 +34,7 @@ iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
 # Local imports
-from Riggs.RiggsRead import RiggsRead
-
+from . import RiggsRead
 
 class RiggsPull:
     """Class that pulls  Gage data and appends it to the SoS.
@@ -151,7 +152,8 @@ class RiggsPull:
 
         #define date range block here
         ALLt=pd.date_range(start=self.start_date,end=self.end_date)
-        gage_read = GageReadR(self.riggs_targets)
+        # gage_read = RiggsRead(self.riggs_targets)
+        gage_read = RiggsRead.RiggsRead(self.riggs_targets)
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
         
         # Download records and gather a list of dataframes

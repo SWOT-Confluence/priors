@@ -85,6 +85,9 @@ class USGSPull:
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
 
+        # this is where we need to go get historical data to append too
+
+
         # generate empty arrays for nc output
         EMPTY=np.nan
         MONQ=np.full((len(dataUSGS),12),EMPTY)
