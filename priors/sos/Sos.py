@@ -177,14 +177,16 @@ class Sos:
         self.overwritten_indexes = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
         self.overwritten_source = np.full(sos.dimensions["num_reaches"].size, "xxxx", dtype="S4")
 
-        grdc_reach_ids = sos["model"]["grdc"]["grdc_reach_id"][:]
+        grdc_reach_ids = sos["historicQ"]["grdc"]["grdc_reach_id"][:]
         for rid in grdc_reach_ids:
-            self._overwrite_prior(rid, sos, "grdc")
+            self._overwrite_prior(rid, sos, sos["historicQ"]["grdc"], "grdc")
+        
+
 
         if self.continent == "na":
-            usgs_reach_ids = sos["model"]["usgs"]["usgs_reach_id"][:]
+            usgs_reach_ids = sos["usgs"]["usgs_reach_id"][:]
             for rid in usgs_reach_ids:
-                self._overwrite_prior(rid, sos, "usgs")
+                self._overwrite_prior(rid, sos, sos["usgs"], "usgs")
         
         self._create_dims_vars(sos)
 
@@ -196,7 +198,7 @@ class Sos:
 
         sos.close()
 
-    def _overwrite_prior(self, reach_id, sos, source):
+    def _overwrite_prior(self, reach_id, sos, gage, source):
         """Overwrite prior in grades with prior found in gage.
 
         Parameters
@@ -212,14 +214,14 @@ class Sos:
         """
 
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
-        gage_index = np.where(reach_id == sos["model"][source][f"{source}_reach_id"][:])
+        gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
         
         # check to see if more than one gauge was found
         if len(gage_index[0]) > 1:
             double_gauge = True 
 
             # find the mean q for each gauge
-            gage_mean_q_list = [sos["model"][source]["mean_q"][i] for i in gage_index[0]]
+            gage_mean_q_list = [gage["mean_q"][i] for i in gage_index[0]]
 
             # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
             # this method of sorting could change
@@ -228,14 +230,7 @@ class Sos:
         else:
             double_gauge = False
 
-
-
-
-
-
-
         grades = sos["model"]
-        gage = sos["model"][source]
         if self._isvalid_q(gage, gage_index):
             if not double_gauge:
                 grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
