@@ -198,9 +198,9 @@ class Priors:
             sos.overwrite_grades()
 
 
-        # # Upload priors results to S3 bucket
-        # print("Uploading new SoS priors version.")
-        # sos.upload_file()
+        # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
 
 
 def main():
