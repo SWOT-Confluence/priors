@@ -115,7 +115,7 @@ class GRDC:
         
         sos = Dataset(self.sos_file, 'a')
         sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-        grdc = sos["model"]["grdc"]
+        grdc = sos["historicQ"]["grdc"]
 
         grdc["num_days"][:] = self.map_dict["days"]
         grdc["num_grdc_reaches"][:] = range(1, self.map_dict["grdc_reach_id"].shape[0] + 1)

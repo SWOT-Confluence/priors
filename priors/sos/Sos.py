@@ -12,6 +12,12 @@ from netCDF4 import Dataset, stringtochar
 import numpy as np
 import s3fs
 
+
+def closest(lst, K):
+    # https://www.geeksforgeeks.org/python-find-closest-number-to-k-in-given-list/
+
+    return min(range(len(lst)), key = lambda i: abs(lst[i]-K))
+
 class Sos:
     """Class that represents the SoS and required ops to create a new version.
     
@@ -91,6 +97,7 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
+
         session = Session(aws_access_key_id=self.confluence_creds['key'],
                         aws_secret_access_key=self.confluence_creds['secret'])
         s3 = session.resource('s3')
@@ -171,14 +178,16 @@ class Sos:
         self.overwritten_indexes = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
         self.overwritten_source = np.full(sos.dimensions["num_reaches"].size, "xxxx", dtype="S4")
 
-        grdc_reach_ids = sos["model"]["grdc"]["grdc_reach_id"][:]
+        grdc_reach_ids = sos["historicQ"]["grdc"]["grdc_reach_id"][:]
         for rid in grdc_reach_ids:
-            self._overwrite_prior(rid, sos, "grdc")
+            self._overwrite_prior(rid, sos, sos["historicQ"]["grdc"], "grdc")
+        
+
 
         if self.continent == "na":
-            usgs_reach_ids = sos["model"]["usgs"]["usgs_reach_id"][:]
+            usgs_reach_ids = sos["usgs"]["usgs_reach_id"][:]
             for rid in usgs_reach_ids:
-                self._overwrite_prior(rid, sos, "usgs")
+                self._overwrite_prior(rid, sos, sos["usgs"], "usgs")
         
         self._create_dims_vars(sos)
 
@@ -190,7 +199,7 @@ class Sos:
 
         sos.close()
 
-    def _overwrite_prior(self, reach_id, sos, source):
+    def _overwrite_prior(self, reach_id, sos, gage, source):
         """Overwrite prior in grades with prior found in gage.
 
         Parameters
@@ -206,19 +215,43 @@ class Sos:
         """
 
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
-        gage_index = np.where(reach_id == sos["model"][source][f"{source}_reach_id"][:])
+        gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
         
+        # check to see if more than one gauge was found
+        if len(gage_index[0]) > 1:
+            double_gauge = True 
+
+            # find the mean q for each gauge
+            gage_mean_q_list = [gage["mean_q"][i] for i in gage_index[0]]
+
+            # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
+            # this method of sorting could change
+            winner_index = closest( gage_mean_q_list, sos["model"]["mean_q"][sos_index][0])
+
+        else:
+            double_gauge = False
+
         grades = sos["model"]
-        gage = sos["model"][source]
         if self._isvalid_q(gage, gage_index):
-            grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
-            grades["max_q"][sos_index] = gage["max_q"][gage_index]
-            grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
-            grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
-            grades["min_q"][sos_index] = gage["min_q"][gage_index]
-            grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
-            self.overwritten_indexes[sos_index] = 1
-            self.overwritten_source[sos_index] = source
+            if not double_gauge:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+            else:
+                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index][winner_index]
+                grades["max_q"][sos_index] = gage["max_q"][gage_index][winner_index]
+                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index][winner_index]
+                grades["mean_q"][sos_index] = gage["mean_q"][gage_index][winner_index]
+                grades["min_q"][sos_index] = gage["min_q"][gage_index][winner_index]
+                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index][winner_index]
+                self.overwritten_indexes[sos_index] = 1
+                self.overwritten_source[sos_index] = source
+
         else:
             self.bad_prior[sos_index] = 1
             self.bad_prior_source[sos_index] = source
@@ -256,18 +289,23 @@ class Sos:
             sos NetCDF Dataset
         """
 
-        oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
-        oi.comment = "Indexes of GRADES priors that were overwritten."
+        if "overwritten_indexes" not in sos["model"].variables:
+            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi.comment = "Indexes of GRADES priors that were overwritten."
+
+        if "nchar" not in sos["model"].variables:
+            sos["model"].createDimension("nchar", 4)
+            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
+            os.comment = "Source of gage data that overwrote GRADES priors."
         
-        sos["model"].createDimension("nchar", 4)
-        os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
-        os.comment = "Source of gage data that overwrote GRADES priors."
-        
-        bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
-        bp.comment = "Indexes of invalid gage priors that were not overwritten."
-        
-        bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
-        bps.comment = "Source of invalid gage priors."
+        if "bad_priors" not in sos["model"].variables:
+            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+            bp.comment = "Indexes of invalid gage priors that were not overwritten."
+
+        if "bad_prior_source" not in sos["model"].variables:
+            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+            bps.comment = "Source of invalid gage priors."
+
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""

@@ -51,9 +51,11 @@ RUN apt update && apt upgrade -y && apt -y install r-base r-base-dev \
 	&& /usr/bin/Rscript -e "install.packages('data.table', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('rjson', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
     && /usr/bin/Rscript -e "install.packages('R.utils', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
+	&& /usr/bin/Rscript -e "install.packages('BBmisc', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
+	&& /usr/bin/Rscript -e "install.packages('tidyhydat', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
+	&&/usr/bin/Rscript -e "install.packages('RSelenium', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
 	&& /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)'
-
-# Stage 3 - Python packages
+#Stage 3 - Python packages
 FROM stage2 as stage3
 COPY requirements.txt /app/requirements.txt
 RUN /usr/bin/python3 -m venv /app/env
@@ -64,8 +66,13 @@ FROM stage3 as stage4
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
 
-# Stage 5 - Execute algorithm
+# Stage 5 - Download tidyhydat database
 FROM stage4 as stage5
+RUN sudo mkdir -p /root/.local/share/tidyhydat/\
+	&& /usr/bin/Rscript -e 'library(tidyhydat)'\
+	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(ask=FALSE)'
+# Stage 6 - Execute algorithm
+FROM stage5 as stage6
 LABEL version="1.0" \
 	description="Containerized priors module." \
 	"confluence.contact"="ntebaldi@umass.edu" \
