@@ -64,6 +64,8 @@ class USGSUpdate:
         usgs_ids = self.usgs_dict["reachId"]
         same_ids = np.intersect1d(self.sos_reaches, usgs_ids)
         indexes = np.where(np.isin(usgs_ids, same_ids))[0]
+        print('new values',len(self.usgs_dict["Qmean"][indexes]))
+
 
         if indexes.size == 0:
             self.map_dict = None
@@ -109,7 +111,6 @@ class USGSUpdate:
             # this variable is not in the SOS
             # usgs["num_usgs_reaches"][:] = range(1, self.map_dict["usgs_reach_id"].shape[0] + 1)
 
-            # usgs_reach_id needs to change?
             usgs["usgs_reach_id"][:] = self.map_dict["usgs_reach_id"]
             usgs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
             usgs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
@@ -118,7 +119,38 @@ class USGSUpdate:
             usgs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
             usgs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
             usgs["usgs_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S16"))
+
+
+
+            # with open('/mnt/data/original.txt', 'w') as file:
+            #     for year in usgs["usgs_q"][:]:
+            #         file.write(f"\n, {year}")
+
+            print('original', len(usgs["usgs_q"][:][0]))
+            org = [i for i in usgs["usgs_q"][:][0]]
             usgs["usgs_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
+            print('after', len(usgs["usgs_q"][:][0]))
+            after = [i for i in usgs["usgs_q"][:][0]]
+            print('new_data', len(self.map_dict["usgs_q"][0]))
+
+            if org == after:
+                print('no change')
+            else:
+                print('change')
+                for index, (first, second) in enumerate(zip(org, after)):
+                    if first != second:
+                        print(index, second)
+        
+
+            
+            # with open('/mnt/data/fter.txt', 'w') as file:
+            #     for year in usgs["usgs_q"][:]:
+            #         file.write(f"\n, {year}")
+            
+
+            # with open('/mnt/data/new_data.txt', 'w') as file:
+            #     for year in self.map_dict["usgs_q"]:
+            #         file.write(f"\n, {year}")
             usgs["usgs_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()

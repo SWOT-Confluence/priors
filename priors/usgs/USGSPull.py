@@ -6,6 +6,9 @@ import asyncio
 import dataretrieval.nwis as nwis
 import numpy as np
 import pandas as pd
+from netCDF4 import Dataset, stringtochar
+from pathlib import Path
+
 
 # Local imports
 from priors.usgs.USGSRead import USGSRead
@@ -45,7 +48,6 @@ class USGSPull:
         end_date: str
             Date to end search for
         """
-        
         self.usgs_targets = usgs_targets
         self.start_date = start_date
         self.end_date = end_date
@@ -85,7 +87,20 @@ class USGSPull:
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
 
-        # this is where we need to go get historical data to append too
+
+
+        # turn sos into dataframes organized by gauge
+        '''
+        for gauge, index1 in sos/usgs/usgs_q:
+            gage_df = df_list[index1]
+            for reading, index2 in gauge:
+                date = make it the same date
+                gage_df.append()
+            
+
+        '''
+
+
 
 
         # generate empty arrays for nc output
@@ -108,7 +123,7 @@ class USGSPull:
                 Q=df_list[i]['00060_Mean']
                 Q=Q[Mask]
                 if Q.empty is False:
-                    print(i)
+                    # print(i)
                     Q=Q.to_numpy()
                     Q=Q*0.0283168#convertcfs to meters        
                     T=df_list[i].index.values        

@@ -51,6 +51,8 @@ class Sos:
         number of integers in SoS identifier
     version: str
         current version of the SoS (for current execution)
+    last_run_time: str
+        %Y-%m-%d of the sos production date, to be used for pulling gauge data
     
     Methods
     -------
@@ -160,6 +162,7 @@ class Sos:
         self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}.nc")
         print(f"Creating new version of: {self.sos_file}")
         sos = Dataset(self.sos_file, 'a')
+        self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
 
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))

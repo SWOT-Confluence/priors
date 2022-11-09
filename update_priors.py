@@ -120,7 +120,7 @@ class Priors:
         grdc.map_data()
         grdc.update_data()
 
-    def execute_usgs(self, sos_file):
+    def execute_usgs(self, sos_file, start_date):
         """Create and execute USGS operations.
 
         Parameters
@@ -134,15 +134,16 @@ class Priors:
 
         #preparing for historical data update
         # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
-        today_last_year = '1980-1-1'
-        usgs_pull = USGSPull(usgs_file, today_last_year, today)
+        # today_last_year = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
+        # today_last_year = '1980-1-1'
+        usgs_pull = USGSPull(usgs_targets = usgs_file, start_date = start_date, end_date = today)
         usgs_pull.pull()
         usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict)
         usgs_update.read_sos()
         usgs_update.map_data()
         usgs_update.update_data()
         
-    def execute_Riggs(self, sos_file):
+    def execute_Riggs(self, sos_file, start_date):
         """Create and execute Riggs operations.
 
         Parameters
@@ -154,10 +155,10 @@ class Priors:
         Riggs_file = self.input_dir / "gage" / "Rtarget"
         today = datetime.today().strftime("%Y-%m-%d")
 
-        #preparing for historical data update
+        #preparing for historical data update, change this to the last date in sos
         # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
-        today_last_year = '1980-1-1'
-        Riggs_pull = RiggsPull(Riggs_file, today_last_year, today)
+        # today_last_year = '1980-1-1'
+        Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today)
         Riggs_pull.pull()
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
@@ -173,6 +174,7 @@ class Priors:
         sos.copy_sos()
         sos.create_new_version()
         sos_file = sos.sos_file
+        sos_last_run_time = sos.last_run_time
 
         # Determine run type and add requested gage priors
         if self.run_type == "constrained":
@@ -182,10 +184,10 @@ class Priors:
 
             if "usgs" in self.priors_list and self.cont == "na":
                 print("Updating USGS priors.")
-                self.execute_usgs(sos_file)
+                self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
 
-            self.execute_Riggs(sos_file)
+            self.execute_Riggs(sos_file, start_date = sos_last_run_time)
         
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
@@ -199,8 +201,8 @@ class Priors:
 
 
         # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # print("Uploading new SoS priors version.")
+        # sos.upload_file()
 
 
 def main():
