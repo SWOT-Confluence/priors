@@ -163,6 +163,7 @@ class Sos:
         print(f"Creating new version of: {self.sos_file}")
         sos = Dataset(self.sos_file, 'a')
         self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
+        print(self.last_run_time)
 
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))

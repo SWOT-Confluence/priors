@@ -139,7 +139,7 @@ class USGSUpdate:
                 print('change')
                 for index, (first, second) in enumerate(zip(org, after)):
                     if first != second:
-                        print(index, second)
+                        print(index, first, second)
         
 
             

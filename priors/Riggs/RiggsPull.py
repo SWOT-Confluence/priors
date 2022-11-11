@@ -159,6 +159,7 @@ class RiggsPull:
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(datariggs,agencyR))
 
+
         # generate empty arrays for nc output
         EMPTY=np.nan
         MONQ=np.full((len(datariggs),12),EMPTY)

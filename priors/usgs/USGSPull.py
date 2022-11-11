@@ -13,6 +13,47 @@ from pathlib import Path
 # Local imports
 from priors.usgs.USGSRead import USGSRead
 
+from netCDF4 import Dataset, stringtochar
+import pandas as pd
+import datetime as datetime
+import pandas as pd
+
+
+def days_convert(days):
+
+
+    start_date = datetime.date(1, 1, 1)
+
+    new_date = start_date + datetime.timedelta(days=days)
+
+    return new_date.strftime('%Y-%m-%d %H:%M:%S+%X')[:-3]
+
+
+def create_sos_df(sos, date_list, index):
+    df = pd.DataFrame(columns = ['datetime', 'q'])
+    usgs_q = sos['usgs']['usgs_q']
+
+    df['00060_Mean'] = usgs_q[index]/0.0283168
+
+    return df
+
+
+def combine_dfs(sos_df, gauge_df):
+    return df.merge(gdf, how="outer")
+
+
+def merge_historic_gauge_data(sos, date_list, gauge_df_list):
+
+    merged_df_list = []
+
+    cnt = 0
+    for gauge_df in gauge_df_list:
+        sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt)
+        merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
+        merged_df_list.append(merged_df)
+
+    return merged_df_list
+
 class USGSPull:
     """Class that pulls USGS Gage data and appends it to the SoS.
     
@@ -37,7 +78,7 @@ class USGSPull:
         Pulls USGS data and flags and stores in usgs_dict
     """
 
-    def __init__(self, usgs_targets, start_date, end_date):
+    def __init__(self, usgs_targets, start_date, end_date, sos_file):
         """
         Parameters
         ----------
@@ -52,6 +93,7 @@ class USGSPull:
         self.start_date = start_date
         self.end_date = end_date
         self.usgs_dict = {}
+        self.sos_file = sos_file
 
     async def get_record(self, site):
         """Get NWIS record.
@@ -76,6 +118,10 @@ class USGSPull:
         records = await asyncio.gather(*(self.get_record(site) for site in sites))
         return records
 
+
+
+
+
     def pull(self):
         """Pulls USGS data and flags and stores in usgs_dict."""
 
@@ -89,18 +135,20 @@ class USGSPull:
 
 
 
+        sos = Dataset(self.sos_file, 'a')
+        usgs_qt = sos['usgs']['usgs_qt']
+        date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
+
+        merged_df_list = merge_historic_gauge_data(sos, date_list, gauge_df_list)   
+
+
         # turn sos into dataframes organized by gauge
-        '''
-        for gauge, index1 in sos/usgs/usgs_q:
-            gage_df = df_list[index1]
-            for reading, index2 in gauge:
-                date = make it the same date
-                gage_df.append()
-            
-
-        '''
 
 
+        print('usgs frame')
+        print(df_list[0])
+        print('das a reachhhh',reachID)
+        df_list[0].to_csv('/mnt/data/gauge_out.csv')
 
 
         # generate empty arrays for nc output
