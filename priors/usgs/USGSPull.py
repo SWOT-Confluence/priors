@@ -27,32 +27,45 @@ def days_convert(days):
     new_date = start_date + datetime.timedelta(days=days)
 
     return new_date.strftime('%Y-%m-%d %H:%M:%S+%X')[:-3]
+    # return new_date
 
 
 def create_sos_df(sos, date_list, index):
-    df = pd.DataFrame(columns = ['datetime', 'q'])
+    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
     usgs_q = sos['usgs']['usgs_q']
 
+    df['datetime'] = date_list
     df['00060_Mean'] = usgs_q[index]/0.0283168
+    df = df.set_index('datetime')
 
     return df
 
 
 def combine_dfs(sos_df, gauge_df):
-    return df.merge(gdf, how="outer")
+    return sos_df.append(gauge_df)
 
 
 def merge_historic_gauge_data(sos, date_list, gauge_df_list):
 
-    merged_df_list = []
-
     cnt = 0
     for gauge_df in gauge_df_list:
-        sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt)
-        merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
-        merged_df_list.append(merged_df)
+        if gauge_df.empty is False and '00060_Mean' in gauge_df:
+            try:
+                sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt)
+                merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
+                gauge_df_list[cnt] = merged_df
+                print('merging', cnt, 'of', len(gauge_df_list))
+            
+            except:
+                print('merge failed')
+                print(gauge_df)
+                try:
+                    print(sos_df)
+                except:
+                    print('no sos df')
+        cnt +=1
 
-    return merged_df_list
+    return gauge_df_list
 
 class USGSPull:
     """Class that pulls USGS Gage data and appends it to the SoS.
@@ -126,7 +139,7 @@ class USGSPull:
         """Pulls USGS data and flags and stores in usgs_dict."""
 
         #define date range block here
-        ALLt=pd.date_range(start=self.start_date,end=self.end_date)
+        ALLt=pd.date_range(start='1980-1-1',end=self.end_date)
         gage_read = USGSRead(self.usgs_targets)
         dataUSGS, reachID, USGScal = gage_read.read()
         
@@ -137,9 +150,14 @@ class USGSPull:
 
         sos = Dataset(self.sos_file, 'a')
         usgs_qt = sos['usgs']['usgs_qt']
-        date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
 
-        merged_df_list = merge_historic_gauge_data(sos, date_list, gauge_df_list)   
+        print('creating date list ...')
+        date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
+        print('date list created...')
+
+        print('merging historic data...')
+
+        df_list = merge_historic_gauge_data(sos, date_list, df_list)   
 
 
         # turn sos into dataframes organized by gauge
@@ -147,7 +165,7 @@ class USGSPull:
 
         print('usgs frame')
         print(df_list[0])
-        print('das a reachhhh',reachID)
+        print('das a reachhhh',reachID[0])
         df_list[0].to_csv('/mnt/data/gauge_out.csv')
 
 
@@ -173,8 +191,12 @@ class USGSPull:
                 if Q.empty is False:
                     # print(i)
                     Q=Q.to_numpy()
-                    Q=Q*0.0283168#convertcfs to meters        
-                    T=df_list[i].index.values        
+                    Q=Q*0.0283168#convertcfs to meters
+                    # df_list[i].index = pd.to_datetime(df_list[i].index, utc=True)        
+                    T=df_list[i].index.values
+                    # df_list[i] = df_list[i].reset_index()
+                    # df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'], utc=True, , errors='coerce')
+                    # df_list[i] = df_list[i].set_index['datetime']        
                     T=pd.DatetimeIndex(T)
                     T=T[Mask]
                     moy=T.month
