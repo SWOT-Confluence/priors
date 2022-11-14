@@ -130,7 +130,8 @@ class Priors:
         """
 
         usgs_file = self.input_dir / "gage" / "USGStargetsV5P.nc"
-        today = datetime.today().strftime("%Y-%m-%d")
+        # today = datetime.today().strftime('%Y-%m-%d %H:%M:%S+00:00')
+        today = datetime.today().strftime('%Y-%m-%d')
 
         #preparing for historical data update
         # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
@@ -201,8 +202,8 @@ class Priors:
 
 
         # Upload priors results to S3 bucket
-        # print("Uploading new SoS priors version.")
-        # sos.upload_file()
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
 
 
 def main():

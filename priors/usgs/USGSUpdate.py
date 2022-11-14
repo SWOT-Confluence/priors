@@ -105,7 +105,6 @@ class USGSUpdate:
 
             usgs = sos["usgs"]
 
-            # by this point sel.map_dict["days"] should  have all the historical data as well as the new year
             usgs["num_days"][:] = self.map_dict["days"]
 
             # this variable is not in the SOS
@@ -120,37 +119,12 @@ class USGSUpdate:
             usgs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
             usgs["usgs_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S16"))
 
-
-
-            # with open('/mnt/data/original.txt', 'w') as file:
-            #     for year in usgs["usgs_q"][:]:
-            #         file.write(f"\n, {year}")
-
             print('original', len(usgs["usgs_q"][:][0]))
             org = [i for i in usgs["usgs_q"][:][0]]
             usgs["usgs_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
             print('after', len(usgs["usgs_q"][:][0]))
             after = [i for i in usgs["usgs_q"][:][0]]
             print('new_data', len(self.map_dict["usgs_q"][0]))
-
-            if org == after:
-                print('no change')
-            else:
-                print('change')
-                for index, (first, second) in enumerate(zip(org, after)):
-                    if first != second:
-                        print(index, first, second)
-        
-
-            
-            # with open('/mnt/data/fter.txt', 'w') as file:
-            #     for year in usgs["usgs_q"][:]:
-            #         file.write(f"\n, {year}")
-            
-
-            # with open('/mnt/data/new_data.txt', 'w') as file:
-            #     for year in self.map_dict["usgs_q"]:
-            #         file.write(f"\n, {year}")
             usgs["usgs_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()

@@ -10,6 +10,7 @@ from netCDF4 import Dataset, stringtochar
 from pathlib import Path
 
 
+
 # Local imports
 from priors.usgs.USGSRead import USGSRead
 
@@ -26,7 +27,8 @@ def days_convert(days):
 
     new_date = start_date + datetime.timedelta(days=days)
 
-    return new_date.strftime('%Y-%m-%d %H:%M:%S+%X')[:-3]
+    return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
+
     # return new_date
 
 
@@ -151,11 +153,8 @@ class USGSPull:
         sos = Dataset(self.sos_file, 'a')
         usgs_qt = sos['usgs']['usgs_qt']
 
-        print('creating date list ...')
         date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
-        print('date list created...')
 
-        print('merging historic data...')
 
         df_list = merge_historic_gauge_data(sos, date_list, df_list)   
 
@@ -163,10 +162,6 @@ class USGSPull:
         # turn sos into dataframes organized by gauge
 
 
-        print('usgs frame')
-        print(df_list[0])
-        print('das a reachhhh',reachID[0])
-        df_list[0].to_csv('/mnt/data/gauge_out.csv')
 
 
         # generate empty arrays for nc output
@@ -192,11 +187,15 @@ class USGSPull:
                     # print(i)
                     Q=Q.to_numpy()
                     Q=Q*0.0283168#convertcfs to meters
-                    # df_list[i].index = pd.to_datetime(df_list[i].index, utc=True)        
+
+                    # pull in the dataframe and format datetime
+                    # would be more appropriate as a part of a function but moving it anywhere breaks the pulling functinality
+                    df_list[i] = df_list[i].reset_index()
+                    df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
+                    df_list[i] = df_list[i].set_index('datetime')
+
+                    
                     T=df_list[i].index.values
-                    # df_list[i] = df_list[i].reset_index()
-                    # df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'], utc=True, , errors='coerce')
-                    # df_list[i] = df_list[i].set_index['datetime']        
                     T=pd.DatetimeIndex(T)
                     T=T[Mask]
                     moy=T.month

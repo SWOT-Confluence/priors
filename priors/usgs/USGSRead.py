@@ -54,7 +54,6 @@ class USGSRead:
         #       No remark (blank)
         M={}
 
-        print('the problem ', len(In))
         for i in range(len(In)):
             if 'Ice' in In[i] or '*' in In[i]:
                 M[i]=False
