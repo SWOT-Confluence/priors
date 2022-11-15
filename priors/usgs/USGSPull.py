@@ -8,16 +8,13 @@ import numpy as np
 import pandas as pd
 from netCDF4 import Dataset, stringtochar
 from pathlib import Path
+import datetime as datetime
 
 
 
 # Local imports
 from priors.usgs.USGSRead import USGSRead
 
-from netCDF4 import Dataset, stringtochar
-import pandas as pd
-import datetime as datetime
-import pandas as pd
 
 
 def days_convert(days):
@@ -131,10 +128,6 @@ class USGSPull:
         records = await asyncio.gather(*(self.get_record(site) for site in sites))
         return records
 
-
-
-
-
     def pull(self):
         """Pulls USGS data and flags and stores in usgs_dict."""
 
@@ -146,21 +139,11 @@ class USGSPull:
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
 
-
-
+        # Bring in previously downloaded gauge data and merge with new data
         sos = Dataset(self.sos_file, 'a')
         usgs_qt = sos['usgs']['usgs_qt']
-
         date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
-
-
         df_list = merge_historic_gauge_data(sos, date_list, df_list)   
-
-
-        # turn sos into dataframes organized by gauge
-
-
-
 
         # generate empty arrays for nc output
         EMPTY=np.nan

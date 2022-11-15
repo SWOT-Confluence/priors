@@ -64,8 +64,6 @@ class USGSUpdate:
         usgs_ids = self.usgs_dict["reachId"]
         same_ids = np.intersect1d(self.sos_reaches, usgs_ids)
         indexes = np.where(np.isin(usgs_ids, same_ids))[0]
-        print('new values',len(self.usgs_dict["Qmean"][indexes]))
-
 
         if indexes.size == 0:
             self.map_dict = None

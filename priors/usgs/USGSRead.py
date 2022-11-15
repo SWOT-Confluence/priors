@@ -53,7 +53,6 @@ class USGSRead:
         # 2     Remark is write protected without any remark code to be printed
         #       No remark (blank)
         M={}
-
         for i in range(len(In)):
             if 'Ice' in In[i] or '*' in In[i]:
                 M[i]=False

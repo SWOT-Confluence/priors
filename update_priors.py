@@ -130,13 +130,7 @@ class Priors:
         """
 
         usgs_file = self.input_dir / "gage" / "USGStargetsV5P.nc"
-        # today = datetime.today().strftime('%Y-%m-%d %H:%M:%S+00:00')
         today = datetime.today().strftime('%Y-%m-%d')
-
-        #preparing for historical data update
-        # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
-        # today_last_year = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
-        # start_date = '1980-1-1'
         usgs_pull = USGSPull(usgs_targets = usgs_file, start_date = start_date, end_date = today, sos_file = sos_file)
         usgs_pull.pull()
         usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict)
@@ -155,10 +149,6 @@ class Priors:
 
         Riggs_file = self.input_dir / "gage" / "Rtarget"
         today = datetime.today().strftime("%Y-%m-%d")
-
-        #preparing for historical data update, change this to the last date in sos
-        # today_last_year = today.replace(today[:4], str(int(today[:4])-1))
-        # start_dat = '1980-1-1'
         Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today)
         Riggs_pull.pull()
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
