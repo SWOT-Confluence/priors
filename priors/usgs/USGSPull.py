@@ -29,8 +29,6 @@ def days_convert(days):
 
     return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
 
-    # return new_date
-
 
 def create_sos_df(sos, date_list, index):
     df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
@@ -56,7 +54,7 @@ def merge_historic_gauge_data(sos, date_list, gauge_df_list):
                 sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt)
                 merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
                 gauge_df_list[cnt] = merged_df
-                print('merging', cnt, 'of', len(gauge_df_list))
+                # print('merging', cnt, 'of', len(gauge_df_list))
             
             except:
                 print('merge failed')

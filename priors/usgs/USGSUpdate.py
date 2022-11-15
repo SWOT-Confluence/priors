@@ -118,13 +118,7 @@ class USGSUpdate:
             usgs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
             usgs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
             usgs["usgs_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S16"))
-
-            print('original', len(usgs["usgs_q"][:][0]))
-            org = [i for i in usgs["usgs_q"][:][0]]
             usgs["usgs_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
-            print('after', len(usgs["usgs_q"][:][0]))
-            after = [i for i in usgs["usgs_q"][:][0]]
-            print('new_data', len(self.map_dict["usgs_q"][0]))
             usgs["usgs_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()
