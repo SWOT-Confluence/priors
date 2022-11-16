@@ -6,9 +6,63 @@ import asyncio
 import dataretrieval.nwis as nwis
 import numpy as np
 import pandas as pd
+from netCDF4 import Dataset, stringtochar
+from pathlib import Path
+import datetime as datetime
+
+
 
 # Local imports
 from priors.usgs.USGSRead import USGSRead
+
+
+
+def days_convert(days):
+
+
+    start_date = datetime.date(1, 1, 1)
+
+    new_date = start_date + datetime.timedelta(days=days)
+
+    return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
+
+
+def create_sos_df(sos, date_list, index):
+    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
+    usgs_q = sos['usgs']['usgs_q']
+
+    df['datetime'] = date_list
+    df['00060_Mean'] = usgs_q[index]/0.0283168
+    df = df.set_index('datetime')
+
+    return df
+
+
+def combine_dfs(sos_df, gauge_df):
+    return sos_df.append(gauge_df)
+
+
+def merge_historic_gauge_data(sos, date_list, gauge_df_list):
+
+    cnt = 0
+    for gauge_df in gauge_df_list:
+        if gauge_df.empty is False and '00060_Mean' in gauge_df:
+            try:
+                sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt)
+                merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
+                gauge_df_list[cnt] = merged_df
+                # print('merging', cnt, 'of', len(gauge_df_list))
+            
+            except:
+                print('merge failed')
+                print(gauge_df)
+                try:
+                    print(sos_df)
+                except:
+                    print('no sos df')
+        cnt +=1
+
+    return gauge_df_list
 
 class USGSPull:
     """Class that pulls USGS Gage data and appends it to the SoS.
@@ -34,7 +88,7 @@ class USGSPull:
         Pulls USGS data and flags and stores in usgs_dict
     """
 
-    def __init__(self, usgs_targets, start_date, end_date):
+    def __init__(self, usgs_targets, start_date, end_date, sos_file):
         """
         Parameters
         ----------
@@ -45,11 +99,11 @@ class USGSPull:
         end_date: str
             Date to end search for
         """
-        
         self.usgs_targets = usgs_targets
         self.start_date = start_date
         self.end_date = end_date
         self.usgs_dict = {}
+        self.sos_file = sos_file
 
     async def get_record(self, site):
         """Get NWIS record.
@@ -78,15 +132,18 @@ class USGSPull:
         """Pulls USGS data and flags and stores in usgs_dict."""
 
         #define date range block here
-        ALLt=pd.date_range(start=self.start_date,end=self.end_date)
+        ALLt=pd.date_range(start='1980-1-1',end=self.end_date)
         gage_read = USGSRead(self.usgs_targets)
         dataUSGS, reachID, USGScal = gage_read.read()
         
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
 
-        # this is where we need to go get historical data to append too
-
+        # Bring in previously downloaded gauge data and merge with new data
+        sos = Dataset(self.sos_file, 'a')
+        usgs_qt = sos['usgs']['usgs_qt']
+        date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
+        df_list = merge_historic_gauge_data(sos, date_list, df_list)   
 
         # generate empty arrays for nc output
         EMPTY=np.nan
@@ -108,10 +165,18 @@ class USGSPull:
                 Q=df_list[i]['00060_Mean']
                 Q=Q[Mask]
                 if Q.empty is False:
-                    print(i)
+                    # print(i)
                     Q=Q.to_numpy()
-                    Q=Q*0.0283168#convertcfs to meters        
-                    T=df_list[i].index.values        
+                    Q=Q*0.0283168#convertcfs to meters
+
+                    # pull in the dataframe and format datetime
+                    # would be more appropriate as a part of a function but moving it anywhere breaks the pulling functinality
+                    df_list[i] = df_list[i].reset_index()
+                    df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
+                    df_list[i] = df_list[i].set_index('datetime')
+
+                    
+                    T=df_list[i].index.values
                     T=pd.DatetimeIndex(T)
                     T=T[Mask]
                     moy=T.month

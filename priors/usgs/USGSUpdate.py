@@ -103,13 +103,11 @@ class USGSUpdate:
 
             usgs = sos["usgs"]
 
-            # by this point sel.map_dict["days"] should  have all the historical data as well as the new year
             usgs["num_days"][:] = self.map_dict["days"]
 
             # this variable is not in the SOS
             # usgs["num_usgs_reaches"][:] = range(1, self.map_dict["usgs_reach_id"].shape[0] + 1)
 
-            # usgs_reach_id needs to change?
             usgs["usgs_reach_id"][:] = self.map_dict["usgs_reach_id"]
             usgs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
             usgs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
