@@ -65,6 +65,8 @@ class RiggsUpdate:
         same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
         indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
 
+        print(' riggs q write', self.Riggs_dict["Qwrite"][0])
+
         if indexes.size == 0:
             self.map_dict = None
         else:
@@ -101,7 +103,7 @@ class RiggsUpdate:
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
 
-            Riggs = sos["model"]["Riggs"]
+            Riggs = sos["Riggs"]
             Riggs["num_days"][:] = self.map_dict["days"]
             Riggs["num_Riggs_reaches"][:] = range(1, self.map_dict["Riggs_reach_id"].shape[0] + 1)
             Riggs["Riggs_reach_id"][:] = self.map_dict["Riggs_reach_id"]

@@ -43,7 +43,8 @@ class RiggsRead:
             ncf = Dataset(self.Riggs_targets.__str__()+"/"+filenames[i])
             #ncf = Dataset('./Rtarget/'+filenames[i])
            
-            #agency ID            
+            #agency ID
+            print(ncf)          
             st = ncf["StationID"][:].filled(np.nan)
             if type(st[0]) == np.ndarray:
                 st=np.rot90(st,k=-1,axes=(1,0))
@@ -64,7 +65,7 @@ class RiggsRead:
             #calibration flag
             cal= ncf["CAL"][:].filled(np.nan)
             
-            
+            print(filenames)
             for j in range(len(st)):
                 #this is set up for multiple agencies to run in the same module
                 #I may end up setting up independent modules for all of them meaning this can be simplified.
@@ -79,6 +80,7 @@ class RiggsRead:
                      reachIDR.append(str(int(rid[j])))
                      RIGGScal.append(int(cal[j]))
                 if 'Canada' in filenames[i]:
+                     print('found canada!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                      agencyR.append('WSC')
                      datariggs.append(str(st[j]))
                      reachIDR.append(str(int(rid[j])))

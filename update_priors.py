@@ -27,6 +27,7 @@ import json
 import os
 from pathlib import Path
 import sys
+from os import walk
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -146,11 +147,14 @@ class Priors:
         sos_file: Path
             path to SOS file to update
         """
-
+        print('running Rigs')
         Riggs_file = self.input_dir / "gage" / "Rtarget"
+        print('rigs file', Riggs_file)
         today = datetime.today().strftime("%Y-%m-%d")
         Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today)
         Riggs_pull.pull()
+        filenames = next(walk(Riggs_file), (None, None, []))[2]
+        print(filenames)
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
         Riggs_update.map_data()
@@ -168,16 +172,15 @@ class Priors:
         sos_last_run_time = sos.last_run_time
 
         # Determine run type and add requested gage priors
-        if self.run_type == "constrained":
-            if "grdc" in self.priors_list:
-                print("Updating GRDC priors.")
-                self.execute_grdc(sos_file)
+        if "grdc" in self.priors_list:
+            print("Updating GRDC priors.")
+            self.execute_grdc(sos_file)
 
-            if "usgs" in self.priors_list and self.cont == "na":
-                print("Updating USGS priors.")
-                self.execute_usgs(sos_file, start_date = sos_last_run_time)
+        if "usgs" in self.priors_list and self.cont == "na":
+            print("Updating USGS priors.")
+            self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
-
+        if 'riggs' in self.priors_list:
             self.execute_Riggs(sos_file, start_date = sos_last_run_time)
         
         # Add geoBAM priors if requested (for either data product)
@@ -192,8 +195,8 @@ class Priors:
 
 
         # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # print("Uploading new SoS priors version.")
+        # sos.upload_file()
 
 
 def main():
