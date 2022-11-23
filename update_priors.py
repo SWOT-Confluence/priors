@@ -151,10 +151,15 @@ class Priors:
         Riggs_file = self.input_dir / "gage" / "Rtarget"
         print('rigs file', Riggs_file)
         today = datetime.today().strftime("%Y-%m-%d")
-        Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today)
+        Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today, cont = self.cont,  sos_file = sos_file)
+
+        # need to update riggs pull, to not include historical gauge data 
+
+
         Riggs_pull.pull()
-        filenames = next(walk(Riggs_file), (None, None, []))[2]
-        print(filenames)
+        # filenames = next(walk(Riggs_file), (None, None, []))[2]
+        # print(filenames)
+        # Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict, Riggs_pull.agency_r)
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
         Riggs_update.map_data()

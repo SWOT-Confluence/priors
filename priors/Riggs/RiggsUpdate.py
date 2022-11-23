@@ -47,8 +47,8 @@ class RiggsUpdate:
             Path to SoS NetCDF file
         temp_sos: TemporaryDirectory
             Temporary directory that holds old SoS version
-        usgs_dict: dict
-            Dictionary of USGS data
+        Riggs_dict: dict
+            Dictionary of riggs gauge data
         """
 
         self.sos_file = sos_file
@@ -64,13 +64,12 @@ class RiggsUpdate:
         Riggs_ids = self.Riggs_dict["reachId"]
         same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
         indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
-
-        print(' riggs q write', self.Riggs_dict["Qwrite"][0])
-
+        print(self.Riggs_dict.keys())
+        
         if indexes.size == 0:
             self.map_dict = None
         else:
-            # Map USGS data that matches SoS reach identifiers
+            # Map Riggs data that matches SoS reach identifiers
             self.map_dict["days"] = np.array(range(1, len(self.Riggs_dict["Qwrite"][0]) + 1))
             self.map_dict["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[indexes]
             self.map_dict["fdq"] = self.Riggs_dict["FDQS"][indexes,:]
@@ -79,7 +78,7 @@ class RiggsUpdate:
             self.map_dict["mean_q"] = self.Riggs_dict["Qmean"][indexes]
             self.map_dict["min_q"] = self.Riggs_dict["Qmin"][indexes]
             self.map_dict["tyr"] = self.Riggs_dict["TwoYr"][indexes]
-            self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["dataRiggs"])[indexes]
+            self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes] # Changed from Riggsdata
             self.map_dict["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
             self.map_dict["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
     
@@ -102,19 +101,28 @@ class RiggsUpdate:
         if self.map_dict:
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-
-            Riggs = sos["Riggs"]
+            agency = self.Riggs_dict["Agency"][0]
+            Riggs = sos[agency]
             Riggs["num_days"][:] = self.map_dict["days"]
-            Riggs["num_Riggs_reaches"][:] = range(1, self.map_dict["Riggs_reach_id"].shape[0] + 1)
-            Riggs["Riggs_reach_id"][:] = self.map_dict["Riggs_reach_id"]
+            # Riggs["num_Riggs_reaches"][:] = range(1, self.map_dict["Riggs_reach_id"].shape[0] + 1)
+            print(Riggs[f"{agency}_reach_id"][:])
+            print(self.map_dict["Riggs_reach_id"])
+
+            for element in self.map_dict["Riggs_reach_id"]:
+                if element not in Riggs[f"{agency}_reach_id"][:]:
+                    print(element)
+
+
+
+            Riggs[f"{agency}_reach_id"][:] = self.map_dict["Riggs_reach_id"]
             Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
             Riggs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["Riggs_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S16"))
-            Riggs["Riggs_q"][:] = np.nan_to_num(self.map_dict["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["Riggs_qt"][:] = np.nan_to_num(self.map_dict["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
+            Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S16"))
+            Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
+            Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()

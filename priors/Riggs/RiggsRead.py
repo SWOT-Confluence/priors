@@ -19,7 +19,7 @@ class RiggsRead:
         Reads Riggs data
     """
 
-    def __init__(self, Riggs_targets):
+    def __init__(self, Riggs_targets, cont):
         """
         Parameters
         ----------
@@ -28,13 +28,21 @@ class RiggsRead:
         """
 
         self.Riggs_targets = Riggs_targets
+        self.cont = cont
 
 
 
     def read(self):
         """Read Riggs data."""
-        filenames = next(walk(self.Riggs_targets), (None, None, []))[2]  # [] if no file
+        # filenames = next(walk(self.Riggs_targets), (None, None, []))[2]  # [] if no file
         #filenames = next(walk('./Rtarget/'), (None, None, []))[2]  # [] if no file
+
+        target_file_map = {
+            'na':['Riggs_Canada_P.nc']
+        }
+
+        filenames = target_file_map[self.cont]
+
         datariggs=[]
         reachIDR=[]
         agencyR=[]
@@ -43,8 +51,7 @@ class RiggsRead:
             ncf = Dataset(self.Riggs_targets.__str__()+"/"+filenames[i])
             #ncf = Dataset('./Rtarget/'+filenames[i])
            
-            #agency ID
-            print(ncf)          
+            #agency ID      
             st = ncf["StationID"][:].filled(np.nan)
             if type(st[0]) == np.ndarray:
                 st=np.rot90(st,k=-1,axes=(1,0))
@@ -82,6 +89,9 @@ class RiggsRead:
                 if 'Canada' in filenames[i]:
                      print('found canada!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                      agencyR.append('WSC')
+
+                    #pull in sos here and only build the list based on the gauges that have allready been pulled
+
                      datariggs.append(str(st[j]))
                      reachIDR.append(str(int(rid[j])))
                      RIGGScal.append(int(cal[j]))
@@ -96,5 +106,4 @@ class RiggsRead:
                      datariggs.append(str(st[j]))
                      reachIDR.append(str(int(rid[j])))
                      RIGGScal.append(int(cal[j]))
-
         return datariggs, reachIDR, agencyR, RIGGScal
