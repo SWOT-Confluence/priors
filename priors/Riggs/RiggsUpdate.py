@@ -78,6 +78,11 @@ class RiggsUpdate:
             self.map_dict["mean_q"] = self.Riggs_dict["Qmean"][indexes]
             self.map_dict["min_q"] = self.Riggs_dict["Qmin"][indexes]
             self.map_dict["tyr"] = self.Riggs_dict["TwoYr"][indexes]
+
+            # print(np.array(self.Riggs_dict["data"])[indexes])
+            # print(self.map_dict["Riggs_id"])
+
+
             self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes] # Changed from Riggsdata
             self.map_dict["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
             self.map_dict["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
@@ -105,12 +110,6 @@ class RiggsUpdate:
             Riggs = sos[agency]
             Riggs["num_days"][:] = self.map_dict["days"]
             # Riggs["num_Riggs_reaches"][:] = range(1, self.map_dict["Riggs_reach_id"].shape[0] + 1)
-            print(Riggs[f"{agency}_reach_id"][:])
-            print(self.map_dict["Riggs_reach_id"])
-
-            for element in self.map_dict["Riggs_reach_id"]:
-                if element not in Riggs[f"{agency}_reach_id"][:]:
-                    print(element)
 
 
 
@@ -121,7 +120,7 @@ class RiggsUpdate:
             Riggs["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
-            Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S16"))
+            Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S100"))
             Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
             Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
