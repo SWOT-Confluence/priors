@@ -78,11 +78,6 @@ class RiggsUpdate:
             self.map_dict["mean_q"] = self.Riggs_dict["Qmean"][indexes]
             self.map_dict["min_q"] = self.Riggs_dict["Qmin"][indexes]
             self.map_dict["tyr"] = self.Riggs_dict["TwoYr"][indexes]
-
-            # print(np.array(self.Riggs_dict["data"])[indexes])
-            # print(self.map_dict["Riggs_id"])
-
-
             self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes] # Changed from Riggsdata
             self.map_dict["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
             self.map_dict["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
