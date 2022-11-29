@@ -210,65 +210,19 @@ class RiggsPull:
     def pull(self):
         """Pulls riggs data and (?) and stores in usgs_dict."""
 
-        # #define date range block here
-        # ALLt=pd.date_range(start=self.start_date,end=self.end_date)
-
-
-
-        # gage_read = RiggsRead.RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
-
-        # datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-    
-        # # Download records and gather a list of dataframes
-        # df_list = asyncio.run(self.gather_records(datariggs,agencyR))
-
         #define date range block here
         ALLt=pd.date_range(start='1980-1-1',end=self.end_date)
 
         # get all reachIDR's we want to pull from non historic list
         sos = Dataset(self.sos_file, 'a')
 
+        # this method of pulling in the gauge targets where we read the targets twice
+        # lets us pull gauges that are not in the historic_q group
         gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
         # read in all gauges to create agencyR list
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
         current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reach_id'][:]
-        # print('cgari')
-        # print(current_group_agency_reach_ids)
-        # print(reachIDR)
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_group_agency_reach_ids)
-        # print('after')
-        # print(reachIDR)
-        # crossreff agecy R with historical q so we don't re-pull those gauges
-        # historic_q_group_agency_reach_ids = sos["historicQ"][agencyR[0]][f'{agencyR[0]}_reach_id'][:]
-        
-
-
-
-# fixing below
-
-        # this list is the list of indices that need to be removed from datarigs, reachidr, agencyr, and Riggscal
-        # print('historic q reach ids')
-        # print(historic_q_group_agency_reach_ids)
-
-        # print('type', type(historic_q_group_agency_reach_ids[0]))
-
-        # print('attempting to convert', reachIDR[0], 'to', "{:e}".format(int(reachIDR[0])))
-        # print('new type is', type("{:e}".format(int(reachIDR[0]))))
-        # historic_reach_id_indices = [i for i, z in enumerate(reachIDR) if float("{:e}".format(int(z))) in historic_q_group_agency_reach_ids]
-        # print('historics ind')
-        # print(historic_reach_id_indices)
-
-        # print('befor', len(reachIDR))
-
-        # # remove those indices from all lists before pulling records, need to do it in reverse so you dont change indices while deleting
-        # for i in sorted(historic_reach_id_indices, reverse=True):
-        #     for x in [datariggs, reachIDR, agencyR, RIGGScal]:
-        #         del x[i]
-        # print('after', len(reachIDR))
-        
-
-
-
 
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
@@ -280,10 +234,6 @@ class RiggsPull:
             riggs_qt = sos[agencyR[0]][f'{agencyR[0]}_qt']
             date_list = [days_convert(i) if i!=-999999999999.0 else i for i in riggs_qt[0].data]
             df_list = merge_historic_gauge_data(sos, date_list, df_list, agencyR[0])  
-
-
-
-
 
         # generate empty arrays for nc output
         EMPTY=np.nan
