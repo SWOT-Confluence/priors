@@ -323,5 +323,5 @@ class RiggsPull:
             "Mt": Mt,
             "P": P,
             "FDQS": FDQS,
-            "TwoYr": TwoYr,
+            "TwoYr": TwoYr
         }

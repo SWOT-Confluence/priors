@@ -64,7 +64,6 @@ class RiggsUpdate:
         Riggs_ids = self.Riggs_dict["reachId"]
         same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
         indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
-        print(self.Riggs_dict.keys())
         
         if indexes.size == 0:
             self.map_dict = None
@@ -78,7 +77,7 @@ class RiggsUpdate:
             self.map_dict["mean_q"] = self.Riggs_dict["Qmean"][indexes]
             self.map_dict["min_q"] = self.Riggs_dict["Qmin"][indexes]
             self.map_dict["tyr"] = self.Riggs_dict["TwoYr"][indexes]
-            self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes] # Changed from Riggsdata
+            self.map_dict["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes]
             self.map_dict["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
             self.map_dict["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
     
@@ -104,10 +103,7 @@ class RiggsUpdate:
             agency = self.Riggs_dict["Agency"][0]
             Riggs = sos[agency]
             Riggs["num_days"][:] = self.map_dict["days"]
-            # Riggs["num_Riggs_reaches"][:] = range(1, self.map_dict["Riggs_reach_id"].shape[0] + 1)
-
-
-
+            # used f string for agency so it generalizes the sos creation for different agencies
             Riggs[f"{agency}_reach_id"][:] = self.map_dict["Riggs_reach_id"]
             Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
             Riggs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)

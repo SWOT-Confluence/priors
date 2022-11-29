@@ -35,9 +35,8 @@ class RiggsRead:
 
     def read(self, current_group_agency_reach_ids = []):
         """Read Riggs data."""
-        # filenames = next(walk(self.Riggs_targets), (None, None, []))[2]  # [] if no file
-        #filenames = next(walk('./Rtarget/'), (None, None, []))[2]  # [] if no file
 
+        # add more file maps as we test new continents
         target_file_map = {
             'na':['Riggs_Canada_P.nc']
         }
@@ -82,7 +81,8 @@ class RiggsRead:
                 #this is set up for multiple agencies to run in the same module
                 #I may end up setting up independent modules for all of them meaning this can be simplified.
 
-
+                # This logic block ensures that the if we are in the second call of read
+                # then we will only read the targets of the non historic gauges
                 if len(current_group_agency_reach_ids)!=0:
                     if ref_aray[j] in current_group_agency_reach_ids:
 
@@ -97,7 +97,6 @@ class RiggsRead:
                             reachIDR.append(str(int(rid[j])))
                             RIGGScal.append(int(cal[j]))
                         if 'Canada' in filenames[i]:
-                            # print('found canada!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                             agencyR.append('WSC')
                             datariggs.append(str(st[j]))
                             reachIDR.append(str(int(rid[j])))

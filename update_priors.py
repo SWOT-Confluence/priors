@@ -147,19 +147,10 @@ class Priors:
         sos_file: Path
             path to SOS file to update
         """
-        print('running Rigs')
         Riggs_file = self.input_dir / "gage" / "Rtarget"
-        print('rigs file', Riggs_file)
         today = datetime.today().strftime("%Y-%m-%d")
         Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today, cont = self.cont,  sos_file = sos_file)
-
-        # need to update riggs pull, to not include historical gauge data 
-
-
         Riggs_pull.pull()
-        # filenames = next(walk(Riggs_file), (None, None, []))[2]
-        # print(filenames)
-        # Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict, Riggs_pull.agency_r)
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
         Riggs_update.map_data()
@@ -177,6 +168,8 @@ class Priors:
         sos_last_run_time = sos.last_run_time
 
         # Determine run type and add requested gage priors
+        # removed constrained run logic check as both unconstrained and constrained now pull gauge data
+        # in the future we should write the gauge data to a separate nc file for both
         if "grdc" in self.priors_list:
             print("Updating GRDC priors.")
             self.execute_grdc(sos_file)
@@ -193,6 +186,7 @@ class Priors:
             print("Updating geoBAM priors.")
             self.execute_gbpriors(sos_file)
 
+        # only overwrite if doing a constrained run
         if self.run_type == "constrained":
             # Overwrite GRADES with gage priors
             print("Overwriting GRADES data with gaged priors.")
