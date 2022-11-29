@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import rpy2.robjects as ro
 from os import walk
+from netCDF4 import Dataset, stringtochar
+import datetime as datetime
 
 #RpyImport necessary packages
 import rpy2.robjects as robjects
@@ -34,7 +36,61 @@ iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
 # Local imports
-from . import RiggsRead
+from .RiggsRead import RiggsRead
+
+
+
+
+
+
+def days_convert(days):
+
+
+    start_date = datetime.date(1, 1, 1)
+
+    new_date = start_date + datetime.timedelta(days=days)
+
+    return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
+
+
+def create_sos_df(sos, date_list, index, agencyR):
+    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
+    riggs_q = sos[agencyR][f'{agencyR}_q']
+
+    df['datetime'] = date_list
+    df['00060_Mean'] = riggs_q[index]/0.0283168
+    df = df.set_index('datetime')
+
+    return df
+
+
+def combine_dfs(sos_df, gauge_df):
+    return sos_df.append(gauge_df)
+
+
+def merge_historic_gauge_data(sos, date_list, gauge_df_list, agencyR):
+
+    cnt = 0
+    for gauge_df in gauge_df_list:
+        if gauge_df.empty is False and '00060_Mean' in gauge_df:
+            try:
+                sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt, agencyR=agencyR)
+                merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
+                gauge_df_list[cnt] = merged_df
+                # print('merging', cnt, 'of', len(gauge_df_list))
+            
+            except:
+                print('merge failed')
+                print(gauge_df)
+                try:
+                    print(sos_df)
+                except:
+                    print('no sos df')
+        cnt +=1
+
+    return gauge_df_list
+
+
 
 class RiggsPull:
     """Class that pulls  Gage data and appends it to the SoS.
@@ -61,7 +117,7 @@ class RiggsPull:
     """
 
 
-    def __init__(self, riggs_targets, start_date, end_date):
+    def __init__(self, riggs_targets, start_date, end_date, cont, sos_file):
         """
         Parameters
         ----------
@@ -71,12 +127,16 @@ class RiggsPull:
             Date to start search for
         end_date: str
             Date to end search for
+        cont: str
+            String identifier for what continent the module is running on
         """
         
         self.riggs_targets = riggs_targets
         self.start_date = start_date
         self.end_date = end_date
         self.riggs_dict = {}
+        self.cont = cont
+        self.sos_file = sos_file
 
     async def get_record(self,site,agencyR):
         """Get rigs record.
@@ -151,13 +211,29 @@ class RiggsPull:
         """Pulls riggs data and (?) and stores in usgs_dict."""
 
         #define date range block here
-        ALLt=pd.date_range(start=self.start_date,end=self.end_date)
-        # gage_read = RiggsRead(self.riggs_targets)
-        gage_read = RiggsRead.RiggsRead(self.riggs_targets)
+        ALLt=pd.date_range(start='1980-1-1',end=self.end_date)
+
+        # get all reachIDR's we want to pull from non historic list
+        sos = Dataset(self.sos_file, 'a')
+
+        # this method of pulling in the gauge targets where we read the targets twice
+        # lets us pull gauges that are not in the historic_q group
+        gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
+        # read in all gauges to create agencyR list
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-        
+        current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reach_id'][:]
+        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_group_agency_reach_ids)
+
         # Download records and gather a list of dataframes
-        df_list = asyncio.run(self.gather_records(datariggs,agencyR))
+        df_list = asyncio.run(self.gather_records(datariggs, agencyR))
+
+        # Bring in previously downloaded gauge data and merge with new data
+        # add more agencies that do not use a start date
+        if agencyR[0] not in ['WSC']:
+            print('appending stuff becaue not wsc')
+            riggs_qt = sos[agencyR[0]][f'{agencyR[0]}_qt']
+            date_list = [days_convert(i) if i!=-999999999999.0 else i for i in riggs_qt[0].data]
+            df_list = merge_historic_gauge_data(sos, date_list, df_list, agencyR[0])  
 
         # generate empty arrays for nc output
         EMPTY=np.nan

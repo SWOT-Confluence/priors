@@ -27,6 +27,7 @@ import json
 import os
 from pathlib import Path
 import sys
+from os import walk
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -146,10 +147,9 @@ class Priors:
         sos_file: Path
             path to SOS file to update
         """
-
         Riggs_file = self.input_dir / "gage" / "Rtarget"
         today = datetime.today().strftime("%Y-%m-%d")
-        Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today)
+        Riggs_pull = RiggsPull(Riggs_file, start_date=start_date, end_date=today, cont = self.cont,  sos_file = sos_file)
         Riggs_pull.pull()
         Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
         Riggs_update.read_sos()
@@ -168,16 +168,17 @@ class Priors:
         sos_last_run_time = sos.last_run_time
 
         # Determine run type and add requested gage priors
-        if self.run_type == "constrained":
-            if "grdc" in self.priors_list:
-                print("Updating GRDC priors.")
-                self.execute_grdc(sos_file)
+        # removed constrained run logic check as both unconstrained and constrained now pull gauge data
+        # in the future we should write the gauge data to a separate nc file for both
+        if "grdc" in self.priors_list:
+            print("Updating GRDC priors.")
+            self.execute_grdc(sos_file)
 
-            if "usgs" in self.priors_list and self.cont == "na":
-                print("Updating USGS priors.")
-                self.execute_usgs(sos_file, start_date = sos_last_run_time)
+        if "usgs" in self.priors_list and self.cont == "na":
+            print("Updating USGS priors.")
+            self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
-
+        if 'riggs' in self.priors_list:
             self.execute_Riggs(sos_file, start_date = sos_last_run_time)
         
         # Add geoBAM priors if requested (for either data product)
@@ -185,6 +186,7 @@ class Priors:
             print("Updating geoBAM priors.")
             self.execute_gbpriors(sos_file)
 
+        # only overwrite if doing a constrained run
         if self.run_type == "constrained":
             # Overwrite GRADES with gage priors
             print("Overwriting GRADES data with gaged priors.")
