@@ -125,7 +125,6 @@ class RiggsRead:
                             reachIDR.append(str(int(rid[j])))
                             RIGGScal.append(int(cal[j]))
                         if 'Canada' in filenames[i]:
-                            print('found canada!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                             agencyR.append('WSC')
                             datariggs.append(str(st[j]))
                             reachIDR.append(str(int(rid[j])))

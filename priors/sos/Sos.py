@@ -4,6 +4,8 @@ import glob
 from os import scandir
 from pathlib import Path
 from shutil import copy
+import warnings
+
 
 # Third-party imports
 import boto3
@@ -185,13 +187,40 @@ class Sos:
         grdc_reach_ids = sos["historicQ"]["grdc"]["grdc_reach_id"][:]
         for rid in grdc_reach_ids:
             self._overwrite_prior(rid, sos, sos["historicQ"]["grdc"], "grdc")
-        
+    
 
-
+        # could make this iterative based on global agency variable, also check cal/val split
         if self.continent == "na":
+
+             # historic USGS
+            historic_usgs_reach_ids = sos["historicQ"]["usgs"]["usgs_reach_id"][:]
+            for index, rid in enumerate(historic_usgs_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["usgs"], "usgs")   
+
+            # USGS
             usgs_reach_ids = sos["usgs"]["usgs_reach_id"][:]
-            for rid in usgs_reach_ids:
-                self._overwrite_prior(rid, sos, sos["usgs"], "usgs")
+            usgs_cal = sos["usgs"]["CAL"][:]
+            for index, rid in enumerate(usgs_reach_ids) :
+                # check for cal/val
+                if usgs_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["usgs"], "usgs")
+
+            # Historic WSC
+            historic_wsc_reach_ids = sos["historicQ"]["WSC"]["WSC_reach_id"][:]
+            for index, rid in enumerate(historic_wsc_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["WSC"], "WSC")  
+
+            # WSC
+            wsc_reach_ids = sos["WSC"]["WSC_reach_id"][:]
+            wsc_cal = sos["WSC"]["CAL"][:]
+            for index, rid in enumerate(wsc_reach_ids):
+                # check for cal/val
+                if wsc_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["WSC"], "WSC")
+
+
+        if self.continent in ["oc", "af", "eu", "sa"]:
+            raise ValueError('gauge overwrite operations not complete for this continent')
         
         self._create_dims_vars(sos)
 
