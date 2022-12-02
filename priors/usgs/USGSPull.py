@@ -28,11 +28,13 @@ def days_convert(days):
 
 
 def create_sos_df(sos, date_list, index):
-    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
+    df = pd.DataFrame(columns = ['datetime', '00060_Mean', '00060_Mean_cd'])
     usgs_q = sos['usgs']['usgs_q']
 
     df['datetime'] = date_list
     df['00060_Mean'] = usgs_q[index]/0.0283168
+    # a for approved for publishing so historic data doesnt get dropped
+    df['00060_Mean_cd'] = 'A'
     df = df.set_index('datetime')
 
     return df
@@ -143,7 +145,8 @@ class USGSPull:
         sos = Dataset(self.sos_file, 'a')
         usgs_qt = sos['usgs']['usgs_qt']
         date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
-        df_list = merge_historic_gauge_data(sos, date_list, df_list)   
+        df_list = merge_historic_gauge_data(sos, date_list, df_list) 
+
 
         # generate empty arrays for nc output
         EMPTY=np.nan
@@ -158,7 +161,9 @@ class USGSPull:
 
         # Extract data from NWIS dataframe records
         for i in range(len(dataUSGS)):
-            if df_list[i].empty is False and '00060_Mean' in df_list[i] :        
+            if df_list[i].empty is False and '00060_Mean' in df_list[i] :
+                print('1', df_list[i])
+                
                 # create boolean from quality flag       
                 Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                 # pull in Q
@@ -175,18 +180,32 @@ class USGSPull:
                     df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
                     df_list[i] = df_list[i].set_index('datetime')
 
-                    
+
                     T=df_list[i].index.values
+                    # print('3',T)
                     T=pd.DatetimeIndex(T)
+                    # print('4', T)
                     T=T[Mask]
+                    # print('5', T)
                     moy=T.month
                     yyyy=T.year
-                    moy=moy.to_numpy()       
+                    moy=moy.to_numpy()      
                     thisT=np.zeros(len(T))
+                    for a_time in T[:10]:
+                        print(a_time)
                     for j in range((len(T))):
-                        thisT=np.where(ALLt==np.datetime64(T[j]))
-                        Qwrite[i,thisT]=Q[j]
-                        Twrite[i,thisT]=date.toordinal(T[j])
+                        try:
+                            thisT=np.where(ALLt==np.datetime64(T[j]))
+                            # print('6', thisT[0])
+                            Qwrite[i,thisT]=Q[j]
+                            Twrite[i,thisT]=date.toordinal(T[j])
+                            # print(T[j], 'could be converted')
+                        except:
+                            # if it couldn't be converted it was a nan, the Q still gets written with a nan date just as it was in the original dataframe
+                            # would be a good idea to check and be sure date is nan in sos if it didn't work
+                            # print(T[j], 'couldnt be converted')
+                            pass
+                        # print('7', Twrite[i,thisT])
                     # with df pulled in run some stats
                     #basic stats
                     Qmean[i]=np.nanmean(Q)
@@ -213,11 +232,13 @@ class USGSPull:
                     FDQS[i]=np.interp(list(range(1,99,5)),FDp,FDq)
                     #FDPS=list(range(0,99,5))
                     # Two year recurrence flow
-                    
+                    print('yyyy', yyyy)
                     Yy=np.unique(yyyy); 
                     Ymax=np.empty(len(Yy))  
+                    print('Yy', Yy)
                     for j in range(len(Yy)):
-                        Ymax[j]=np.nanmax(Q[np.where(yyyy==Yy[j])]);
+                        if str(Yy[j]) != 'nan': 
+                            Ymax[j]=np.nanmax(Q[np.where(yyyy==Yy[j])])
                 
                     MAQ=np.flip(np.sort(Ymax))
                     m = (len(Yy)+1)/2

@@ -39,6 +39,9 @@ class USGSRead:
         Inq:    ?list 
                 ?discharge value
         """
+        # for i, x in zip(Inflag, Inq):
+        #     print(i, x)
+
         Inflag[Inq<=0]=np.nan
         In = Inflag.replace(np.nan,'*', regex=True)
 
