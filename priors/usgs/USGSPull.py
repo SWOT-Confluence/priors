@@ -162,7 +162,6 @@ class USGSPull:
         # Extract data from NWIS dataframe records
         for i in range(len(dataUSGS)):
             if df_list[i].empty is False and '00060_Mean' in df_list[i] :
-                print('1', df_list[i])
                 
                 # create boolean from quality flag       
                 Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
@@ -170,7 +169,6 @@ class USGSPull:
                 Q=df_list[i]['00060_Mean']
                 Q=Q[Mask]
                 if Q.empty is False:
-                    # print(i)
                     Q=Q.to_numpy()
                     Q=Q*0.0283168#convertcfs to meters
 
@@ -182,11 +180,8 @@ class USGSPull:
 
 
                     T=df_list[i].index.values
-                    # print('3',T)
                     T=pd.DatetimeIndex(T)
-                    # print('4', T)
                     T=T[Mask]
-                    # print('5', T)
                     moy=T.month
                     yyyy=T.year
                     moy=moy.to_numpy()      
@@ -232,10 +227,8 @@ class USGSPull:
                     FDQS[i]=np.interp(list(range(1,99,5)),FDp,FDq)
                     #FDPS=list(range(0,99,5))
                     # Two year recurrence flow
-                    print('yyyy', yyyy)
                     Yy=np.unique(yyyy); 
                     Ymax=np.empty(len(Yy))  
-                    print('Yy', Yy)
                     for j in range(len(Yy)):
                         if str(Yy[j]) != 'nan': 
                             Ymax[j]=np.nanmax(Q[np.where(yyyy==Yy[j])])
