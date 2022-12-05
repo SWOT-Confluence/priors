@@ -218,8 +218,16 @@ class Sos:
                 if wsc_cal[index] == 1:
                     self._overwrite_prior(rid, sos, sos["WSC"], "WSC")
 
+        if self.continent == 'eu':
+            # defra
+            defra_reach_ids = sos["DEFRA"]["DEFRA_reach_id"][:]
+            defra_cal = sos["DEFRA"]["CAL"][:]
+            for index, rid in enumerate(defra_reach_ids) :
+                # check for cal/val
+                if defra_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["DEFRA"], "DEFRA") 
 
-        if self.continent in ["oc", "af", "eu", "sa"]:
+        if self.continent in ["oc", "af", "sa"]:
             raise ValueError('gauge overwrite operations not complete for this continent')
         
         self._create_dims_vars(sos)

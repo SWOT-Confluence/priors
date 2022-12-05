@@ -38,7 +38,8 @@ class RiggsRead:
 
         # add more file maps as we test new continents
         target_file_map = {
-            'na':['Riggs_Canada_P.nc']
+            'na':['Riggs_Canada_P.nc'],
+            'eu':['Riggs_uk_P.nc']
         }
 
         filenames = target_file_map[self.cont]
