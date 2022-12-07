@@ -57,7 +57,7 @@ qdownload_a = function(site,sd,ed){
                             end_date = ed))
   if(!is.error(discharge)){
     discharge$Q = discharge$Value
-    discharge$Date = as.Date(discharge$Timestamp)
+    discharge$Date = as.character(as.Date(discharge$Timestamp,format = "%Y-%m-%d"))
     return(discharge)
   }
   return(NA)
