@@ -165,6 +165,7 @@ class RiggsPull:
                     except:
                         FMr = []
                         return []
+                    print('returned a successful gage', FMr[(FMr['Quality Code']>-1)])
                     return FMr[(FMr['Quality Code']>-1)]
             else:
                 FMr=[]
