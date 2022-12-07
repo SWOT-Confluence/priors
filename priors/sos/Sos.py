@@ -227,9 +227,46 @@ class Sos:
                 if defra_cal[index] == 1: 
                     self._overwrite_prior(rid, sos, sos["DEFRA"], "DEFRA") 
 
-        if self.continent in ["oc", "af", "sa"]:
-            raise ValueError('gauge overwrite operations not complete for this continent')
+        if self.continent == 'oc':
+            #ABOM
+            defra_reach_ids = sos["ABOM"]["ABOM_reach_id"][:]
+            defra_cal = sos["ABOM"]["CAL"][:]
+            for index, rid in enumerate(defra_reach_ids) :
+                # check for cal/val
+                if defra_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["ABOM"], "ABOM") 
         
+        if self.continent == 'as':
+
+            # Historic MLIT
+            historic_wsc_reach_ids = sos["historicQ"]["MLIT"]["MLIT_reach_id"][:]
+            for index, rid in enumerate(historic_wsc_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")  
+
+
+            defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
+            defra_cal = sos["MLIT"]["CAL"][:]
+            for index, rid in enumerate(defra_reach_ids) :
+                # check for cal/val
+                if defra_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
+        
+        # if self.continent == 'sa':
+
+        #     # Historic MLIT
+        #     historic_wsc_reach_ids = sos["historicQ"]["MLIT"]["MLIT_reach_id"][:]
+        #     for index, rid in enumerate(historic_wsc_reach_ids):
+        #         self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")  
+
+
+        #     defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
+        #     defra_cal = sos["MLIT"]["CAL"][:]
+        #     for index, rid in enumerate(defra_reach_ids) :
+        #         # check for cal/val
+        #         if defra_cal[index] == 1: 
+        #             self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
+
+
         self._create_dims_vars(sos)
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
@@ -329,13 +366,14 @@ class Sos:
         sos: netCDF4._netCDF4.Dataset
             sos NetCDF Dataset
         """
-
         if "overwritten_indexes" not in sos["model"].variables:
             oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
             oi.comment = "Indexes of GRADES priors that were overwritten."
 
-        if "nchar" not in sos["model"].variables:
-            sos["model"].createDimension("nchar", 4)
+        if "overwritten_source" not in sos["model"].variables:
+            print(sos["model"].dimensions)
+            if "nchar" not in sos["model"].dimensions:
+                sos["model"].createDimension("nchar", 4)
             os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
             os.comment = "Source of gage data that overwrote GRADES priors."
         

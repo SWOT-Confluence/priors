@@ -69,7 +69,7 @@ def combine_dfs(sos_df, gauge_df):
 
 
 def merge_historic_gauge_data(sos, date_list, gauge_df_list, agencyR):
-
+    
     cnt = 0
     for gauge_df in gauge_df_list:
         if gauge_df.empty is False and '00060_Mean' in gauge_df:
@@ -159,7 +159,12 @@ class RiggsPull:
             if 'FMr' in locals():
                 with localconverter(ro.default_converter + pandas2ri.converter):
                     FMr = ro.conversion.rpy2py(FMr)
-                    FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
+                    # sometimes the above returens a <class 'rpy2.rinterface_lib.sexp.NALogicalType'> and needs to be handled the same as no data
+                    try:
+                        FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
+                    except:
+                        FMr = []
+                        return []
                     return FMr[(FMr['Quality Code']>-1)]
             else:
                 FMr=[]
@@ -227,10 +232,11 @@ class RiggsPull:
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
+        # made it ot here dec 6
+        # need to make merge historic gage data different for each agency, can use arg allready in place.
+
         # Bring in previously downloaded gauge data and merge with new data
-        # add more agencies that do not use a start date
-        if agencyR[0] not in ['WSC']:
-            print('appending stuff becaue not wsc')
+        if agencyR[0] in  ['usgs']:
             riggs_qt = sos[agencyR[0]][f'{agencyR[0]}_qt']
             date_list = [days_convert(i) if i!=-999999999999.0 else i for i in riggs_qt[0].data]
             df_list = merge_historic_gauge_data(sos, date_list, df_list, agencyR[0])  
@@ -248,63 +254,66 @@ class RiggsPull:
 
         # Extract data from NWIS dataframe records
         for i in range(len(datariggs)):
-            if df_list[i].empty is False and 'Q' in df_list[i] :        
-                # create boolean from quality flag       
-                #Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
-                # pull in Q
-                Q=df_list[i]['Q']
-                #Q=Q[Mask]
-                if Q.empty is False:
-                    print(i)
-                    Q=Q.to_numpy()
-                    #Q=Q*0.0283168#convertcfs to meters        
-                    T=df_list[i]['ConvertedDate']        
-                    T=pd.DatetimeIndex(T)
-                    #T=T[Mask]
-                    moy=T.month
-                    yyyy=T.year
-                    moy=moy.to_numpy()       
-                    thisT=np.zeros(len(T))
-                    for j in range((len(T))):
-                        thisT=np.where(ALLt==np.datetime64(T[j]))
-                        Qwrite[i,thisT]=Q[j]
-                        Twrite[i,thisT]=date.toordinal(T[j])
-                    # with df pulled in run some stats
-                    #basic stats
-                    Qmean[i]=np.nanmean(Q)
-                    Qmax[i]=np.nanmax(Q)
-                    Qmin[i]=np.nanmin(Q)
-                    #monthly means
-                    Tmonn={}    
-                    for j in range(12):
-                        Tmonn=np.where(moy==j+1)
-                        if not np.isnan(Tmonn).all() and Tmonn: 
-                            MONQ[i,j]=np.nanmean(Q[Tmonn])
+            # check that it is a dataframe
+            if isinstance(df_list[i], pd.DataFrame):
+
+                if df_list[i].empty is False and 'Q' in df_list[i] :        
+                    # create boolean from quality flag       
+                    #Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
+                    # pull in Q
+                    Q=df_list[i]['Q']
+                    #Q=Q[Mask]
+                    if Q.empty is False:
+                        print(i)
+                        Q=Q.to_numpy()
+                        #Q=Q*0.0283168#convertcfs to meters        
+                        T=df_list[i]['ConvertedDate']        
+                        T=pd.DatetimeIndex(T)
+                        #T=T[Mask]
+                        moy=T.month
+                        yyyy=T.year
+                        moy=moy.to_numpy()       
+                        thisT=np.zeros(len(T))
+                        for j in range((len(T))):
+                            thisT=np.where(ALLt==np.datetime64(T[j]))
+                            Qwrite[i,thisT]=Q[j]
+                            Twrite[i,thisT]=date.toordinal(T[j])
+                        # with df pulled in run some stats
+                        #basic stats
+                        Qmean[i]=np.nanmean(Q)
+                        Qmax[i]=np.nanmax(Q)
+                        Qmin[i]=np.nanmin(Q)
+                        #monthly means
+                        Tmonn={}    
+                        for j in range(12):
+                            Tmonn=np.where(moy==j+1)
+                            if not np.isnan(Tmonn).all() and Tmonn: 
+                                MONQ[i,j]=np.nanmean(Q[Tmonn])
+                                
+                        #flow duration curves (n=20)
                             
-                    #flow duration curves (n=20)
+                        p=np.empty(len(Q))  
                         
-                    p=np.empty(len(Q))  
+                        for j in range(len(Q)):
+                            p[j]=100* ((j+1)/(len(Q)+1))           
+                        
+                        
+                        thisQ=np.flip(np.sort(Q))
+                        FDq=thisQ
+                        FDp=p
+                        FDQS[i]=np.interp(list(range(1,99,5)),FDp,FDq)
+                        #FDPS=list(range(0,99,5))
+                        # Two year recurrence flow
+                        
+                        Yy=np.unique(yyyy); 
+                        Ymax=np.empty(len(Yy))  
+                        for j in range(len(Yy)):
+                            Ymax[j]=np.nanmax(Q[np.where(yyyy==Yy[j])]);
                     
-                    for j in range(len(Q)):
-                        p[j]=100* ((j+1)/(len(Q)+1))           
-                    
-                    
-                    thisQ=np.flip(np.sort(Q))
-                    FDq=thisQ
-                    FDp=p
-                    FDQS[i]=np.interp(list(range(1,99,5)),FDp,FDq)
-                    #FDPS=list(range(0,99,5))
-                    # Two year recurrence flow
-                    
-                    Yy=np.unique(yyyy); 
-                    Ymax=np.empty(len(Yy))  
-                    for j in range(len(Yy)):
-                        Ymax[j]=np.nanmax(Q[np.where(yyyy==Yy[j])]);
-                
-                    MAQ=np.flip(np.sort(Ymax))
-                    m = (len(Yy)+1)/2
-                    
-                    TwoYr[i]=MAQ[int(np.ceil(m))-1]
+                        MAQ=np.flip(np.sort(Ymax))
+                        m = (len(Yy)+1)/2
+                        
+                        TwoYr[i]=MAQ[int(np.ceil(m))-1]
 
         Mt=list(range(1,13))
         P=list(range(1,99,5))
