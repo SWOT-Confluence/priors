@@ -32,6 +32,7 @@ downloadQ_c = robjects.globalenv['qDownload_c']
 downloadQ_j = robjects.globalenv['qDownload_j']
 # Loading the function we have defined in R.
 downloadQ_u = robjects.globalenv['qdownload_uk']
+downloadQ_ch = robjects.globalenv['qdownload_ch']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
@@ -148,12 +149,15 @@ class RiggsPull:
         """
         #Rcode pull entire record, will need to filter after DL within this function
         if 'Hidroweb' in agencyR:
+            #brazil
             FMr=downloadQ_b(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
                 FMr['ConvertedDate']=pd.to_datetime(FMr.Date,format= "%Y%m%d",errors='coerce')
            
             return FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
+
+
         if 'ABOM' in agencyR:    
             FMr=downloadQ_a(site,self.start_date, self.end_date)
             if 'FMr' in locals():
@@ -165,7 +169,7 @@ class RiggsPull:
                     except:
                         FMr = []
                         return []
-                    print('returned a successful gage', FMr[(FMr['Quality Code']>-1)])
+                    # print('returned a successful gage', FMr[(FMr['Quality Code']>-1)])
                     return FMr[(FMr['Quality Code']>-1)]
             else:
                 FMr=[]
@@ -199,6 +203,13 @@ class RiggsPull:
                  FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
                  return FMr
 
+        if 'DGA' in agencyR:
+            FMr=downloadQ_ch(site)
+            with localconverter(ro.default_converter + pandas2ri.converter):
+                 FMr = ro.conversion.rpy2py(FMr)
+                 FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
+                 return FMr
+
     async def gather_records(self, sites,agencyR):
         
         
@@ -226,10 +237,15 @@ class RiggsPull:
         # lets us pull gauges that are not in the historic_q group
         gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
         # read in all gauges to create agencyR list
-        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-        current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reach_id'][:]
-        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_group_agency_reach_ids)
 
+        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
+        print('len ird------------------', len(reachIDR))
+        # current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reaches'][:]
+        current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_id'][:]
+        print('current', current_group_agency_reach_ids)
+        print('currnent len', len(current_group_agency_reach_ids))
+        # datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_group_agency_reach_ids)
+        print('after len', len(reachIDR))
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
@@ -238,6 +254,7 @@ class RiggsPull:
 
         # Bring in previously downloaded gauge data and merge with new data
         if agencyR[0] in  ['usgs']:
+            print('merging because usgs ---------------------------------------------------------------')
             riggs_qt = sos[agencyR[0]][f'{agencyR[0]}_qt']
             date_list = [days_convert(i) if i!=-999999999999.0 else i for i in riggs_qt[0].data]
             df_list = merge_historic_gauge_data(sos, date_list, df_list, agencyR[0])  

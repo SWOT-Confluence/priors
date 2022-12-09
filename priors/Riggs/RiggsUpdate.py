@@ -104,6 +104,13 @@ class RiggsUpdate:
             Riggs = sos[agency]
             Riggs["num_days"][:] = self.map_dict["days"]
             # used f string for agency so it generalizes the sos creation for different agencies
+
+            print('before', Riggs[f"{agency}_reach_id"][:])
+            print('before', Riggs[f"{agency}_reach_id"][:].shape)
+
+            print('after', self.map_dict["Riggs_reach_id"])
+            print('after', self.map_dict["Riggs_reach_id"].shape)
+
             Riggs[f"{agency}_reach_id"][:] = self.map_dict["Riggs_reach_id"]
             Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
             Riggs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
