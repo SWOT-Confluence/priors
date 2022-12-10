@@ -42,7 +42,8 @@ class RiggsRead:
             'eu':['Riggs_uk_P.nc'],
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
-            'sa':['Riggs_chile_.nc', 'Riggs_brazil_.nc'],
+            'sa':['Riggs_chile_.nc'],
+            # 'sa':['Riggs_brazil_.nc'],
             'af':['no_target']
         }
 
@@ -88,72 +89,73 @@ class RiggsRead:
 
                 # This logic block ensures that the if we are in the second call of read
                 # then we will only read the targets of the non historic gauges
-                # if len(current_group_agency_reach_ids)!=0:
-                if str(int(cal[j])) in ['0','1']:
+                if len(current_group_agency_reach_ids)!=0:
+                    if st[j] in current_group_agency_reach_ids:
+                        if str(int(cal[j])) in ['0','1']:
 
-                    if 'brazil' in filenames[i]:
-                        agencyR.append('Hidroweb')
-                        datariggs.append(str(int(st[j])))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
-                    if 'australia' in filenames[i]:
-                        agencyR.append('ABOM')
-                        datariggs.append(str(st[j]))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
-                    if 'Canada' in filenames[i]:
-                        agencyR.append('WSC')
-                        datariggs.append(str(st[j]))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
-                    if 'japan' in filenames[i]:
-                        #some unserialize gages in the list so need to check for NaN                   
-                        agencyR.append('MLIT')
-                        datariggs.append(str(st[j]))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
-                    if 'uk' in filenames[i]:
-                        agencyR.append('DEFRA')
-                        datariggs.append(str(st[j]))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
-                    if 'chile' in filenames[i]:
-                        agencyR.append('DGA')
-                        datariggs.append(str(st[j]))
-                        reachIDR.append(str(int(rid[j])))
-                        RIGGScal.append(int(cal[j]))
+                            if 'brazil' in filenames[i]:
+                                agencyR.append('Hidroweb')
+                                datariggs.append(str(int(st[j])))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'australia' in filenames[i]:
+                                agencyR.append('ABOM')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'Canada' in filenames[i]:
+                                agencyR.append('WSC')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'japan' in filenames[i]:
+                                #some unserialize gages in the list so need to check for NaN                   
+                                agencyR.append('MLIT')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'uk' in filenames[i]:
+                                agencyR.append('DEFRA')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'chile' in filenames[i]:
+                                agencyR.append('DGA')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
 
-                # else:
-                #         if 'brazil' in filenames[i]:
-                #             agencyR.append('Hidroweb')
-                #             datariggs.append(str(int(st[j])))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
-                #         if 'australia' in filenames[i]:
-                #             agencyR.append('ABOM')
-                #             datariggs.append(str(st[j]))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
-                #         if 'Canada' in filenames[i]:
-                #             agencyR.append('WSC')
-                #             datariggs.append(str(st[j]))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
-                #         if 'japan' in filenames[i]:
-                #             #some unserialize gages in the list so need to check for NaN                   
-                #             agencyR.append('MLIT')
-                #             datariggs.append(str(st[j]))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
-                #         if 'uk' in filenames[i]:
-                #             agencyR.append('DEFRA')
-                #             datariggs.append(str(st[j]))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
-                #         if 'chile' in filenames[i]:
-                #             agencyR.append('DGA')
-                #             datariggs.append(str(st[j]))
-                #             reachIDR.append(str(int(rid[j])))
-                #             RIGGScal.append(int(cal[j]))
+                else:
+                        if 'brazil' in filenames[i]:
+                            agencyR.append('Hidroweb')
+                            datariggs.append(str(int(st[j])))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
+                        if 'australia' in filenames[i]:
+                            agencyR.append('ABOM')
+                            datariggs.append(str(st[j]))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
+                        if 'Canada' in filenames[i]:
+                            agencyR.append('WSC')
+                            datariggs.append(str(st[j]))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
+                        if 'japan' in filenames[i]:
+                            #some unserialize gages in the list so need to check for NaN                   
+                            agencyR.append('MLIT')
+                            datariggs.append(str(st[j]))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
+                        if 'uk' in filenames[i]:
+                            agencyR.append('DEFRA')
+                            datariggs.append(str(st[j]))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
+                        if 'chile' in filenames[i]:
+                            agencyR.append('DGA')
+                            datariggs.append(str(st[j]))
+                            reachIDR.append(str(int(rid[j])))
+                            RIGGScal.append(int(cal[j]))
 
         return datariggs, reachIDR, agencyR, RIGGScal

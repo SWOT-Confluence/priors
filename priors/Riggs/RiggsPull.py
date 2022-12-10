@@ -242,11 +242,39 @@ class RiggsPull:
         print('len ird------------------', len(reachIDR))
         # current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reaches'][:]
         current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_id'][:]
+
+        # convert the above to match the riggs
+
+        current = []
+        for x in current_group_agency_reach_ids:
+            test = []
+            for i in x:
+                
+                if i != b'':
+                    test.append(i.decode('UTF-8'))
+            test = ''.join(test)
+            current.append(test)
+
+
         print('current', current_group_agency_reach_ids)
         print('currnent len', len(current_group_agency_reach_ids))
-        # datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_group_agency_reach_ids)
-        print('after len', len(reachIDR))
+        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current)
+        # print('after len', len(reachIDR))
         # Download records and gather a list of dataframes
+
+
+        # test = []
+        # for i in gage_id[5]:
+            
+        #     if i != b'':
+        #         test.append(i.decode('UTF-8'))
+        # test = ''.join(test)
+        # print(test)
+        test_data_riggs = []
+
+
+        # old!!!!!!!!!!!!!!
+        # df_list = asyncio.run(self.gather_records(datariggs, agencyR))
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6
