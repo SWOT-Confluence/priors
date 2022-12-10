@@ -153,7 +153,12 @@ class RiggsPull:
             FMr=downloadQ_b(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
-                FMr['ConvertedDate']=pd.to_datetime(FMr.Date,format= "%Y%m%d",errors='coerce')
+                try:
+                    FMr['ConvertedDate']=pd.to_datetime(FMr.Date,format= "%Y%m%d",errors='coerce')
+                except:
+                    FMr = []
+                    return FMr
+
            
             return FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
 
@@ -196,6 +201,7 @@ class RiggsPull:
                   FMr = ro.conversion.rpy2py(FMr)
                   FMr['ConvertedDate']=pd.to_datetime(FMr.date)
                   return FMr
+
         if 'DEFRA' in agencyR:
             FMr=downloadQ_u(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
@@ -253,6 +259,18 @@ class RiggsPull:
                 if i != b'':
                     test.append(i.decode('UTF-8'))
             test = ''.join(test)
+
+            if agencyR[0] == 'DEFRA':
+                split_test = test.split('/')
+                one = split_test[-1][:8]
+                two = split_test[-1][8:12]
+                three = split_test[-1][12:16]
+                four = split_test[-1][16:20]
+                five = split_test[-1][20:]
+
+                parsed_id =  '-'.join([one,two,three,four,five])
+                url = '/'.join(split_test[:-1])
+                test = '/'.join([url, parsed_id])
             current.append(test)
 
 
