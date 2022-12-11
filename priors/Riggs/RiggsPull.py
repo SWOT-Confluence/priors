@@ -154,6 +154,7 @@ class RiggsPull:
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
                 try:
+                    # 
                     FMr['ConvertedDate']=pd.to_datetime(FMr.Date,format= "%Y%m%d",errors='coerce')
                 except:
                     FMr = []
@@ -212,9 +213,16 @@ class RiggsPull:
         if 'DGA' in agencyR:
             FMr=downloadQ_ch(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
-                 FMr = ro.conversion.rpy2py(FMr)
-                 FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
-                 return FMr
+                FMr = ro.conversion.rpy2py(FMr)
+                print(FMr)
+                try:
+                    FMr['ConvertedDate']=pd.to_datetime(FMr.Date)
+                    return FMr
+
+                except:
+                    FMr = []
+                    return FMr
+                
 
     async def gather_records(self, sites,agencyR):
         
@@ -321,7 +329,9 @@ class RiggsPull:
             # check that it is a dataframe
             if isinstance(df_list[i], pd.DataFrame):
 
-                if df_list[i].empty is False and 'Q' in df_list[i] :        
+                if df_list[i].empty is False and 'Q' in df_list[i] :
+                    print('found df')
+                    print(df_list[i])       
                     # create boolean from quality flag       
                     #Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                     # pull in Q
