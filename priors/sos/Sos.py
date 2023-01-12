@@ -251,20 +251,29 @@ class Sos:
                 if defra_cal[index] == 1: 
                     self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
         
-        # if self.continent == 'sa':
+        if self.continent == 'sa':
 
-        #     # Historic MLIT
-        #     historic_wsc_reach_ids = sos["historicQ"]["MLIT"]["MLIT_reach_id"][:]
-        #     for index, rid in enumerate(historic_wsc_reach_ids):
-        #         self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")  
+            # Historic Hidroweb
+            historic_wsc_reach_ids = sos["historicQ"]["Hidroweb"]["Hidroweb_reach_id"][:]
+            for index, rid in enumerate(historic_wsc_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["Hidroweb"], "Hidroweb")  
 
 
-        #     defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
-        #     defra_cal = sos["MLIT"]["CAL"][:]
-        #     for index, rid in enumerate(defra_reach_ids) :
-        #         # check for cal/val
-        #         if defra_cal[index] == 1: 
-        #             self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
+            defra_reach_ids = sos["Hidroweb"]["Hidroweb_reach_id"][:]
+            defra_cal = sos["Hidroweb"]["CAL"][:]
+            for index, rid in enumerate(defra_reach_ids) :
+                # check for cal/val
+                if defra_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["Hidroweb"], "Hidroweb")
+
+
+            # DGA, no historic, too new
+            defra_reach_ids = sos["DGA"]["DGA_reach_id"][:]
+            defra_cal = sos["DGA"]["CAL"][:]
+            for index, rid in enumerate(defra_reach_ids) :
+                # check for cal/val
+                if defra_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["DGA"], "DGA")
 
 
         self._create_dims_vars(sos)
