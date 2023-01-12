@@ -71,18 +71,11 @@ class RiggsRead:
                     ST.append("".join(tst))
                 st=ST                    
                 
-                    
-            
             #associated Sword Reach
             rid= ncf["Reach_ID"][:].filled(np.nan)
             #calibration flag
             cal= ncf["CAL"][:].filled(np.nan)
-            
-            print(filenames)
 
-            # ref_aray = np.array([str(int(i)) for i in rid]).astype(np.int64)
-
-            print('----------------------------st', st)
             for j in range(len(st)):
                 #this is set up for multiple agencies to run in the same module
                 #I may end up setting up independent modules for all of them meaning this can be simplified.

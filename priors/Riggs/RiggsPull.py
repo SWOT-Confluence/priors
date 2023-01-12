@@ -70,7 +70,6 @@ def combine_dfs(sos_df, gauge_df):
 
 
 def merge_historic_gauge_data(sos, date_list, gauge_df_list, agencyR):
-    
     cnt = 0
     for gauge_df in gauge_df_list:
         if gauge_df.empty is False and '00060_Mean' in gauge_df:
@@ -251,10 +250,7 @@ class RiggsPull:
         # lets us pull gauges that are not in the historic_q group
         gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
         # read in all gauges to create agencyR list
-
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-        print('len ird------------------', len(reachIDR))
-        # current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_reaches'][:]
         current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_id'][:]
 
         # convert the above to match the riggs
@@ -285,30 +281,17 @@ class RiggsPull:
         print('current', current_group_agency_reach_ids)
         print('currnent len', len(current_group_agency_reach_ids))
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current)
-        # print('after len', len(reachIDR))
-        # Download records and gather a list of dataframes
 
-
-        # test = []
-        # for i in gage_id[5]:
-            
-        #     if i != b'':
-        #         test.append(i.decode('UTF-8'))
-        # test = ''.join(test)
-        # print(test)
         test_data_riggs = []
-
-
-        # old!!!!!!!!!!!!!!
-        # df_list = asyncio.run(self.gather_records(datariggs, agencyR))
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6
         # need to make merge historic gage data different for each agency, can use arg allready in place.
 
         # Bring in previously downloaded gauge data and merge with new data
+        # Riggs module not downloading delta just pulling all non histoic data
+        # usgs only one pulling delta
         if agencyR[0] in  ['usgs']:
-            print('merging because usgs ---------------------------------------------------------------')
             riggs_qt = sos[agencyR[0]][f'{agencyR[0]}_qt']
             date_list = [days_convert(i) if i!=-999999999999.0 else i for i in riggs_qt[0].data]
             df_list = merge_historic_gauge_data(sos, date_list, df_list, agencyR[0])  

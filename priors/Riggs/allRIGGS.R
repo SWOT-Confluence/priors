@@ -93,7 +93,6 @@ qdownload_b = function(site){
   files = paste0(link, site)
   out = paste0(outpath, site, ".zip")
   try(download.file(files, out, method = "curl", quiet = TRUE))
-  print(out)
   a = unzip(out)
   data = suppressWarnings(try(read.table(unzip(a[grep("vazoes", a)]), sep = ";", header = TRUE, fileEncoding = "latin1")))
   if(!is.error(data)){
