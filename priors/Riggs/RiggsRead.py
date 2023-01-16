@@ -45,7 +45,7 @@ class RiggsRead:
             'sa':['Riggs_chile_.nc', 'Riggs_brazil_.nc'],
             # 'sa':['Riggs_brazil_.nc'],
 
-            'sa':['Riggs_chile_.nc'],
+            # 'sa':['Riggs_chile_.nc'],
             'af':['no_target']
         }
 
@@ -87,6 +87,7 @@ class RiggsRead:
                 if len(current_group_agency_reach_ids)!=0:
                     if st[j] in current_group_agency_reach_ids:
                         if str(int(cal[j])) in ['0','1']:
+                            # print(filenames[i])
 
                             if 'brazil' in filenames[i]:
                                 agencyR.append('Hidroweb')
@@ -123,6 +124,8 @@ class RiggsRead:
                                 RIGGScal.append(int(cal[j]))
 
                 else:
+                        print(filenames[i])
+                        print('-------------------------------------------')
                         if 'brazil' in filenames[i]:
                             agencyR.append('Hidroweb')
                             datariggs.append(str(int(st[j])))

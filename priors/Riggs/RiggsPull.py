@@ -254,8 +254,10 @@ class RiggsPull:
         current_group_agency_reach_ids = []
         for agency in list(set(list(agencyR))):
             current_group_agency_reach_ids = current_group_agency_reach_ids +  list(sos[agency][f'{agency}_id'][:])
-            print('double agency issue')
-            print(len(current_group_agency_reach_ids))
+        #     print('double agency issue')
+        #     print(len(current_group_agency_reach_ids))
+        
+        # raise ValueError(agencyR)
 
         # convert the above to match the riggs
 
