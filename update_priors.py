@@ -196,8 +196,8 @@ class Priors:
 
 
         # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # print("Uploading new SoS priors version.")
+        # sos.upload_file()
 
 
 def main():

@@ -251,7 +251,11 @@ class RiggsPull:
         gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
         # read in all gauges to create agencyR list
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-        current_group_agency_reach_ids = sos[agencyR[0]][f'{agencyR[0]}_id'][:]
+        current_group_agency_reach_ids = []
+        for agency in list(set(list(agencyR))):
+            current_group_agency_reach_ids = current_group_agency_reach_ids +  list(sos[agency][f'{agency}_id'][:])
+            print('double agency issue')
+            print(len(current_group_agency_reach_ids))
 
         # convert the above to match the riggs
 

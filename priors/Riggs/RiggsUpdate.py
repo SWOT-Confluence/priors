@@ -100,19 +100,24 @@ class RiggsUpdate:
         if self.map_dict:
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-            agency = self.Riggs_dict["Agency"][0]
-            Riggs = sos[agency]
-            Riggs["num_days"][:] = self.map_dict["days"]
-            # used f string for agency so it generalizes the sos creation for different agencies
-            Riggs[f"{agency}_reach_id"][:] = self.map_dict["Riggs_reach_id"]
-            Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
-            Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S100"))
-            Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
-            Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
+            agencies = set(list(self.Riggs_dict["Agency"]))
+            for agency in agencies:
+                Riggs = sos[agency]
+                Riggs["num_days"][:] = self.map_dict["days"]
+                # used f string for agency so it generalizes the sos creation for different agencies
+                print(agency)
+                print(self.map_dict["Riggs_reach_id"].shape)
+                print(self.map_dict["Riggs_reach_id"])
+                print(Riggs[f"{agency}_reach_id"][:])
+                Riggs[f"{agency}_reach_id"][:] = self.map_dict["Riggs_reach_id"]
+                Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict["Riggs_id"].astype("S100"))
+                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()
