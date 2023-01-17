@@ -178,8 +178,10 @@ class Priors:
             print("Updating USGS priors.")
             self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
-        if 'riggs' in self.priors_list:
-            self.execute_Riggs(sos_file, start_date = sos_last_run_time)
+        if 'riggs' in self.priors_list and self.cont not in ['af', ]:
+            # riggs modules are having problems with downloading just the delta
+            # change start date to sos_last_run_time to continue development
+            self.execute_Riggs(sos_file, start_date = '1980-1-1')
         
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
@@ -194,8 +196,8 @@ class Priors:
 
 
         # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # print("Uploading new SoS priors version.")
+        # sos.upload_file()
 
 
 def main():
