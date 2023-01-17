@@ -59,7 +59,7 @@ class RiggsUpdate:
         self.sos_reaches = None            
 
     def nested_dict(self):
-        return collections.defaultdict(nested_dict)
+        return collections.defaultdict(self.nested_dict)
 
     def read_sos(self):
         """Reads in data from the SoS and stores in sos_reaches attribute."""
