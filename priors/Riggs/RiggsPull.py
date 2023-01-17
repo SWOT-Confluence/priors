@@ -254,11 +254,6 @@ class RiggsPull:
         current_group_agency_reach_ids = []
         for agency in list(set(list(agencyR))):
             current_group_agency_reach_ids = current_group_agency_reach_ids +  list(sos[agency][f'{agency}_id'][:])
-        #     print('double agency issue')
-        #     print(len(current_group_agency_reach_ids))
-        
-        # raise ValueError(agencyR)
-
         # convert the above to match the riggs
 
         current = []
@@ -283,9 +278,6 @@ class RiggsPull:
                 test = '/'.join([url, parsed_id])
             current.append(test)
 
-
-        print('current', current_group_agency_reach_ids)
-        print('currnent len', len(current_group_agency_reach_ids))
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current)
 
         test_data_riggs = []

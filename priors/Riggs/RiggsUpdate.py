@@ -101,10 +101,6 @@ class RiggsUpdate:
                 self.map_dict[agency]["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes]
                 self.map_dict[agency]["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
                 self.map_dict[agency]["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
-        
-        print('----------------------------------')
-        print(self.map_dict)
-
 
     def update_data(self):
         """Updates Riggs data in the SoS.
@@ -119,15 +115,10 @@ class RiggsUpdate:
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
             agencies = set(list(self.Riggs_dict["Agency"]))
-            print(agencies)
             for agency in agencies:
                 Riggs = sos[agency]
                 Riggs["num_days"][:] = self.map_dict[agency]["days"]
                 # used f string for agency so it generalizes the sos creation for different agencies
-                print(agency)
-                # print(self.map_dict[agency]["Riggs_reach_id"].shape)
-                # print(self.map_dict[agency]["Riggs_reach_id"])
-                # print(Riggs[f"{agency}_reach_id"][:])
                 Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
                 Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
                 Riggs["max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)

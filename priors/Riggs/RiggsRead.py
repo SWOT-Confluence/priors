@@ -41,11 +41,8 @@ class RiggsRead:
             'na':['Riggs_Canada_P.nc'],
             'eu':['Riggs_uk_P.nc'],
             'as':['Riggs_japan_.nc'],
-            # 'oc':['Riggs_australia_.nc'],
+            'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_chile_.nc', 'Riggs_brazil_.nc'],
-            # 'sa':['Riggs_brazil_.nc'],
-
-            # 'sa':['Riggs_chile_.nc'],
             'af':['no_target']
         }
 
@@ -124,8 +121,6 @@ class RiggsRead:
                                 RIGGScal.append(int(cal[j]))
 
                 else:
-                        print(filenames[i])
-                        print('-------------------------------------------')
                         if 'brazil' in filenames[i]:
                             agencyR.append('Hidroweb')
                             datariggs.append(str(int(st[j])))
