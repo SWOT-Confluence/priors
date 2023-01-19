@@ -149,7 +149,14 @@ class RiggsPull:
         #Rcode pull entire record, will need to filter after DL within this function
         if 'Hidroweb' in agencyR:
             #brazil
-            FMr=downloadQ_b(site)
+            # sometimes the gauge pull fails, we will try it three times
+            for i in range(3):
+                try:
+                    FMr=downloadQ_b(site)
+                    break
+                except:
+                    FMr = []
+
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
                 try:
