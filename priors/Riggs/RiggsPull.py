@@ -156,6 +156,7 @@ class RiggsPull:
                     break
                 except:
                     FMr = []
+                    return FMr
 
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
