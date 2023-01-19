@@ -267,13 +267,10 @@ class Sos:
                     self._overwrite_prior(rid, sos, sos["Hidroweb"], "Hidroweb")
 
 
-            # DGA, no historic, too new
-            defra_reach_ids = sos["DGA"]["DGA_reach_id"][:]
-            defra_cal = sos["DGA"]["CAL"][:]
+            # DGA, only historic
+            defra_reach_ids = sos["historicQ"]["DGA"]["DGA_reach_id"][:]
             for index, rid in enumerate(defra_reach_ids) :
-                # check for cal/val
-                if defra_cal[index] == 1: 
-                    self._overwrite_prior(rid, sos, sos["DGA"], "DGA")
+                self._overwrite_prior(rid, sos, sos["historicQ"]["DGA"], "DGA")
 
 
         self._create_dims_vars(sos)
