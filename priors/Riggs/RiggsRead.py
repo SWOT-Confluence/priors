@@ -40,7 +40,7 @@ class RiggsRead:
         target_file_map = {
             'na':['Riggs_Canada_P.nc'],
             'eu':['Riggs_uk_P.nc'],
-            'as':['Riggs_japan_.nc'],
+            'as':['no_target'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
             'af':['no_target']

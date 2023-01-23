@@ -178,7 +178,7 @@ class Priors:
             print("Updating USGS priors.")
             self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
-        if 'riggs' in self.priors_list and self.cont not in ['af', ]:
+        if 'riggs' in self.priors_list and self.cont not in ['af', 'as' ]:
             # riggs modules are having problems with downloading just the delta
             # change start date to sos_last_run_time to continue development
             self.execute_Riggs(sos_file, start_date = '1980-1-1')

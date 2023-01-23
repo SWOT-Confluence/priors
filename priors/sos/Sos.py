@@ -244,12 +244,12 @@ class Sos:
                 self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")  
 
 
-            defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
-            defra_cal = sos["MLIT"]["CAL"][:]
-            for index, rid in enumerate(defra_reach_ids) :
-                # check for cal/val
-                if defra_cal[index] == 1: 
-                    self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
+            # defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
+            # defra_cal = sos["MLIT"]["CAL"][:]
+            # for index, rid in enumerate(defra_reach_ids) :
+            #     # check for cal/val
+            #     if defra_cal[index] == 1: 
+            #         self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
         
         if self.continent == 'sa':
 
