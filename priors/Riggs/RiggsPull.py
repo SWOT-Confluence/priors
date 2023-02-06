@@ -33,6 +33,7 @@ downloadQ_j = robjects.globalenv['qDownload_j']
 # Loading the function we have defined in R.
 downloadQ_u = robjects.globalenv['qdownload_uk']
 downloadQ_ch = robjects.globalenv['qdownload_ch']
+downloadQ_f = robjects.globalenv['qdownload_f']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
@@ -147,6 +148,22 @@ class RiggsPull:
             Site identifier
         """
         #Rcode pull entire record, will need to filter after DL within this function
+        if 'EAU' in agencyR:
+            print("Pulling French gages")
+            try:
+                FMr=downloadQ_f(site)
+                try:
+                    with localconverter(ro.default_converter + pandas2ri.converter):
+                        FMr = ro.conversion.rpy2py(FMr)                       
+                        return FMr[(FMr['Date'] >= self.start_date) & (FMr['Date'] <=  self.end_date)]
+            
+                except AttributeError:
+                    FMr=[]
+                    return FMr
+            except:
+                FMr=[]
+                return FMr
+            return FMr[(FMr['Date'] >= self.start_date) & (FMr['Date'] <=  self.end_date)]
         if 'Hidroweb' in agencyR:
             #brazil
             FMr=downloadQ_b(site)
