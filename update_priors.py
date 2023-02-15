@@ -27,7 +27,6 @@ import json
 import os
 from pathlib import Path
 import sys
-from os import walk
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -202,8 +201,9 @@ def main():
 
     # Store command line arguments
     try:
-        run_type = sys.argv[1]
-        prior_ops = sys.argv[2:]
+        index = int(sys.argv[1])
+        run_type = sys.argv[2]
+        prior_ops = sys.argv[3:]
         print(f"Running on {run_type} data product and pulling the following: {', '.join(prior_ops)}")
     except IndexError:
         print("Please enter appropriate command line arguments which MUST include run_type.")
@@ -211,9 +211,9 @@ def main():
         sys.exit(1)
 
     # Get continent to run on
-    index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
+    i = int(index) if index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
     with open(INPUT_DIR / "continent.json") as jsonfile:
-        cont = list(json.load(jsonfile)[index].keys())[0]
+        cont = list(json.load(jsonfile)[i].keys())[0]
 
     # Retrieve and update priors
     priors = Priors(cont, run_type, prior_ops, INPUT_DIR, INPUT_DIR / "sos")
