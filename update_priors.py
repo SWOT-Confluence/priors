@@ -22,6 +22,7 @@ main()
 """
 
 # Standard imports
+import argparse
 from datetime import datetime
 import json
 import os
@@ -195,28 +196,45 @@ class Priors:
         print("Uploading new SoS priors version.")
         sos.upload_file()
 
+def create_args():
+    """Create and return argparser with arguments."""
+
+    arg_parser = argparse.ArgumentParser(description="Update Confluence SoS priors.")
+    arg_parser.add_argument("-i",
+                            "--index",
+                            type=int,
+                            help="Index value to select continent to run on")
+    arg_parser.add_argument("-r",
+                            "--runtype",
+                            type=str,
+                            choices=["constrained", "unconstrained"],
+                            help="Indicates what type of run to generate priors for.",
+                            default="constrained")
+    arg_parser.add_argument("-p",
+                            "--priors",
+                            type=str,
+                            nargs="+",
+                            default=[],
+                            help="List: usgs, grdc, riggs, gbpriors")
+    return arg_parser
 
 def main():
     """Main method to generate, retrieve, and overwrite priors."""
 
     # Store command line arguments
-    try:
-        index = int(sys.argv[1])
-        run_type = sys.argv[2]
-        prior_ops = sys.argv[3:]
-        print(f"Running on {run_type} data product and pulling the following: {', '.join(prior_ops)}")
-    except IndexError:
-        print("Please enter appropriate command line arguments which MUST include run_type.")
-        print("Program exit.")
-        sys.exit(1)
+    arg_parser = create_args()
+    args = arg_parser.parse_args()
+    print(f"Index: {args.index}")
+    print(f"Run type: {args.runtype}")
+    if len(args.priors) > 0: print(f"Priors: {', '.join(args.priors)}")
 
     # Get continent to run on
-    i = int(index) if index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
+    i = int(args.index) if args.index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
     with open(INPUT_DIR / "continent.json") as jsonfile:
         cont = list(json.load(jsonfile)[i].keys())[0]
 
     # Retrieve and update priors
-    priors = Priors(cont, run_type, prior_ops, INPUT_DIR, INPUT_DIR / "sos")
+    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos")
     priors.update()
 
 if __name__ == "__main__":
