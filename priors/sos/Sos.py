@@ -1,19 +1,12 @@
 # Standard imports
-from datetime import datetime, timezone
-import glob
-from os import scandir
+from datetime import datetime
 from pathlib import Path
-from shutil import copy
-import warnings
-
 
 # Third-party imports
 import boto3
 from boto3.session import Session
 from netCDF4 import Dataset, stringtochar
 import numpy as np
-import s3fs
-
 
 def closest(lst, K):
     # https://www.geeksforgeeks.org/python-find-closest-number-to-k-in-given-list/
@@ -29,12 +22,8 @@ class Sos:
         list of either USGS or GRDC q priors that are less than 0.
     bad_priors_source: np.array
         list that indicates source of bad prior
-    confluence_fs: S3FileSystem
-        references Confluence S3 buckets
     continent: str
         continent abbreviation to id SoS file
-    MOD_TIME: int
-        nunber of seconds since last modification 
     overwritten_indexes: np.array
         list of integer index values where grades data was overwritten
     overwritten_source: np.array
@@ -66,12 +55,10 @@ class Sos:
         Uploads new version to Confluence S3 bucket
     """
 
-    LOCAL_SOS = Path("")    # Path to temporary local SoS
-    SUFFIX = "_sword_v11_SOS"
-    MOD_TIME = 7200
+    SUFFIX = "_sword_v11_SOS_priors.nc"
     VERS_LENGTH = 4
 
-    def __init__(self, continent, run_type, sos_dir, confluence_creds):
+    def __init__(self, continent, run_type, sos_dir):
         """
         Parameters
         ----------
@@ -81,17 +68,11 @@ class Sos:
             'constrained' or 'unconstrained' data product type
         sos_dir: Path
             path to SoS directory on local storage
-        confluence_creds: dict
-            Dictionary of s3 credentials 
         """
-        self.confluence_creds = confluence_creds
         self.bad_prior = np.array([])
         self.bad_prior_source = np.array([])
-        self.confluence_fs = s3fs.S3FileSystem(key=confluence_creds["key"], 
-            secret=confluence_creds["secret"], 
-            client_kwargs={"region_name": confluence_creds["region"]})
-        # self.confluence_fs = None   # Temporary local function
         self.continent = continent
+        self.last_run_time = ""
         self.overwritten_indexes = np.array([])
         self.overwritten_source = np.array([])
         self.run_type = run_type
@@ -102,55 +83,18 @@ class Sos:
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
 
-        session = Session(aws_access_key_id=self.confluence_creds['key'],
-                        aws_secret_access_key=self.confluence_creds['secret'])
+        session = Session()
         s3 = session.resource('s3')
         bucket = s3.Bucket(name="confluence-sos")
-        print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
-        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/") if obj.key != "constrained/"]))
+        # print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
+        
+        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/")]))
         dirs.sort()
         current = dirs[-1]
-        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}_priors.nc")
-        
-        if current != "0000":
-            try:
-                if (datetime.now(timezone.utc) - obj.last_modified).seconds < self.MOD_TIME:
-                    obj = self._locate_previous_version(dirs, current, s3)
-            except s3.meta.client.exceptions.ClientError as error:
-                obj = self._locate_previous_version(dirs, current, s3)
+        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         
         print(f"Downloading: {obj.key}")
-        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}.nc")
-        
-    def _locate_previous_version(self, dirs, current, s3):
-        """Locate the previous version of a file in the dirs list.
-        
-        Parameter
-        ---------
-        dirs: list
-            list of string names of directories in S3  
-        current: str
-            name of current directory
-        s3: boto3.resources.factory.s3.ServiceResource
-            s3 resource that represents SoS bucket
-        
-        Returns
-        -------
-        s3 Object representing previous version of file
-        """
-        
-        dirs.remove(current)
-        return s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{dirs[-1]}/{self.continent}{self.SUFFIX}_priors.nc")
-
-    def copy_local(self):
-        """Temporary copy local method."""
-
-        sos_dir = self.LOCAL_SOS / self.run_type
-        with scandir(sos_dir) as entries:
-            dirs = [ entry.name for entry in entries ]
-            curr_dir = max(dirs)
-        file = glob.glob(f"{str(sos_dir / curr_dir)}/{self.continent}*.nc")[0]
-        copy(file, self.sos_dir / f"{self.continent}{self.SUFFIX}.nc")
+        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
 
     def create_new_version(self):
         """Create new version of the SoS file.
@@ -161,18 +105,16 @@ class Sos:
             Path to new SoS file on local storage
         """
 
-        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}.nc")
-        print(f"Creating new version of: {self.sos_file}")
+        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
         sos = Dataset(self.sos_file, 'a')
         self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
-        print(self.last_run_time)
-
+        # print(self.last_run_time)
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.version = f"{''.join(padding)}{self.version}"
         sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-
         sos.close()
+        print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
 
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
@@ -398,4 +340,6 @@ class Sos:
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.version
         sos_ds.close()
-        self.confluence_fs.put(str(self.sos_file), f"confluence-sos/{self.run_type}/{vers}/{self.sos_file.stem}_priors.nc")
+
+        s3 = boto3.client("s3")
+        response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.stem}")
