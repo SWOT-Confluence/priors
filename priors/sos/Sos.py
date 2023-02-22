@@ -4,6 +4,8 @@ from pathlib import Path
 
 # Third-party imports
 import boto3
+import logging
+boto3.set_stream_logger("boto3.resources")
 from boto3.session import Session
 from netCDF4 import Dataset, stringtochar
 import numpy as np
@@ -82,19 +84,19 @@ class Sos:
 
     def copy_sos(self):
         """Copy the latest version of the SoS file to local storage."""
+        
+        s3 = boto3.client("s3")
+        object_list = s3.list_objects(Bucket="confluence-sos", Prefix=self.run_type)
+        objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
 
-        session = Session()
-        s3 = session.resource('s3')
-        bucket = s3.Bucket(name="confluence-sos")
-        # print([i for i in bucket.objects.filter(Prefix=f"{self.run_type}/")])
-        
-        dirs = list(set([str(obj.key).split('/')[1] for obj in bucket.objects.filter(Prefix=f"{self.run_type}/")]))
+        dirs = list(set(objects))
         dirs.sort()
+        print(f"Directories located for SoS: [{', '.join(dirs)}]")
         current = dirs[-1]
-        obj = s3.Object(bucket_name="confluence-sos", key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         
-        print(f"Downloading: {obj.key}")
-        obj.download_file(f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        print(f"Downloaded: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
 
     def create_new_version(self):
         """Create new version of the SoS file.
@@ -342,4 +344,5 @@ class Sos:
         sos_ds.close()
 
         s3 = boto3.client("s3")
-        response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.stem}")
+        response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
+        print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
