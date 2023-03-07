@@ -66,7 +66,7 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current):
         """
         Parameters
         ----------
@@ -87,6 +87,7 @@ class Priors:
         self.priors_list = priors_list
         self.input_dir = input_dir
         self.sos_dir = sos_dir
+        self.fake_current = fake_current
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -159,7 +160,7 @@ class Priors:
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
         sos = Sos(self.cont, self.run_type, self.sos_dir)
-        sos.copy_sos()
+        sos.copy_sos(self.fake_current)
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
@@ -216,6 +217,12 @@ def create_args():
                             nargs="+",
                             default=[],
                             help="List: usgs, grdc, riggs, gbpriors")
+
+    arg_parser.add_argument("-l",
+                            "--level",
+                            type=str,
+                            default='foo',
+                            help="Forces priors to pull a certain level sos ex: 0000")
     return arg_parser
 
 def main():
@@ -234,7 +241,7 @@ def main():
         cont = list(json.load(jsonfile)[i].keys())[0]
 
     # Retrieve and update priors
-    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos")
+    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level)
     priors.update()
 
 if __name__ == "__main__":

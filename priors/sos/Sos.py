@@ -82,7 +82,7 @@ class Sos:
         self.sos_file = None
         self.version = ""
 
-    def copy_sos(self):
+    def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
         
         s3 = boto3.client("s3")
@@ -93,6 +93,9 @@ class Sos:
         dirs.sort()
         print(f"Directories located for SoS: [{', '.join(dirs)}]")
         current = dirs[-1]
+
+        if fake_current != 'foo':
+            current = fake_current
         
         print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
