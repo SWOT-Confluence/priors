@@ -1,12 +1,11 @@
 # Standard imports
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Third-party imports
 import boto3
-import logging
 boto3.set_stream_logger("boto3.resources")
-from boto3.session import Session
+import botocore
 from netCDF4 import Dataset, stringtochar
 import numpy as np
 
@@ -59,6 +58,7 @@ class Sos:
 
     SUFFIX = "_sword_v11_SOS_priors.nc"
     VERS_LENGTH = 4
+    MOD_TIME = 18000    # seconds
 
     def __init__(self, continent, run_type, sos_dir):
         """
@@ -89,17 +89,67 @@ class Sos:
         object_list = s3.list_objects(Bucket="confluence-sos", Prefix=self.run_type)
         objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
 
+        # Get sorted list of version keys
         dirs = list(set(objects))
         dirs.sort()
         print(f"Directories located for SoS: [{', '.join(dirs)}]")
-        current = dirs[-1]
+        
+        # Determine current version based on modification time
+        try:
+            current = self.get_current_version(s3, dirs)
+        except botocore.exceptions.ClientError as error:
+            print(f"ERROR: Could not locate current version of the SoS.")
+            print(error)
+            raise error
 
         if fake_current != 'foo':
             current = fake_current
         
+        # Download current version of the SoS
         print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
-        response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        try:
+            response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+        except botocore.exceptions.ClientError as error:
+            print(f"ERROR: Could not download current version of the SoS.")
+            print(error)
+            raise error
         print(f"Downloaded: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        
+    def get_current_version(self, s3, dirs):
+        """Return current version of SoS based on moidication time."""
+        
+        current = dirs[-1]
+        
+        # Return if first run
+        if current == "0000": return current
+        
+        # Get modication time
+        try:
+            print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+                                        Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
+                                        ObjectAttributes=["ObjectSize"]) 
+            previous = dirs[-2]
+        except botocore.exceptions.ClientError:
+            print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX} could not be found. Trying version: {dirs[-2]}.")
+            current = dirs[-2]
+            if current == "0000":
+                return current   # Return if first run
+            else:
+                previous = dirs[-3]
+            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+                                        Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
+                                        ObjectAttributes=["ObjectSize"])
+        
+        # Return previous key if modification time is less than class constant
+        obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
+        if obj_age < self.MOD_TIME:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
+            return previous
+        else:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
+            return current
+        
 
     def create_new_version(self):
         """Create new version of the SoS file.

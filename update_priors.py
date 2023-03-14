@@ -27,7 +27,6 @@ from datetime import datetime
 import json
 import os
 from pathlib import Path
-import sys
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -38,6 +37,9 @@ from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
 from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
+
+# Third-party imports
+import botocore
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
@@ -160,7 +162,11 @@ class Priors:
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
         sos = Sos(self.cont, self.run_type, self.sos_dir)
-        sos.copy_sos(self.fake_current)
+        try:
+            sos.copy_sos(self.fake_current)
+        except botocore.exceptions.ClientError:
+            print("Exiting program.")
+            exit(1)
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
