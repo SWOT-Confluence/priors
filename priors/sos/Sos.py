@@ -95,14 +95,15 @@ class Sos:
         print(f"Directories located for SoS: [{', '.join(dirs)}]")
         
         # Determine current version based on modification time
-        try:
-            current = self.get_current_version(s3, dirs)
-        except botocore.exceptions.ClientError as error:
-            print(f"ERROR: Could not locate current version of the SoS.")
-            print(error)
-            raise error
+        if fake_current == 'foo':
+            try:
+                current = self.get_current_version(s3, dirs)
+            except botocore.exceptions.ClientError as error:
+                print(f"ERROR: Could not locate current version of the SoS.")
+                print(error)
+                raise error
 
-        if fake_current != 'foo':
+        else:
             current = fake_current
         
         # Download current version of the SoS
