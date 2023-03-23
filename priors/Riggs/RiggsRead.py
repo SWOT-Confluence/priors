@@ -39,8 +39,8 @@ class RiggsRead:
         # add more file maps as we test new continents
         target_file_map = {
             'na':['Riggs_Canada_P.nc'],
-            'eu':['Riggs_uk_P.nc'],
-            'as':['no_target'],
+            'eu':['Riggs_uk_P.nc', 'Riggs_france_.nc'],
+            'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
             'af':['no_target']
@@ -119,6 +119,11 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                            if 'france' in filenames[i]:
+                                agencyR.append('EAU')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
 
                 else:
                         if 'brazil' in filenames[i]:
@@ -154,5 +159,10 @@ class RiggsRead:
                             datariggs.append(str(st[j]))
                             reachIDR.append(str(int(rid[j])))
                             RIGGScal.append(int(cal[j]))
+                        if 'france' in filenames[i]:
+                                agencyR.append('EAU')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
 
         return datariggs, reachIDR, agencyR, RIGGScal
