@@ -225,7 +225,21 @@ class Sos:
             for index, rid in enumerate(defra_reach_ids) :
                 # check for cal/val
                 if defra_cal[index] == 1: 
-                    self._overwrite_prior(rid, sos, sos["DEFRA"], "DEFRA") 
+                    self._overwrite_prior(rid, sos, sos["DEFRA"], "DEFRA")
+
+
+            # Historic EAU
+            historic_wsc_reach_ids = sos["historicQ"]["EAU"]["EAU_reach_id"][:]
+            for index, rid in enumerate(historic_wsc_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["EAU"], "EAU")  
+
+            # EAU
+            wsc_reach_ids = sos["EAU"]["EAU_reach_id"][:]
+            wsc_cal = sos["EAU"]["CAL"][:]
+            for index, rid in enumerate(wsc_reach_ids):
+                # check for cal/val
+                if wsc_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["EAU"], "EAU")
 
         if self.continent == 'oc':
             #ABOM
