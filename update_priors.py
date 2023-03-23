@@ -22,12 +22,11 @@ main()
 """
 
 # Standard imports
+import argparse
 from datetime import datetime
 import json
 import os
 from pathlib import Path
-import sys
-from os import walk
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -38,6 +37,9 @@ from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
 from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
+
+# Third-party imports
+import botocore
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
@@ -66,7 +68,7 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, confluence_creds):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current):
         """
         Parameters
         ----------
@@ -79,9 +81,7 @@ class Priors:
         input_dir: Path
             path to input data directory
         sos_dir: Path
-            path to SoS directory on local storage
-        confluence_creds: dict
-            Dictionary of s3 credentials            
+            path to SoS directory on local storage           
         """
 
         self.cont = cont
@@ -89,7 +89,7 @@ class Priors:
         self.priors_list = priors_list
         self.input_dir = input_dir
         self.sos_dir = sos_dir
-        self.confluence_creds = confluence_creds
+        self.fake_current = fake_current
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -161,8 +161,12 @@ class Priors:
 
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
-        sos = Sos(self.cont, self.run_type, self.sos_dir, self.confluence_creds)
-        sos.copy_sos()
+        sos = Sos(self.cont, self.run_type, self.sos_dir)
+        try:
+            sos.copy_sos(self.fake_current)
+        except botocore.exceptions.ClientError:
+            print("Exiting program.")
+            exit(1)
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
@@ -178,7 +182,7 @@ class Priors:
             print("Updating USGS priors.")
             self.execute_usgs(sos_file, start_date = sos_last_run_time)
 
-        if 'riggs' in self.priors_list and self.cont not in ['af', ]:
+        if 'riggs' in self.priors_list and self.cont not in ['af', 'as' ]:
             # riggs modules are having problems with downloading just the delta
             # change start date to sos_last_run_time to continue development
             self.execute_Riggs(sos_file, start_date = '1980-1-1')
@@ -199,32 +203,51 @@ class Priors:
         print("Uploading new SoS priors version.")
         sos.upload_file()
 
+def create_args():
+    """Create and return argparser with arguments."""
+
+    arg_parser = argparse.ArgumentParser(description="Update Confluence SoS priors.")
+    arg_parser.add_argument("-i",
+                            "--index",
+                            type=int,
+                            help="Index value to select continent to run on")
+    arg_parser.add_argument("-r",
+                            "--runtype",
+                            type=str,
+                            choices=["constrained", "unconstrained"],
+                            help="Indicates what type of run to generate priors for.",
+                            default="constrained")
+    arg_parser.add_argument("-p",
+                            "--priors",
+                            type=str,
+                            nargs="+",
+                            default=[],
+                            help="List: usgs, grdc, riggs, gbpriors")
+
+    arg_parser.add_argument("-l",
+                            "--level",
+                            type=str,
+                            default='foo',
+                            help="Forces priors to pull a certain level sos ex: 0000")
+    return arg_parser
 
 def main():
     """Main method to generate, retrieve, and overwrite priors."""
 
     # Store command line arguments
-    try:
-        s3_creds_filename = sys.argv[1]
-        run_type = sys.argv[2]
-        prior_ops = sys.argv[3:]
-        print(f"Running on {run_type} data product and pulling the following: {', '.join(prior_ops)}")
-    except IndexError:
-        print("Please enter appropriate command line arguments which MUST include run_type.")
-        print("Program exit.")
-        sys.exit(1)
+    arg_parser = create_args()
+    args = arg_parser.parse_args()
+    print(f"Index: {args.index}")
+    print(f"Run type: {args.runtype}")
+    if len(args.priors) > 0: print(f"Priors: {', '.join(args.priors)}")
 
     # Get continent to run on
-    index = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
+    i = int(args.index) if args.index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
     with open(INPUT_DIR / "continent.json") as jsonfile:
-        cont = list(json.load(jsonfile)[index].keys())[0]
-
-    # Get s3 creds for SoS upload
-    with open(INPUT_DIR / s3_creds_filename) as jsonfile:
-        confluence_creds = json.load(jsonfile)
+        cont = list(json.load(jsonfile)[i].keys())[0]
 
     # Retrieve and update priors
-    priors = Priors(cont, run_type, prior_ops, INPUT_DIR, INPUT_DIR / "sos", confluence_creds)
+    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level)
     priors.update()
 
 if __name__ == "__main__":

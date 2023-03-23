@@ -20,6 +20,7 @@ Command line arguments
 2. grdc (optional): 'grdc'
 3. usgs (optional): 'usgs'
 4. gbpriors (optional): 'gbpriors'
+5. riggs (optional): 'riggs'
 
 To execute
 ----------

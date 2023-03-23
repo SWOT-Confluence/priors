@@ -166,7 +166,15 @@ class RiggsPull:
             return FMr[(FMr['Date'] >= self.start_date) & (FMr['Date'] <=  self.end_date)]
         if 'Hidroweb' in agencyR:
             #brazil
-            FMr=downloadQ_b(site)
+            # sometimes the gauge pull fails, we will try it three times
+            for i in range(3):
+                try:
+                    FMr=downloadQ_b(site)
+                    break
+                except:
+                    FMr = []
+                    return FMr
+
             with localconverter(ro.default_converter + pandas2ri.converter):
                 FMr = ro.conversion.rpy2py(FMr)
                 try:

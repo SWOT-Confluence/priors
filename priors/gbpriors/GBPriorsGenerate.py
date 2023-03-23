@@ -345,25 +345,33 @@ class GBPriorsGenerate:
         cont = self.sos_dict["cont"]
         swot_files = [ Path(swot_file) for swot_file in glob.glob(f"{self.swot_dir}/{self.CONT_DICT[cont]}*_SWOT.nc") ]
 
+        cnt = 0
         for swot_file in swot_files:
-            print(f"Running on file: {swot_file.name}")     
-            reach_id = int(swot_file.name.split('_')[0])
-            sos_ri = np.where(self.sos_dict["reach_id"] == reach_id)
-            
-            qhat = self.sos_dict["qhat"][sos_ri[0]]
-            swot_data = extract_swot(swot_file, qhat)
-            if swot_data["reach"]:
-                gb = GB(swot_data["reach"])
-                data = gb.bam_data_reach()
-                priors = gb.bam_priors(data)
-                self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
-            
-            if swot_data["node"]:
-                gb = GB(swot_data["node"])
-                data = gb.bam_data_node()
-                priors = gb.bam_priors(data)
-                sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
-                self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
+            cnt +=1
+            if str(cnt).endswith('00'):
+                print('--------------------------------------', cnt, f'of {len(swot_files)} files processed ...')
+            try:
+                # print(f"Running on file: {swot_file.name}")     
+                reach_id = int(swot_file.name.split('_')[0])
+                sos_ri = np.where(self.sos_dict["reach_id"] == reach_id)
+                
+                qhat = self.sos_dict["qhat"][sos_ri[0]]
+                swot_data = extract_swot(swot_file, qhat)
+                if swot_data["reach"]:
+                    gb = GB(swot_data["reach"])
+                    data = gb.bam_data_reach()
+                    priors = gb.bam_priors(data)
+                    self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
+                
+                if swot_data["node"]:
+                    gb = GB(swot_data["node"])
+                    data = gb.bam_data_node()
+                    priors = gb.bam_priors(data)
+                    sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
+                    self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
+            except:
+                print(swot_file.name, 'failed')
+                pass
         
         self.gb_dict["reach"] = reach_temp_dict
         self.gb_dict["node"] = node_temp_dict
