@@ -3,6 +3,7 @@ from netCDF4 import Dataset, chartostring
 import numpy as np
 import pandas as pd
 from os import walk
+import os
 
 class RiggsRead:
     """Class that reads in Riggs site data needed to download riggs records.
@@ -35,11 +36,11 @@ class RiggsRead:
 
     def read(self, current_group_agency_reach_ids = []):
         """Read Riggs data."""
-
-        # add more file maps as we test new continents
+                # add more file maps as we test new continents
         target_file_map = {
-            'na':['Riggs_Canada_P.nc'],
-            'eu':['Riggs_uk_P.nc', 'Riggs_france_.nc'],
+            'na':['Riggs_canada_.nc'],
+            'eu':['Riggs_uk_.nc', 'Riggs_france_.nc'],
+            # 'eu':['Riggs_france_.nc'],
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
@@ -52,28 +53,91 @@ class RiggsRead:
         reachIDR=[]
         agencyR=[]
         RIGGScal=[]
-        for i in  range(len(filenames)):
+
+        for i in range(len(filenames)):
+
+            # ncf = Dataset('./Rtarget/'+filename)
             ncf = Dataset(self.Riggs_targets.__str__()+"/"+filenames[i])
-            #ncf = Dataset('./Rtarget/'+filenames[i])
-           
+            print(ncf["StationID"][:])
             #agency ID      
-            st = ncf["StationID"][:].filled(np.nan)
-            if type(st[0]) == np.ndarray:
-                st=np.rot90(st,k=-1,axes=(1,0))
-                st=np.flipud(st)
-                st=st.astype(str)
-                ST=[]
+            # st = ncf["StationID"][:].filled(np.nan) #new python methods no longer return a masked array for station id
+            st = ncf["StationID"][:]
+            print(st, 'before')
+            
+
+            current = []
+            if len(current_group_agency_reach_ids) != 0:
+                print('second reading pass')
+                print(current_group_agency_reach_ids)
+                current_group_agency_reach_ids = [''.join(x) for x in current_group_agency_reach_ids]
+
+            st = [''.join(x) for x in st]
+
+
+
+
+            # for x in current_group_agency_reach_ids:
                 
-                for ids in range(len(st)):
-                    tst=st[ids]
-                    tst=np.delete(tst,np.where(tst==' '))               
-                    ST.append("".join(tst))
-                st=ST                    
-                
+            #     test = [''.join(x) for x in st]
+            #     print('test print')
+            #     print(test)
+            #     print('comparison print')
+            #     print(test[0][0])
+            #     if 'uk' in test[0][0]:
+            #         print('parsing uk gauge')
+
+            #         split_test = test.split('/')
+            #         one = split_test[-1][:8]
+            #         two = split_test[-1][8:12]
+            #         three = split_test[-1][12:16]
+            #         four = split_test[-1][16:20]
+            #         five = split_test[-1][20:]
+
+            #         parsed_id =  '-'.join([one,two,three,four,five])
+            #         url = '/'.join(split_test[:-1])
+            #         test = '/'.join([url, parsed_id])
+            #         current.append(test)
+            #     else:
+            #         test = [''.join(x) for x in st]
+
+            # st = current
+
+
+
+
+
+
+            # This changed with new target files as well, there may be contries that still need this modification
+            # if 'uk' in filenames[i]:
+            #     if type(st[0]) == np.ndarray:
+            #         st=np.rot90(st,k=-1,axes=(1,0))
+            #         st=np.flipud(st)
+            #         st=st.astype(str)
+            #         ST=[]
+                    
+            #         for ids in range(len(st)):
+            #             tst=st[ids]
+            #             tst=np.delete(tst,np.where(tst==' '))               
+            #             ST.append("".join(tst))
+            #         st=ST    
+            
+            # else:
+            #     st = [''.join(x) for x in st]
+            
+            
+                            
+            print(st, 'after')
             #associated Sword Reach
             rid= ncf["Reach_ID"][:].filled(np.nan)
+            print('reach ids')
+            print(rid)
             #calibration flag
             cal= ncf["CAL"][:].filled(np.nan)
+            if len(current_group_agency_reach_ids)!=0:
+                print('second round matchup, defra isnt matching---------------------------')
+                print(st[0], current_group_agency_reach_ids[0])
+                print(st[-1], current_group_agency_reach_ids[-1])
+                print(type(st[-1]), type(current_group_agency_reach_ids[-1]))
 
             for j in range(len(st)):
                 #this is set up for multiple agencies to run in the same module
@@ -82,7 +146,9 @@ class RiggsRead:
                 # This logic block ensures that the if we are in the second call of read
                 # then we will only read the targets of the non historic gauges
                 if len(current_group_agency_reach_ids)!=0:
+
                     if st[j] in current_group_agency_reach_ids:
+                    
                         if str(int(cal[j])) in ['0','1']:
                             # print(filenames[i])
 
@@ -108,6 +174,7 @@ class RiggsRead:
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
                             if 'uk' in filenames[i]:
+                                print('found defra')
                                 agencyR.append('DEFRA')
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
@@ -164,5 +231,6 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
-
+        print('most of the below should not be 23303200391')
+        print(agencyR, reachIDR)
         return datariggs, reachIDR, agencyR, RIGGScal

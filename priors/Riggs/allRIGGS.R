@@ -275,5 +275,6 @@ qdownload_f =function(site){
                   Date=as.character(as.Date(df$date_obs_elab)))
     df = df[df$Q>=0,]
   }
+  print(df)
   return(df)
 }

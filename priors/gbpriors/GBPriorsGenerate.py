@@ -348,8 +348,8 @@ class GBPriorsGenerate:
         cnt = 0
         for swot_file in swot_files:
             cnt +=1
-            if str(cnt).endswith('00'):
-                print('--------------------------------------', cnt, f'of {len(swot_files)} files processed ...')
+            # if str(cnt).endswith('00'):
+            #     print('--------------------------------------', cnt, f'of {len(swot_files)} files processed ...')
             try:
                 # print(f"Running on file: {swot_file.name}")     
                 reach_id = int(swot_file.name.split('_')[0])
@@ -370,7 +370,7 @@ class GBPriorsGenerate:
                     sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
                     self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
             except:
-                print(swot_file.name, 'failed')
+                # print(swot_file.name, 'failed')
                 pass
         
         self.gb_dict["reach"] = reach_temp_dict

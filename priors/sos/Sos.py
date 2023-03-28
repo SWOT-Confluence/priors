@@ -175,6 +175,7 @@ class Sos:
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
 
+
         sos = Dataset(self.sos_file, 'a')
         
         self.bad_prior = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
@@ -318,7 +319,7 @@ class Sos:
             double_gauge = True 
 
             # find the mean q for each gauge
-            gage_mean_q_list = [gage["mean_q"][i] for i in gage_index[0]]
+            gage_mean_q_list = [gage[f"{source}_mean_q"][i] for i in gage_index[0]]
 
             # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
             # this method of sorting could change
@@ -328,23 +329,23 @@ class Sos:
             double_gauge = False
 
         grades = sos["model"]
-        if self._isvalid_q(gage, gage_index):
+        if self._isvalid_q(gage, gage_index, source):
             if not double_gauge:
-                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index]
-                grades["max_q"][sos_index] = gage["max_q"][gage_index]
-                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index]
-                grades["mean_q"][sos_index] = gage["mean_q"][gage_index]
-                grades["min_q"][sos_index] = gage["min_q"][gage_index]
-                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index]
+                grades["flow_duration_q"][sos_index] = gage[f"{source}_flow_duration_q"][gage_index]
+                grades["max_q"][sos_index] = gage[f"{source}_max_q"][gage_index]
+                grades["monthly_q"][sos_index] = gage[f"{source}_monthly_q"][gage_index]
+                grades["mean_q"][sos_index] = gage[f"{source}_mean_q"][gage_index]
+                grades["min_q"][sos_index] = gage[f"{source}_min_q"][gage_index]
+                grades["two_year_return_q"][sos_index] = gage[f"{source}_two_year_return_q"][gage_index]
                 self.overwritten_indexes[sos_index] = 1
                 self.overwritten_source[sos_index] = source
             else:
-                grades["flow_duration_q"][sos_index] = gage["flow_duration_q"][gage_index][winner_index]
-                grades["max_q"][sos_index] = gage["max_q"][gage_index][winner_index]
-                grades["monthly_q"][sos_index] = gage["monthly_q"][gage_index][winner_index]
-                grades["mean_q"][sos_index] = gage["mean_q"][gage_index][winner_index]
-                grades["min_q"][sos_index] = gage["min_q"][gage_index][winner_index]
-                grades["two_year_return_q"][sos_index] = gage["two_year_return_q"][gage_index][winner_index]
+                grades["flow_duration_q"][sos_index] = gage[f"{source}_flow_duration_q"][gage_index][winner_index]
+                grades["max_q"][sos_index] = gage[f"{source}_max_q"][gage_index][winner_index]
+                grades["monthly_q"][sos_index] = gage[f"{source}_monthly_q"][gage_index][winner_index]
+                grades["mean_q"][sos_index] = gage[f"{source}_mean_q"][gage_index][winner_index]
+                grades["min_q"][sos_index] = gage[f"{source}_min_q"][gage_index][winner_index]
+                grades["two_year_return_q"][sos_index] = gage[f"{source}_two_year_return_q"][gage_index][winner_index]
                 self.overwritten_indexes[sos_index] = 1
                 self.overwritten_source[sos_index] = source
 
@@ -352,7 +353,7 @@ class Sos:
             self.bad_prior[sos_index] = 1
             self.bad_prior_source[sos_index] = source
         
-    def _isvalid_q(self, gage, gage_index):
+    def _isvalid_q(self, gage, gage_index, source):
         """Test if any q priors in gage data are less than or equal to 0.
         
         Parameters
@@ -365,9 +366,10 @@ class Sos:
         Returns
         -------
         Boolean indicator of valid (True) or invalid data (False)
+        
         """
         
-        keys = ["flow_duration_q", "max_q", "monthly_q", "mean_q", "min_q", "two_year_return_q"]
+        keys = [f"{source}_flow_duration_q", f"{source}_max_q", f"{source}_monthly_q", f"{source}_mean_q", f"{source}_min_q", f"{source}_two_year_return_q"]
         valid = True
         for key in keys:
             var = gage[key][gage_index]
