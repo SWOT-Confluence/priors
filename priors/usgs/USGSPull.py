@@ -57,9 +57,10 @@ def merge_historic_gauge_data(sos, date_list, gauge_df_list):
             
             except:
                 print('merge failed')
-                print(gauge_df)
+                # print(gauge_df)
                 try:
-                    print(sos_df)
+                    # print(sos_df)
+                    print('sos df')
                 except:
                     print('no sos df')
         cnt +=1
@@ -136,16 +137,68 @@ class USGSPull:
         #define date range block here
         ALLt=pd.date_range(start='1980-1-1',end=self.end_date)
         gage_read = USGSRead(self.usgs_targets)
+
+        # this pulls all the gauges in the targets
         dataUSGS, reachID, USGScal = gage_read.read()
+
+
+        current_parsed_agency_ids = []
+        # we want to match those up with the one in the non historical sos
+        sos = Dataset(Path(self.sos_file))
+
+        agency_ids_from_sos =  list(sos['usgs']['usgs_id'][:])
+        sos.close()
+
+        print('sos ids')
+        print(agency_ids_from_sos[0])
+        print('the above should match the below, if not parse it')
+        print(dataUSGS[0])
+
+        for x in agency_ids_from_sos:
+            single_id = []
+            for i in x:
+                try:
+                    single_id.append(i.decode('UTF-8'))
+                except:
+                    print('didnt parse')
+                    print(x)
+
+                    pass
+
+            # print(single_id)
+            single_id = ''.join(single_id)
+            # print(single_id)
+            current_parsed_agency_ids.append(single_id)
+
+        # print('these should be 1413')
+        # print('current_parsed_agency_ids')
+        # print(current_parsed_agency_ids)
+        # print('datausgs')
+        # print(dataUSGS)
+
+        # raise ValueError
+        cnt = 0
+        for i in range(len(dataUSGS)):
+                if dataUSGS[i] in current_parsed_agency_ids:
+                    cnt += 1
+        print('cnt---------------------------shoudl be 1413')
+        print(cnt)
+        # raise ValueError
+
+
+
+
+        dataUSGS, reachID, USGScal = gage_read.read(current_agency_ids=current_parsed_agency_ids)
+
         
         # Download records and gather a list of dataframes
         df_list = asyncio.run(self.gather_records(dataUSGS))
 
         # Bring in previously downloaded gauge data and merge with new data
-        sos = Dataset(self.sos_file, 'a')
-        usgs_qt = sos['usgs']['usgs_qt']
-        date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
-        df_list = merge_historic_gauge_data(sos, date_list, df_list) 
+        # sos = Dataset(self.sos_file, 'a')
+        # usgs_qt = sos['usgs']['usgs_qt']
+        # date_list = [days_convert(i) if i!=-999999999999.0 else i for i in usgs_qt[0].data]
+        # df_list = merge_historic_gauge_data(sos, date_list, df_list) 
 
 
         # generate empty arrays for nc output

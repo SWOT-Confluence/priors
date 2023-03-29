@@ -130,7 +130,7 @@ class Priors:
             path to SOS file to update
         """
 
-        usgs_file = self.input_dir / "gage" / "USGStargetsV5P.nc"
+        usgs_file = self.input_dir / "gage" / "USGStargetsV6_.nc"
         today = datetime.today().strftime('%Y-%m-%d')
         usgs_pull = USGSPull(usgs_targets = usgs_file, start_date = start_date, end_date = today, sos_file = sos_file)
         usgs_pull.pull()
@@ -181,9 +181,10 @@ class Priors:
 
             if "usgs" in self.priors_list and self.cont == "na":
                 print("Updating USGS priors.")
-                self.execute_usgs(sos_file, start_date = sos_last_run_time)
+                self.execute_usgs(sos_file, start_date = '1980-1-1')
 
-            if 'riggs' in self.priors_list and self.cont not in ['af', 'as' ]:
+            # adding na to this list for now to avoid canada integration
+            if 'riggs' in self.priors_list and self.cont not in ['af', 'as', 'na']:
                 # riggs modules are having problems with downloading just the delta
                 # change start date to sos_last_run_time to continue development
                 self.execute_Riggs(sos_file, start_date = '1980-1-1')

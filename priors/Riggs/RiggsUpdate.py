@@ -82,28 +82,14 @@ class RiggsUpdate:
 
             # Reach identifiers
             Riggs_ids_all = self.Riggs_dict["reachId"]
-            print('all riggs id')
-            print(Riggs_ids_all)
             Riggs_ids = [Riggs_ids_all[i] for i in agency_indexes]
-            print('riggs ids')
-            print(Riggs_ids)
             same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
-            print('same ids')
-            print(same_ids)
-            indexes = np.where(np.isin(Riggs_ids[0], same_ids))[0]
-            print('indexes')
-            print(indexes)
+            indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
             
             if indexes.size == 0:
                 self.map_dict[agency] = None
             else:
-                # since we have two separate gauge angencies now,
-                # this map dict needs to get initalized with the dimensions of gauge # by days
-                # then filled in at the indexes 
-                
                 # Map Riggs data that matches SoS reach identifiers
-                print('going into map')
-                print(self.Riggs_dict["reachId"].astype(np.int64)[indexes])
                 self.map_dict[agency]["days"] = np.array(range(1, len(self.Riggs_dict["Qwrite"][0]) + 1))
                 self.map_dict[agency]["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[indexes]
                 self.map_dict[agency]["fdq"] = self.Riggs_dict["FDQS"][indexes,:]
@@ -133,18 +119,13 @@ class RiggsUpdate:
                 Riggs = sos[agency]
                 Riggs["num_days"][:] = self.map_dict[agency]["days"]
                 # used f string for agency so it generalizes the sos creation for different agencies
-                print(self.map_dict[agency]["Riggs_reach_id"])
-                print(Riggs[f"{agency}_reach_id"][:])
-                print(self.map_dict[agency]["Riggs_reach_id"].shape)
-                print(Riggs[f"{agency}_reach_id"][:].shape)
-
                 Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
-                Riggs[f"{agency}_flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
                 Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
                 Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
                 Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
