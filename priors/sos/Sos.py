@@ -56,7 +56,7 @@ class Sos:
         Uploads new version to Confluence S3 bucket
     """
 
-    SUFFIX = "_sword_v11_SOS_priors.nc"
+    SUFFIX = "_sword_v15_SOS_priors.nc"
     VERS_LENGTH = 4
     MOD_TIME = 18000    # seconds
 
@@ -192,17 +192,17 @@ class Sos:
         if self.continent == "na":
 
              # historic USGS
-            historic_usgs_reach_ids = sos["historicQ"]["usgs"]["usgs_reach_id"][:]
+            historic_usgs_reach_ids = sos["historicQ"]["USGS"]["USGS_reach_id"][:]
             for index, rid in enumerate(historic_usgs_reach_ids):
-                self._overwrite_prior(rid, sos, sos["historicQ"]["usgs"], "usgs")   
+                self._overwrite_prior(rid, sos, sos["historicQ"]["USGS"], "USGS")   
 
             # USGS
-            usgs_reach_ids = sos["usgs"]["usgs_reach_id"][:]
-            usgs_cal = sos["usgs"]["CAL"][:]
+            usgs_reach_ids = sos["USGS"]["USGS_reach_id"][:]
+            usgs_cal = sos["USGS"]["CAL"][:]
             for index, rid in enumerate(usgs_reach_ids) :
                 # check for cal/val
                 if usgs_cal[index] == 1:
-                    self._overwrite_prior(rid, sos, sos["usgs"], "usgs")
+                    self._overwrite_prior(rid, sos, sos["USGS"], "USGS")
 
             # Historic WSC
             historic_wsc_reach_ids = sos["historicQ"]["WSC"]["WSC_reach_id"][:]

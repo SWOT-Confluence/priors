@@ -146,7 +146,7 @@ class USGSPull:
         # we want to match those up with the one in the non historical sos
         sos = Dataset(Path(self.sos_file))
 
-        agency_ids_from_sos =  list(sos['usgs']['usgs_id'][:])
+        agency_ids_from_sos =  list(sos['USGS']['USGS_id'][:])
         sos.close()
 
         print('sos ids')

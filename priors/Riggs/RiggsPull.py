@@ -262,7 +262,6 @@ class RiggsPull:
         sites: dict
             Dictionary of riggs data needed to download a record
         """
-
         records = await asyncio.gather(*(self.get_record(sites[site],agencyR[site]) for site in range(len(sites))))
         return records
 
@@ -373,7 +372,6 @@ class RiggsPull:
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_parsed_agency_ids)
         print(' reaches here should be good, this is after second pull, first was good')
         print(len(reachIDR), reachIDR)
-
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6

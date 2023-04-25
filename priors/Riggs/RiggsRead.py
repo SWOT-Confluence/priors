@@ -41,6 +41,7 @@ class RiggsRead:
             'na':['Riggs_canada_.nc'],
             'eu':['Riggs_uk_.nc', 'Riggs_france_.nc'],
             # 'eu':['Riggs_france_.nc'],
+            # 'eu':['Riggs_uk_.nc'],
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
@@ -58,17 +59,17 @@ class RiggsRead:
 
             # ncf = Dataset('./Rtarget/'+filename)
             ncf = Dataset(self.Riggs_targets.__str__()+"/"+filenames[i])
-            print(ncf["StationID"][:])
+            # print(ncf["StationID"][:])
             #agency ID      
             # st = ncf["StationID"][:].filled(np.nan) #new python methods no longer return a masked array for station id
             st = ncf["StationID"][:]
-            print(st, 'before')
+            # print(st, 'before')
             
 
             current = []
             if len(current_group_agency_reach_ids) != 0:
-                print('second reading pass')
-                print(current_group_agency_reach_ids)
+                # print('second reading pass')
+                # print(current_group_agency_reach_ids)
                 current_group_agency_reach_ids = [''.join(x) for x in current_group_agency_reach_ids]
 
             st = [''.join(x) for x in st]
@@ -126,11 +127,11 @@ class RiggsRead:
             
             
                             
-            print(st, 'after')
+            # print(st, 'after')
             #associated Sword Reach
             rid= ncf["Reach_ID"][:].filled(np.nan)
-            print('reach ids')
-            print(rid)
+            # print('reach ids')
+            # print(rid)
             #calibration flag
             cal= ncf["CAL"][:].filled(np.nan)
             if len(current_group_agency_reach_ids)!=0:

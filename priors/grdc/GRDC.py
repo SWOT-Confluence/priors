@@ -120,12 +120,12 @@ class GRDC:
         grdc["num_days"][:] = self.map_dict["days"]
         grdc["num_grdc_reaches"][:] = range(1, self.map_dict["grdc_reach_id"].shape[0] + 1)
         grdc["grdc_reach_id"][:] = self.map_dict["grdc_reach_id"]
-        grdc["flow_duration_q"][:] = np.transpose(np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL))
-        grdc["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
-        grdc["monthly_q"][:] = np.transpose(np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL))
-        grdc["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
-        grdc["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
-        grdc["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
+        grdc["grdc_flow_duration_q"][:] = np.transpose(np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL))
+        grdc["grdc_max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
+        grdc["grdc_monthly_q"][:] = np.transpose(np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL))
+        grdc["grdc_mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
+        grdc["grdc_min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
+        grdc["grdc_two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
         grdc["grdc_id"][:] = np.nan_to_num(self.map_dict["grdc_id"], copy=True, nan=self.INT_FILL)
         grdc["grdc_q"][:] = np.transpose(np.nan_to_num(self.map_dict["grdc_q"], copy=True, nan=self.FLOAT_FILL))
         grdc["grdc_qt"][:] = np.transpose(np.nan_to_num(self.map_dict["grdc_qt"], copy=True, nan=self.FLOAT_FILL))
