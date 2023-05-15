@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:citoterms="http://purl.org/spar/cito/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:foaf="http://xmlns.com/foaf/0.1/"
+   xmlns:ore="http://www.openarchives.org/ore/terms/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs1="http://www.w3.org/2001/01/rdf-schema#"
+>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemetadata.xml">
+    <dc:format>application/rdf+xml</dc:format>
+    <citoterms:documents>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation</citoterms:documents>
+    <dc:title>Dublin Core science metadata document describing the HydroShare resource</dc:title>
+    <ore:isAggregatedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation</ore:isAggregatedBy>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml">
+    <dcterms:created>2023-05-15T18:27:45Z</dcterms:created>
+    <dcterms:modified>2023-05-15T18:27:45Z</dcterms:modified>
+    <dc:format>application/rdf+xml</dc:format>
+    <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/ResourceMap"/>
+    <dc:creator rdf:resource="http://foresite-toolkit.googlecode.com/#pythonAgent"/>
+    <ore:describes rdf:resource="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation"/>
+    <dc:identifier>38feeef698ca484b907b7b3eb84ad05b</dc:identifier>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/terms/CollectionResource">
+    <rdfs1:label>Collection Resource</rdfs1:label>
+    <rdfs1:isDefinedBy>http://www.hydroshare.org/terms</rdfs1:isDefinedBy>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation">
+    <rdf:type rdf:resource="http://www.openarchives.org/ore/terms/Aggregation"/>
+    <ore:isDescribedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml</ore:isDescribedBy>
+    <dcterms:type rdf:resource="http://www.hydroshare.org/terms/CollectionResource"/>
+    <ore:aggregates rdf:resource="http://www.hydroshare.org/resource/465672b67a6d467384eba0724ca979ea/data/resourcemap.xml"/>
+    <ore:aggregates rdf:resource="http://www.hydroshare.org/resource/cbf1587a7f1f4beb9693a3d1973385da/data/resourcemap.xml"/>
+    <citoterms:isDocumentedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemetadata.xml</citoterms:isDocumentedBy>
+    <ore:aggregates rdf:resource="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemetadata.xml"/>
+    <dc:title>Surface Water and Ocean Topography  Hydrology Community Discharge (SWOT SHCQ)</dc:title>
+        <ore:aggregates rdf:resource="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/contents/collection_list_38feeef698ca484b907b7b3eb84ad05b.csv"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/Aggregation">
+    <rdfs1:isDefinedBy>http://www.openarchives.org/ore/terms/</rdfs1:isDefinedBy>
+    <rdfs1:label>Aggregation</rdfs1:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/contents/collection_list_38feeef698ca484b907b7b3eb84ad05b.csv">
+    <ore:isAggregatedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation</ore:isAggregatedBy>
+    <dc:format>text/csv</dc:format>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://foresite-toolkit.googlecode.com/#pythonAgent">
+    <foaf:name>Foresite Toolkit (Python)</foaf:name>
+    <foaf:mbox>foresite@googlegroups.com</foaf:mbox>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/cbf1587a7f1f4beb9693a3d1973385da/data/resourcemap.xml">
+    <dc:format>application/rdf+xml</dc:format>
+    <ore:isAggregatedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation</ore:isAggregatedBy>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.hydroshare.org/resource/465672b67a6d467384eba0724ca979ea/data/resourcemap.xml">
+    <dc:format>application/rdf+xml</dc:format>
+    <ore:isAggregatedBy>http://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/data/resourcemap.xml#aggregation</ore:isAggregatedBy>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.openarchives.org/ore/terms/ResourceMap">
+    <rdfs1:label>ResourceMap</rdfs1:label>
+    <rdfs1:isDefinedBy>http://www.openarchives.org/ore/terms/</rdfs1:isDefinedBy>
+  </rdf:Description>
+</rdf:RDF>
