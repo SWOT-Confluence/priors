@@ -37,6 +37,7 @@ from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
 from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
+from priors.HydroShare.HSPull import HSp
 
 # Third-party imports
 import botocore
@@ -155,6 +156,11 @@ class Priors:
         Riggs_update.read_sos()
         Riggs_update.map_data()
         Riggs_update.update_data()
+    
+    def execute_HydroShare(self):
+        #this is set up to take inputs but doesn't need any
+        hp=HSp()
+        hp.pull()#this gets you a dict with all HS data
 
     def update(self):
         """Generate and update priors based on arguments."""
