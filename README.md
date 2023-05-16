@@ -28,7 +28,7 @@ export aws_key=XXXXXXXXXXXXXX
 export aws_secret=XXXXXXXXXXXXXXXXXXXXXXXXXX
 
 # Docker run command
-docker run --rm --name priors -e AWS_ACCESS_KEY_ID=$aws_key -e AWS_SECRET_ACCESS_KEY=$aws_secret -e AWS_DEFAULT_REGION=$default_region -e AWS_BATCH_JOB_ARRAY_INDEX=3 -v /data/priors:/data priors:latest -i -235 -r constrained -p usgs grdc gbpriors
+docker run --rm --name priors -e AWS_ACCESS_KEY_ID=$aws_key -e AWS_SECRET_ACCESS_KEY=$aws_secret -e AWS_DEFAULT_REGION=$default_region -e AWS_BATCH_JOB_ARRAY_INDEX=3 -v /data/priors:/data priors:latest -i -235 -r constrained -p usgs riggs gbpriors
 ```
 
 # tests
