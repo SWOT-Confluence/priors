@@ -62,18 +62,38 @@ class USGSRead:
         Mask=pd.array(list(M.values()),dtype="boolean")
         return Mask
 
-    def read(self):
+    def read(self, current_agency_ids =[]):
         """Read USGS data."""
        
         ncf = Dataset(self.usgs_targets)
         # USGS STAID ID
-        dataUSGS = chartostring(ncf["STAID"][:].filled(np.nan))
-        dataUSGS = [ el.strip(' ') for el in dataUSGS ]
+
+        # stuff commented here worked before
+        # dataUSGS = chartostring(ncf["StationID"][:].filled(np.nan))
+        dataUSGS = ncf["StationID"][:]
+        dataUSGS = [''.join(i) for i in dataUSGS]
+        # dataUSGS = [ el.strip(' ') for el in dataUSGS ]
 
         # SWORD Reach ID
-        reachID = chartostring(ncf["reach_id"][:].filled(np.nan))
+        # reachID = chartostring(ncf["Reach_ID"][:].filled(np.nan))
+        reachID = ncf["Reach_ID"][:]
         # calibration flag
-        USGScal=ncf["CAL"][:].filled(np.nan)
+        # USGScal=ncf["CAL"][:].filled(np.nan)
+        USGScal=ncf["CAL"][:]
+
+
+        if len(current_agency_ids)!= 0:
+            print('second time through')
+            mock_dataUSGS = []
+            mock_reachID = []
+            mock_USGScal = []
+            for i in range(len(dataUSGS)):
+                if dataUSGS[i] in current_agency_ids:
+                    mock_dataUSGS.append(dataUSGS[i])
+                    mock_reachID.append(reachID[i])
+                    mock_USGScal.append(USGScal[i])
+            print(mock_dataUSGS[0])
+            return mock_dataUSGS, mock_reachID, mock_USGScal
 
 
         return dataUSGS, reachID, USGScal

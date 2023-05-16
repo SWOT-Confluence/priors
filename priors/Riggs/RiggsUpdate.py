@@ -6,6 +6,7 @@ from pathlib import Path
 from netCDF4 import Dataset, stringtochar
 import numpy as np
 import collections
+import json
 
 class RiggsUpdate:
     """Class that updates Riggs gage data in the SoS.
@@ -82,9 +83,24 @@ class RiggsUpdate:
 
             # Reach identifiers
             Riggs_ids_all = self.Riggs_dict["reachId"]
-            Riggs_ids = [Riggs_ids_all[i] for i in agency_indexes]
+            print(Riggs_ids_all, '1')
+            print(Riggs_ids_all[0], '2')
+            Riggs_ids = []
+
+            for i in agency_indexes[0]:
+                print(i)
+                single_id = Riggs_ids_all[i]
+                print(single_id, '-------------------------')
+                Riggs_ids.append(int(single_id))
+            # Riggs_ids = [int(Riggs_ids_all[i]) for i in agency_indexes]
+            print('looking to match')
+            print(Riggs_ids[:10])
+            print('with')
+            print(self.sos_reaches[:10])
             same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
             indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
+            print('indexes here --------------------------')
+            print(indexes)
             
             if indexes.size == 0:
                 self.map_dict[agency] = None
@@ -102,6 +118,13 @@ class RiggsUpdate:
                 self.map_dict[agency]["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
                 self.map_dict[agency]["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
 
+        # Serializing json
+        for i in self.map_dict[agency]["Riggs_q"][:10]:
+            print(i[:10])
+
+        for i in self.Riggs_dict["Qwrite"][:10]:
+            print(i[:10])
+        # raise
     def update_data(self):
         """Updates Riggs data in the SoS.
         
@@ -120,12 +143,12 @@ class RiggsUpdate:
                 Riggs["num_days"][:] = self.map_dict[agency]["days"]
                 # used f string for agency so it generalizes the sos creation for different agencies
                 Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
-                Riggs["flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
-                Riggs["max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs["monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs["mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs["min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs["two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
                 Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
                 Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
                 Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)

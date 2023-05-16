@@ -33,6 +33,7 @@ downloadQ_j = robjects.globalenv['qDownload_j']
 # Loading the function we have defined in R.
 downloadQ_u = robjects.globalenv['qdownload_uk']
 downloadQ_ch = robjects.globalenv['qdownload_ch']
+downloadQ_f = robjects.globalenv['qdownload_f']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
@@ -147,6 +148,25 @@ class RiggsPull:
             Site identifier
         """
         #Rcode pull entire record, will need to filter after DL within this function
+        if 'EAU' in agencyR:
+            print("Pulling French gages")
+            try:
+                FMr=downloadQ_f(site)
+                try:
+                    with localconverter(ro.default_converter + pandas2ri.converter):
+                        print('pulling gauge')
+                        FMr = ro.conversion.rpy2py(FMr)
+                        FMr = FMr.rename(columns={"Date":'ConvertedDate'})                      
+                        FMr =  FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
+                        print('successuflly pulled gauge')
+                        return FMr
+            
+                except AttributeError:
+                    FMr=[]
+                    return FMr
+            except:
+                FMr=[]
+                return FMr
         if 'Hidroweb' in agencyR:
             #brazil
             # sometimes the gauge pull fails, we will try it three times
@@ -211,6 +231,7 @@ class RiggsPull:
                   return FMr
 
         if 'DEFRA' in agencyR:
+            print('pulling uk gauges')
             FMr=downloadQ_u(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
                  FMr = ro.conversion.rpy2py(FMr)
@@ -241,7 +262,6 @@ class RiggsPull:
         sites: dict
             Dictionary of riggs data needed to download a record
         """
-
         records = await asyncio.gather(*(self.get_record(sites[site],agencyR[site]) for site in range(len(sites))))
         return records
 
@@ -259,36 +279,99 @@ class RiggsPull:
         gage_read = RiggsRead(Riggs_targets = self.riggs_targets, cont = self.cont)
         # read in all gauges to create agencyR list
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read()
-        current_group_agency_reach_ids = []
+        # current_group_agency_reach_ids = []
+        print('going through these agencies')
+        print(list(set(list(agencyR))))
+        current_parsed_agency_ids = []
         for agency in list(set(list(agencyR))):
-            current_group_agency_reach_ids = current_group_agency_reach_ids +  list(sos[agency][f'{agency}_id'][:])
+
+            agency_ids_from_sos =  list(sos[agency][f'{agency}_id'][:])
+            print(agency_ids_from_sos)
+
+            for x in agency_ids_from_sos:
+                single_id = []
+                for i in x:
+                    if agency in ['DEFRA','EAU'] :
+                        try:
+                            single_id.append(i.decode('UTF-8'))
+                        except:
+                            single_id.append('-')
+                    else:
+                        single_id.append(i)
+                print(single_id)
+                single_id = ''.join(single_id)
+                print(single_id)
+                current_parsed_agency_ids.append(single_id)
+
+
+
+            # current_group_agency_reach_ids = current_group_agency_reach_ids + current_parsed_agency_ids
+
+
+
+
         # convert the above to match the riggs
-
+        # print(current_group_agency_reach_ids)
         current = []
-        for x in current_group_agency_reach_ids:
-            test = []
-            for i in x:
-                
-                if i != b'':
-                    test.append(i.decode('UTF-8'))
-            test = ''.join(test)
 
-            if agencyR[0] == 'DEFRA':
-                split_test = test.split('/')
-                one = split_test[-1][:8]
-                two = split_test[-1][8:12]
-                three = split_test[-1][12:16]
-                four = split_test[-1][16:20]
-                five = split_test[-1][20:]
+        
+        # for each reach id
 
-                parsed_id =  '-'.join([one,two,three,four,five])
-                url = '/'.join(split_test[:-1])
-                test = '/'.join([url, parsed_id])
-            current.append(test)
 
-        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current)
+    # working for uk
+        # for x in current_group_agency_reach_ids:
+    
+        #     # for each letter
+        #     test = []
+        #     for i in x.data:  
+        #         if i != b'':
+        #             test.append(i.decode('UTF-8'))
+        #             # single_id = ''.join(test)
+        #         else:
+        #             test.append(i)
+        #     print(test)
+        #     site_id = ''.join(test[:-11])
+        #     print(site_id)
+        #     print('this should look right')
+        #     current.append(site_id)
 
-        test_data_riggs = []
+
+        #     if 'uk' in test[0]:
+        #             split_test = test.split('/')
+        #             one = split_test[-1][:8]
+        #             two = split_test[-1][8:12]
+        #             three = split_test[-1][12:16]
+        #             four = split_test[-1][16:20]
+        #             five = split_test[-1][20:]
+
+        #             parsed_id =  '-'.join([one,two,three,four,five])
+        #             url = '/'.join(split_test[:-1])
+        #             test = '/'.join([url, parsed_id])
+
+
+        #     print(test)
+        #     single_id = ''.join(test)
+        #     print(single_id)
+        #     current.append(single_id)
+
+
+        #     print(test)
+        #     if 'uk' in test[0]:
+        #         split_test = test.split('/')
+        #         one = split_test[-1][:8]
+        #         two = split_test[-1][8:12]
+        #         three = split_test[-1][12:16]
+        #         four = split_test[-1][16:20]
+        #         five = split_test[-1][20:]
+
+        #         parsed_id =  '-'.join([one,two,three,four,five])
+        #         url = '/'.join(split_test[:-1])
+        #         test = '/'.join([url, parsed_id])
+        #     current.append(test)
+
+        datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_parsed_agency_ids)
+        print(' reaches here should be good, this is after second pull, first was good')
+        print(len(reachIDR), reachIDR)
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6
@@ -315,12 +398,16 @@ class RiggsPull:
 
         # Extract data from NWIS dataframe records
         for i in range(len(datariggs)):
+            # print('example df')
+            # print(df_list[i])
             # check that it is a dataframe
             if isinstance(df_list[i], pd.DataFrame):
+                # print('found some df')
+                # print(df_list[i])  
 
                 if df_list[i].empty is False and 'Q' in df_list[i] :
-                    print('found df')
-                    print(df_list[i])       
+                    # print('found df')
+                    # print(df_list[i])       
                     # create boolean from quality flag       
                     #Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                     # pull in Q
@@ -397,3 +484,4 @@ class RiggsPull:
             "FDQS": FDQS,
             "TwoYr": TwoYr
         }
+        print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])

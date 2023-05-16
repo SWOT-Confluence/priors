@@ -70,7 +70,7 @@ class USGSUpdate:
         else:
             # Map USGS data that matches SoS reach identifiers
             self.map_dict["days"] = np.array(range(1, len(self.usgs_dict["Qwrite"][0]) + 1))
-            self.map_dict["usgs_reach_id"] = self.usgs_dict["reachId"].astype(np.int64)[indexes]
+            self.map_dict["usgs_reach_id"] = np.array(self.usgs_dict["reachId"]).astype(np.int64)[indexes]
             self.map_dict["fdq"] = self.usgs_dict["FDQS"][indexes,:]
             self.map_dict["max_q"] =self.usgs_dict["Qmax"][indexes]
             self.map_dict["monthly_q"] = self.usgs_dict["MONQ"][indexes,:]
@@ -85,7 +85,9 @@ class USGSUpdate:
         """Reads in data from the SoS and stores in sos_reaches attribute."""
 
         sos = Dataset(Path(self.sos_file))
-        self.sos_reaches = sos["reaches"]["reach_id"][:].filled(np.nan).astype(int)
+        # was borking here
+        # self.sos_reaches = sos["reaches"]["reach_id"][:].filled(np.nan).astype(int)
+        self.sos_reaches = sos["reaches"]["reach_id"][:].astype(int)
         sos.close()
 
     def update_data(self):
@@ -101,22 +103,32 @@ class USGSUpdate:
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
 
-            usgs = sos["usgs"]
+            usgs = sos["USGS"]
 
             usgs["num_days"][:] = self.map_dict["days"]
 
             # this variable is not in the SOS
             # usgs["num_usgs_reaches"][:] = range(1, self.map_dict["usgs_reach_id"].shape[0] + 1)
 
-            usgs["usgs_reach_id"][:] = self.map_dict["usgs_reach_id"]
-            usgs["flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
-            usgs["max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
-            usgs["usgs_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S16"))
-            usgs["usgs_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["usgs_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
+            # print(self.map_dict["usgs_reach_id"])
+            # print(usgs["usgs_reach_id"][:])
+            # print(self.map_dict["usgs_reach_id"].shape)
+            # print(usgs["usgs_reach_id"][:].shape)
+
+            usgs["USGS_reach_id"][:] = self.map_dict["usgs_reach_id"]
+            usgs["USGS_flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
+
+            # print(self.map_dict["usgs_id"])
+            # print(usgs["usgs_id"][:])
+            # print(self.map_dict["usgs_id"].shape)
+            # print(usgs["usgs_id"][:].shape)
+            usgs["USGS_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S100"))
+            usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
                 
             sos.close()
