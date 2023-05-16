@@ -1,31 +1,35 @@
 # priors
 
-The priors module generates and uploads a new version of the SoS priors and overwrites GRADES data with gaged prior data.
+The priors module creates and uploads a new version of the SoS priors and overwrites GRADES data with gaged prior data for constrained runs.
 
-Notes:
-- Current iteration copies local SoS file and ignores AWS infrastructure.
-- This program uses `boto3` to interface with the AWS API.
+Priors runs on the continent level.
+
+The priors module will create priors for the gage data indicated by the `-p` argument. When overwriting GRADES data for constrained runs, the indexes and source of the overwritten data are kept to track data provenance.
 
 # installation
 
-1. Clone the repository to your file system.
-2. confluence-aws is best run with Python virtual environments so install venv and create a virutal environment: https://docs.python.org/3/library/venv.html
-3. Activate the virtual environment and use pip to install dependencies: `pip install -r requirements.txt`
+Build a Docker image: `docker build -t priors .`
 
 # execution
 
-Command line arguments
-----------------------
-1. run_type (required): 'unconstrained' or 'constrained' 
-2. grdc (optional): 'grdc'
-3. usgs (optional): 'usgs'
-4. gbpriors (optional): 'gbpriors'
-5. riggs (optional): 'riggs'
+**Command line arguments:**
+- -i: index to locate continent in JSON file
+- -r: run type for workflow execution: 'constrained' or 'unconstrained'
+- -p: list of data to generate priors for: usgs, riggs, gbpriors
+- -l: forces priors to pull a certail level sos ex: 0000
 
-To execute
-----------
-1. Activate your virtual environment.
-2. Run `python3 update_priors.py constrained gbpriors usgs grdc` 
+**Execute a Docker container:**
+
+AWS credentials will need to be passed as environment variables to the container so that `datagen` may access AWS infrastructure to generate JSON files.
+
+```
+# Credentials
+export aws_key=XXXXXXXXXXXXXX
+export aws_secret=XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# Docker run command
+docker run --rm --name priors -e AWS_ACCESS_KEY_ID=$aws_key -e AWS_SECRET_ACCESS_KEY=$aws_secret -e AWS_DEFAULT_REGION=$default_region -e AWS_BATCH_JOB_ARRAY_INDEX=3 -v /data/priors:/data priors:latest -i -235 -r constrained -p usgs grdc gbpriors
+```
 
 # tests
 
