@@ -92,59 +92,60 @@ class HSp:
             MeanD=[]
             MeanDu=[]
             
-            for resource in Collection: #this will bug id there is fewer than 2 resources
-            #hs.sign_in()
-                Tstr=resource[2]
-                res = hs.resource(Tstr)
-                
-                NOWres=res.download(DLpath)
-                z = ZipFile(DLpath+'/'+Tstr+'.zip')   
-                
-                file =z.extractall(DLpath)
-                z.close()
-                remove(DLpath+'/'+Tstr+'.zip')
-                csvpath= DLpath+'/'+ Tstr + '/data/contents/'
-                
-                with scandir(csvpath) as entries:
-                    RES_files = [ entry for entry in entries if entry.name ]
-                
-                for RES_file in RES_files: 
-                    if RES_file.name[-13:-5] != 'template': 
-                         if RES_file.name[-5:-1] != 'ipynb':
-                             
+            for resource in Collection: #this will bug id there is fewer than 2 resources 
+                if 'TEST' not in  resource[0][0:4]:
+                    Tstr=resource[2]
+                    res = hs.resource(Tstr)
                     
-                                RESlist= genfromtxt(csvpath+"/" +RES_file.name, delimiter=',',dtype ='unicode',skip_header=1)
-                                c=1
-                                for measurement in RESlist:               
-                                   if len(measurement[0])>0:
-                                        print(c)
-                                        c=c+1
-                                        Sf.append(RES_file.name)
-                                        Rid.append(measurement[0].astype(np.int64))
-                                        Nid.append(measurement[1].astype(np.int64))
-                                        x.append(measurement[2].astype(np.float32))
-                                        y.append(measurement[3].astype(np.float32))
-                                        date=measurement[4].strip()
-                                        date=date.strip("'")
-                                        d=dt.strptime( date, '%d-%m-%Y')
-                                        T.append(d.toordinal())
-                                        Q.append(measurement[5].astype(float))
-                                        Qu.append(measurement[6].astype(float))
-                                        WSE.append(measurement[7].astype(float))
-                                        WSEu.append(measurement[8].astype(float))
-                                        W.append(measurement[9].astype(float))
-                                        Wu.append(measurement[10].astype(float))
-                                        CXA.append(measurement[11].astype(float))
-                                        CXAu.append(measurement[12].astype(float))
-                                        MxV.append(measurement[13].astype(float))
-                                        MxVu.append(measurement[14].astype(float))
-                                        MeanV.append(measurement[15].astype(float))
-                                        MeanVu.append(measurement[16].astype(float))
-                                        MxD.append(measurement[17].astype(float))
-                                        MxDu.append(measurement[18].astype(float))
-                                        MeanD.append(measurement[19].astype(float))
-                                        MeanDu.append(measurement[20].astype(float))
-                                       
+                    NOWres=res.download(DLpath)
+                    z = ZipFile(DLpath+'/'+Tstr+'.zip')   
+                    
+                    file =z.extractall(DLpath)
+                    z.close()
+                    remove(DLpath+'/'+Tstr+'.zip')
+                    csvpath= DLpath+'/'+ Tstr + '/data/contents/'
+                    
+                    with scandir(csvpath) as entries:
+                        RES_files = [ entry for entry in entries if entry.name ]
+                    
+                    for RES_file in RES_files: 
+                        if RES_file.name[-13:-5] != 'template': 
+                             if RES_file.name[-5:-1] != 'ipynb':
+                                 if RES_file.name[0:6] != 'readme':
+                                 
+                        
+                                    RESlist= genfromtxt(csvpath+"/" +RES_file.name, delimiter=',',dtype ='unicode',skip_header=1)
+                                    c=1
+                                    for measurement in RESlist:               
+                                       if len(measurement[0])>0:
+                                            print(c)
+                                            c=c+1
+                                            Sf.append(RES_file.name)
+                                            Rid.append(measurement[0].astype(np.int64))
+                                            Nid.append(measurement[1].astype(np.int64))
+                                            x.append(measurement[2].astype(np.float32))
+                                            y.append(measurement[3].astype(np.float32))
+                                            date=measurement[4].strip()
+                                            date=date.strip("'")
+                                            d=dt.strptime( date, '%d-%m-%Y')
+                                            T.append(d.toordinal())
+                                            Q.append(measurement[5].astype(float))
+                                            Qu.append(measurement[6].astype(float))
+                                            WSE.append(measurement[7].astype(float))
+                                            WSEu.append(measurement[8].astype(float))
+                                            W.append(measurement[9].astype(float))
+                                            Wu.append(measurement[10].astype(float))
+                                            CXA.append(measurement[11].astype(float))
+                                            CXAu.append(measurement[12].astype(float))
+                                            MxV.append(measurement[13].astype(float))
+                                            MxVu.append(measurement[14].astype(float))
+                                            MeanV.append(measurement[15].astype(float))
+                                            MeanVu.append(measurement[16].astype(float))
+                                            MxD.append(measurement[17].astype(float))
+                                            MxDu.append(measurement[18].astype(float))
+                                            MeanD.append(measurement[19].astype(float))
+                                            MeanDu.append(measurement[20].astype(float))
+                                           
             
             
             data_id=[]
