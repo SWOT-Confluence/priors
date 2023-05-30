@@ -130,7 +130,7 @@ class Priors:
             path to SOS file to update
         """
 
-        usgs_file = self.input_dir / "gage" / "USGStargetsV6_.nc"
+        usgs_file = self.input_dir / "gage" / "USGStargetsV7_.nc"
         today = datetime.today().strftime('%Y-%m-%d')
         usgs_pull = USGSPull(usgs_targets = usgs_file, start_date = start_date, end_date = today, sos_file = sos_file)
         usgs_pull.pull()
@@ -174,20 +174,20 @@ class Priors:
         # Determine run type and add requested gage priors
         # removed constrained run logic check as both unconstrained and constrained now pull gauge data
         # in the future we should write the gauge data to a separate nc file for both
-        if self.run_type == "constrained":
-            if "grdc" in self.priors_list:
-                print("Updating GRDC priors.")
-                self.execute_grdc(sos_file)
 
-            if "usgs" in self.priors_list and self.cont == "na":
-                print("Updating USGS priors.")
-                self.execute_usgs(sos_file, start_date = '1980-1-1')
+        if "grdc" in self.priors_list:
+            print("Updating GRDC priors.")
+            self.execute_grdc(sos_file)
 
-            # adding na to this list for now to avoid canada integration
-            if 'riggs' in self.priors_list and self.cont not in ['af', 'as', 'na']:
-                # riggs modules are having problems with downloading just the delta
-                # change start date to sos_last_run_time to continue development
-                self.execute_Riggs(sos_file, start_date = '1980-1-1')
+        if "usgs" in self.priors_list and self.cont == "na":
+            print("Updating USGS priors.")
+            self.execute_usgs(sos_file, start_date = '1980-1-1')
+
+        # adding na to this list for now to avoid canada integration
+        if 'riggs' in self.priors_list and self.cont not in ['af', 'as', 'na']:
+            # riggs modules are having problems with downloading just the delta
+            # change start date to sos_last_run_time to continue development
+            self.execute_Riggs(sos_file, start_date = '1980-1-1')
         
         # Add geoBAM priors if requested (for either data product)
         if "gbpriors" in self.priors_list:
