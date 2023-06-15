@@ -299,7 +299,11 @@ class RiggsPull:
                     else:
                         single_id.append(i)
                 print(single_id)
-                single_id = ''.join(single_id)
+                try:
+                    single_id = ''.join(single_id)
+                except TypeError:
+                    single_id = [i.decode('utf-8') for i in single_id]
+                    single_id = ''.join(single_id)
                 print(single_id)
                 current_parsed_agency_ids.append(single_id)
 
