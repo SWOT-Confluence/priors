@@ -77,7 +77,11 @@ class RiggsUpdate:
 
         # separate riggs dict by agency
         for agency in set(list(self.Riggs_dict["Agency"])):
+            print('processing agency', agency, '-----------------------------------------------------------')
 
+            # currently riggs dict is holding data for many agencies
+            # we need to pull out only data for the agency we are currently processing
+            # we find the indexes all of the data in riggs dict associated with that agency here
             agency_indexes = np.where(np.array(self.Riggs_dict['Agency'][:]) == agency)
 
 
@@ -106,24 +110,36 @@ class RiggsUpdate:
                 self.map_dict[agency] = None
             else:
                 # Map Riggs data that matches SoS reach identifiers
+                # self.map_dict[agency]["days"] = np.array(range(1, len(self.Riggs_dict["Qwrite"][0]) + 1))
+                # self.map_dict[agency]["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[indexes]
+                # self.map_dict[agency]["fdq"] = self.Riggs_dict["FDQS"][indexes,:]
+                # self.map_dict[agency]["max_q"] =self.Riggs_dict["Qmax"][indexes]
+                # self.map_dict[agency]["monthly_q"] = self.Riggs_dict["MONQ"][indexes,:]
+                # self.map_dict[agency]["mean_q"] = self.Riggs_dict["Qmean"][indexes]
+                # self.map_dict[agency]["min_q"] = self.Riggs_dict["Qmin"][indexes]
+                # self.map_dict[agency]["tyr"] = self.Riggs_dict["TwoYr"][indexes]
+                # self.map_dict[agency]["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes]
+                # self.map_dict[agency]["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
+                # self.map_dict[agency]["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
+
                 self.map_dict[agency]["days"] = np.array(range(1, len(self.Riggs_dict["Qwrite"][0]) + 1))
-                self.map_dict[agency]["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[indexes]
-                self.map_dict[agency]["fdq"] = self.Riggs_dict["FDQS"][indexes,:]
-                self.map_dict[agency]["max_q"] =self.Riggs_dict["Qmax"][indexes]
-                self.map_dict[agency]["monthly_q"] = self.Riggs_dict["MONQ"][indexes,:]
-                self.map_dict[agency]["mean_q"] = self.Riggs_dict["Qmean"][indexes]
-                self.map_dict[agency]["min_q"] = self.Riggs_dict["Qmin"][indexes]
-                self.map_dict[agency]["tyr"] = self.Riggs_dict["TwoYr"][indexes]
-                self.map_dict[agency]["Riggs_id"] = np.array(self.Riggs_dict["data"])[indexes]
-                self.map_dict[agency]["Riggs_q"] = self.Riggs_dict["Qwrite"][indexes,:]
-                self.map_dict[agency]["Riggs_qt"] = self.Riggs_dict["Twrite"][indexes,:]
+                self.map_dict[agency]["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[agency_indexes]
+                self.map_dict[agency]["fdq"] = self.Riggs_dict["FDQS"][agency_indexes]
+                self.map_dict[agency]["max_q"] =self.Riggs_dict["Qmax"][agency_indexes]
+                self.map_dict[agency]["monthly_q"] = self.Riggs_dict["MONQ"][agency_indexes]
+                self.map_dict[agency]["mean_q"] = self.Riggs_dict["Qmean"][agency_indexes]
+                self.map_dict[agency]["min_q"] = self.Riggs_dict["Qmin"][agency_indexes]
+                self.map_dict[agency]["tyr"] = self.Riggs_dict["TwoYr"][agency_indexes]
+                self.map_dict[agency]["Riggs_id"] = np.array(self.Riggs_dict["data"])[agency_indexes]
+                self.map_dict[agency]["Riggs_q"] = self.Riggs_dict["Qwrite"][agency_indexes]
+                self.map_dict[agency]["Riggs_qt"] = self.Riggs_dict["Twrite"][agency_indexes]
 
         # Serializing json
-        for i in self.map_dict[agency]["Riggs_q"][:10]:
-            print(i[:10])
+        # for i in self.map_dict[agency]["Riggs_q"][:10]:
+        #     print(i[:10])
 
-        for i in self.Riggs_dict["Qwrite"][:10]:
-            print(i[:10])
+        # for i in self.Riggs_dict["Qwrite"][:10]:
+        #     print(i[:10])
         # raise
     def update_data(self):
         """Updates Riggs data in the SoS.
@@ -135,6 +151,7 @@ class RiggsUpdate:
         """
 
         if self.map_dict:
+            print(self.map_dict)
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
             agencies = set(list(self.Riggs_dict["Agency"]))

@@ -164,9 +164,13 @@ class Priors:
         sos = Sos(self.cont, self.run_type, self.sos_dir)
         try:
             sos.copy_sos(self.fake_current)
-        except botocore.exceptions.ClientError:
-            print("Exiting program.")
+        except Exception as e:
+            print(e)
             exit(1)
+        # except botocore.exceptions.ClientError:
+        #     print(botocore.exceptions.ClientError)
+        #     print("Exiting program.")
+        #     exit(1)
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
