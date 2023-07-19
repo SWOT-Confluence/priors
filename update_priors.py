@@ -68,7 +68,7 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current, metadata_json):
         """
         Parameters
         ----------
@@ -90,6 +90,7 @@ class Priors:
         self.input_dir = input_dir
         self.sos_dir = sos_dir
         self.fake_current = fake_current
+        self.metadata_json = metadata_json
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -161,7 +162,7 @@ class Priors:
 
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
-        sos = Sos(self.cont, self.run_type, self.sos_dir)
+        sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -229,12 +230,16 @@ def create_args():
                             nargs="+",
                             default=[],
                             help="List: usgs, grdc, riggs, gbpriors")
-
     arg_parser.add_argument("-l",
                             "--level",
                             type=str,
                             default='foo',
                             help="Forces priors to pull a certain level sos ex: 0000")
+    arg_parser.add_argument("-m",
+                            "--metadatajson",
+                            type=Path,
+                            default=Path(__file__).parent / "metadata" / "metadata.json",
+                            help="Path to JSON file that contains global attribute values")
     return arg_parser
 
 def main():
@@ -253,7 +258,7 @@ def main():
         cont = list(json.load(jsonfile)[i].keys())[0]
 
     # Retrieve and update priors
-    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level)
+    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level, args.metadatajson)
     priors.update()
 
 if __name__ == "__main__":

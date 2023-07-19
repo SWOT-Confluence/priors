@@ -1,5 +1,6 @@
 # Standard imports
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 
 # Third-party imports
@@ -60,7 +61,7 @@ class Sos:
     VERS_LENGTH = 4
     MOD_TIME = 18000    # seconds
 
-    def __init__(self, continent, run_type, sos_dir):
+    def __init__(self, continent, run_type, sos_dir, metadata_json):
         """
         Parameters
         ----------
@@ -75,6 +76,7 @@ class Sos:
         self.bad_prior_source = np.array([])
         self.continent = continent
         self.last_run_time = ""
+        self.metadata_json = metadata_json
         self.overwritten_indexes = np.array([])
         self.overwritten_source = np.array([])
         self.run_type = run_type
@@ -161,14 +163,26 @@ class Sos:
             Path to new SoS file on local storage
         """
 
+        # Retrieve global attribute metadata
+        with open(self.metadata_json) as jf:
+            global_atts = json.load(jf)
+        
+        # Create new SoS
         self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
         sos = Dataset(self.sos_file, 'a')
         self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
-        # print(self.last_run_time)
+        
+        # Store global atts
+        for name, value in global_atts.items():
+            setattr(sos, name, value)
+            
+        # Update attributes for current execution
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.version = f"{''.join(padding)}{self.version}"
         sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
+        sos.date_created = datetime.now().strftime('%Y-%m%dT%H:%M:%S')
+        
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
 
