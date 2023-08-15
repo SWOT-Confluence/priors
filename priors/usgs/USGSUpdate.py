@@ -39,7 +39,7 @@ class USGSUpdate:
     FLOAT_FILL = -999999999999
     INT_FILL = -999
 
-    def __init__(self, sos_file, usgs_dict):
+    def __init__(self, sos_file, usgs_dict, metadata_json):
         """
         Parameters
         ----------
@@ -55,7 +55,8 @@ class USGSUpdate:
         self.temp_sos = None
         self.usgs_dict = usgs_dict
         self.map_dict = {}
-        self.sos_reaches = None            
+        self.sos_reaches = None
+        self.variable_atts = metadata_json["USGS"]
 
     def map_data(self):
         """Maps USGS data to SoS, and stores data in map_dict attribute."""
@@ -104,8 +105,9 @@ class USGSUpdate:
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
 
             usgs = sos["USGS"]
-
-            usgs["num_days"][:] = self.map_dict["days"]
+            
+            usgs["num_days"][:] = self.map_dict["days"][:-105]      
+            self.set_variable_atts(usgs["num_days"], self.variable_atts["num_days"])
 
             # this variable is not in the SOS
             # usgs["num_usgs_reaches"][:] = range(1, self.map_dict["usgs_reach_id"].shape[0] + 1)
@@ -116,19 +118,44 @@ class USGSUpdate:
             # print(usgs["usgs_reach_id"][:].shape)
 
             usgs["USGS_reach_id"][:] = self.map_dict["usgs_reach_id"]
+            self.set_variable_atts(usgs["USGS_reach_id"], self.variable_atts["USGS_reach_id"])
+            
             usgs["USGS_flow_duration_q"][:] = np.nan_to_num(self.map_dict["fdq"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_flow_duration_q"], self.variable_atts["USGS_flow_duration_q"])
+            
             usgs["USGS_max_q"][:] = np.nan_to_num(self.map_dict["max_q"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_max_q"], self.variable_atts["USGS_max_q"])
+            
             usgs["USGS_monthly_q"][:] = np.nan_to_num(self.map_dict["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_monthly_q"], self.variable_atts["USGS_monthly_q"])
+            
             usgs["USGS_mean_q"][:] = np.nan_to_num(self.map_dict["mean_q"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_mean_q"], self.variable_atts["USGS_mean_q"])
+            
             usgs["USGS_min_q"][:] = np.nan_to_num(self.map_dict["min_q"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_min_q"], self.variable_atts["USGS_min_q"])
+            
             usgs["USGS_two_year_return_q"][:] = np.nan_to_num(self.map_dict["tyr"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_two_year_return_q"], self.variable_atts["USGS_two_year_return_q"])
 
             # print(self.map_dict["usgs_id"])
             # print(usgs["usgs_id"][:])
             # print(self.map_dict["usgs_id"].shape)
             # print(usgs["usgs_id"][:].shape)
+            
             usgs["USGS_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S100"))
-            usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
-            usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_id"], self.variable_atts["USGS_id"])            
+            
+            usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_q"], self.variable_atts["USGS_q"])
+            
+            usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+            self.set_variable_atts(usgs["USGS_qt"], self.variable_atts["USGS_qt"])
                 
             sos.close()
+            
+    def set_variable_atts(self, variable, variable_dict):
+        """Set the variable attribute metdata."""
+        
+        for name, value in variable_dict.items():
+            setattr(variable, name, value)

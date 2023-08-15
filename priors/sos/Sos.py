@@ -164,8 +164,7 @@ class Sos:
         """
 
         # Retrieve global attribute metadata
-        with open(self.metadata_json) as jf:
-            global_atts = json.load(jf)
+        global_atts = self.metadata_json["global_attributes"]
         
         # Create new SoS
         self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
