@@ -211,7 +211,7 @@ class RiggsPull:
             #note "value" here might be a quality filter
             FMr=downloadQ_c(site)
             if 'FMr' in locals():
-                if len(FMr[0]) == 1:
+                if np.size(FMr[0]) == 1:
                     print("nd")
                     FMr=[]   
                 else:
