@@ -47,8 +47,7 @@ RUN apt update && apt upgrade -y && apt -y install r-base r-base-dev \
 	&& /usr/bin/Rscript -e "install.packages('BBmisc', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('tidyhydat', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&&/usr/bin/Rscript -e "install.packages('RSelenium', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
-	&&/usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
-	&& /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)'
+	&&/usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 #Stage 3 - Python packages
 FROM stage1 as stage2
@@ -58,6 +57,7 @@ RUN /app/env/bin/pip install -r /app/requirements.txt
 
 # Stage 4 - Copy priors code
 FROM stage2 as stage3
+COPY metadata/ /app/metadata/
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
 RUN /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)'

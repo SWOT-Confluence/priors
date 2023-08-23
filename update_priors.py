@@ -68,7 +68,7 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current, metadata_json):
         """
         Parameters
         ----------
@@ -90,6 +90,7 @@ class Priors:
         self.input_dir = input_dir
         self.sos_dir = sos_dir
         self.fake_current = fake_current
+        self.metadata_json = metadata_json
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -102,7 +103,7 @@ class Priors:
 
         gen = GBPriorsGenerate(sos_file, self.input_dir / "swot")
         gen.run_gb()
-        app = GBPriorsUpdate(gen.gb_dict, sos_file)
+        app = GBPriorsUpdate(gen.gb_dict, sos_file, metadata_json = self.metadata_json)
         app.update_data()
     
     def execute_grdc(self, sos_file):
@@ -134,7 +135,7 @@ class Priors:
         today = datetime.today().strftime('%Y-%m-%d')
         usgs_pull = USGSPull(usgs_targets = usgs_file, start_date = start_date, end_date = today, sos_file = sos_file)
         usgs_pull.pull()
-        usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict)
+        usgs_update = USGSUpdate(sos_file, usgs_pull.usgs_dict, metadata_json = self.metadata_json)
         usgs_update.read_sos()
         usgs_update.map_data()
         usgs_update.update_data()
@@ -151,7 +152,7 @@ class Priors:
         today = datetime.today().strftime("%Y-%m-%d")
         Riggs_pull = RiggsPull(riggs_targets=Riggs_file, start_date=start_date, end_date=today, cont = self.cont,  sos_file = sos_file)
         Riggs_pull.pull()
-        Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict)
+        Riggs_update = RiggsUpdate(sos_file, Riggs_pull.riggs_dict, metadata_json = self.metadata_json)
         Riggs_update.read_sos()
         Riggs_update.map_data()
         Riggs_update.update_data()
@@ -161,7 +162,7 @@ class Priors:
 
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
-        sos = Sos(self.cont, self.run_type, self.sos_dir)
+        sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -204,7 +205,6 @@ class Priors:
             print("Overwriting GRADES data with gaged priors.")
             sos.overwrite_grades()
 
-
         # Upload priors results to S3 bucket
         print("Uploading new SoS priors version.")
         sos.upload_file()
@@ -229,12 +229,16 @@ def create_args():
                             nargs="+",
                             default=[],
                             help="List: usgs, grdc, riggs, gbpriors")
-
     arg_parser.add_argument("-l",
                             "--level",
                             type=str,
                             default='foo',
                             help="Forces priors to pull a certain level sos ex: 0000")
+    arg_parser.add_argument("-m",
+                            "--metadatajson",
+                            type=Path,
+                            default=Path(__file__).parent / "metadata" / "metadata.json",
+                            help="Path to JSON file that contains global attribute values")
     return arg_parser
 
 def main():
@@ -251,9 +255,13 @@ def main():
     i = int(args.index) if args.index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
     with open(INPUT_DIR / "continent.json") as jsonfile:
         cont = list(json.load(jsonfile)[i].keys())[0]
+        
+    # Load metadata JSON
+    with open(args.metadatajson) as jf:
+        variable_atts = json.load(jf)
 
     # Retrieve and update priors
-    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level)
+    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts)
     priors.update()
 
 if __name__ == "__main__":

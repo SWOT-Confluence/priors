@@ -41,7 +41,7 @@ class RiggsUpdate:
     FLOAT_FILL = -999999999999
     INT_FILL = -999
 
-    def __init__(self, sos_file, Riggs_dict):
+    def __init__(self, sos_file, Riggs_dict, metadata_json):
         """
         Parameters
         ----------
@@ -57,7 +57,8 @@ class RiggsUpdate:
         self.temp_sos = None
         self.Riggs_dict = Riggs_dict
         self.map_dict = {}
-        self.sos_reaches = None            
+        self.sos_reaches = None
+        self.variable_atts = metadata_json  
 
     def nested_dict(self):
         return collections.defaultdict(self.nested_dict)
@@ -156,18 +157,51 @@ class RiggsUpdate:
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
             agencies = set(list(self.Riggs_dict["Agency"]))
             for agency in agencies:
+                
+                print("AGENCY: ", agency)
+                variable_atts = self.variable_atts[agency]
+                
                 Riggs = sos[agency]
-                Riggs["num_days"][:] = self.map_dict[agency]["days"]
+                
+                Riggs["num_days"][:] = self.map_dict[agency]["days"][:-105] 
+                self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
+                
                 # used f string for agency so it generalizes the sos creation for different agencies
+                
                 Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
+                self.set_variable_atts(Riggs[f"{agency}_reach_id"], variable_atts[f"{agency}_reach_id"])
+                
                 Riggs[f"{agency}_flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_flow_duration_q"], variable_atts[f"{agency}_flow_duration_q"])
+                
                 Riggs[f"{agency}_max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_max_q"], variable_atts[f"{agency}_max_q"])
+                
                 Riggs[f"{agency}_monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_monthly_q"], variable_atts[f"{agency}_monthly_q"])
+                
                 Riggs[f"{agency}_mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_mean_q"], variable_atts[f"{agency}_mean_q"])
+                
                 Riggs[f"{agency}_min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_min_q"], variable_atts[f"{agency}_min_q"])
+                
                 Riggs[f"{agency}_two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_two_year_return_q"], variable_atts[f"{agency}_two_year_return_q"])
+                
                 Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
-                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
-                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_id"], variable_atts[f"{agency}_id"])
+                
+                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_q"], variable_atts[f"{agency}_q"])
+                
+                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+                self.set_variable_atts(Riggs[f"{agency}_qt"], variable_atts[f"{agency}_qt"])
                 
             sos.close()
+            
+    def set_variable_atts(self, variable, variable_dict):
+        """Set the variable attribute metdata."""
+        
+        for name, value in variable_dict.items():
+            setattr(variable, name, value)
