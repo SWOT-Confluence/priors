@@ -5,11 +5,14 @@ from datetime import date
 import asyncio
 import rpy2 as rp2
 import numpy as np
+from numpy import genfromtxt
 import pandas as pd
 import rpy2.robjects as ro
 from os import walk
 from netCDF4 import Dataset, stringtochar
 import datetime as datetime
+from datetime import datetime as dt
+import urllib as UL
 
 #RpyImport necessary packages
 import rpy2.robjects as robjects
@@ -138,6 +141,84 @@ class RiggsPull:
         self.riggs_dict = {}
         self.cont = cont
         self.sos_file = sos_file
+        
+    def canURLpull(site,FMr):
+        ID=FMr
+        S1= "https://wateroffice.ec.gc.ca/services/real_time_data/csv/inline?stations[]="
+        S2="&parameters[]=47&start_date="         
+        S3="%2000:00:00&end_date="
+        S4="%2023:59:59"    
+        NEWt=[]
+        NEWq=[]
+        NEWst=[]
+        if ~np.isnan(np.nanmax(ID['Date'])):
+                STid=site
+                NEWst.append(STid)
+                sd = dt.fromordinal(int(np.nanmax(ID['Date'])+1))
+                sd.strftime("%Y-%m-%d")
+                sd=sd.strftime("%Y-%m-%d")
+                now=dt.now()
+                ed=now.strftime("%Y-%m-%d")
+                URLst=S1+STid+S2+sd+S3+ed+S4
+                UL.request.urlretrieve(URLst,STid+".csv")
+                CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
+                dates=[]
+                q=[]
+                #pull Q and days
+                if len(CSVd)>0:
+                    for d in range(0,len(CSVd)):               
+                        
+                        ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
+                        dates.append(ddd.toordinal())
+                        q.append(CSVd[d][3])
+                        
+                        
+                    q=np.array(q)
+                    Udates=np.unique(dates)
+                    
+                    #make average daily q
+                    Uq=[]
+                    for u in  Udates:
+                        uidx=np.where(dates==u)
+                        Uq.append(np.mean(q[uidx].astype(np.float32)))
+                        
+                    #generate new daily series with fill for all missing dates
+                    tsd=[]
+                    tsq=[]  
+                    DAYs=list(range(int(np.nanmax(ID['Twrite'])+1),np.max(Udates)))
+                    k=0
+                    for d in range(len(DAYs)):
+                        if DAYs[d] in Udates:
+                            tsd.append(DAYs[d])
+                            tsq.append(Uq[k])
+                            k=k+1
+                        else:
+                            tsd.append(np.nan)
+                            tsq.append(np.nan)                  
+                       
+                            
+                    #append new and old
+                    tNEWt=np.append(ID['Date'],np.array(tsd))
+                    NEWt.append(tNEWt)
+                    tNEWq=np.append(ID['Q'],np.array(tsq))
+                    NEWq.append(tNEWq)
+                   
+                else:
+                    NEWt.append(np.append(ID['Date'],np.nan))
+                    NEWq.append(np.append(ID['Q'],np.nan))
+               
+        else: 
+                NEWt.append(np.nan)
+                NEWq.append(np.nan)
+                NEWst.append(np.nan)
+                
+                FMr['Date']=NEWt
+                FMr['Q']=NEWq
+                FMr['STATION_NUMBER']=NEWst
+                
+                return FMr
+    
+    
 
     async def get_record(self,site,agencyR):
         """Get rigs record.
@@ -221,7 +302,10 @@ class RiggsPull:
                   
             else:
                 print("nd")
-                FMr=[]      
+                FMr=[]
+                
+                
+            FMr=self.canURLpull(site,FMr)
             return FMr
         if 'MLIT' in agencyR:
             FMr=downloadQ_j(site, int(self.start_date[0:4]), int(self.end_date[0:4]))
@@ -265,6 +349,8 @@ class RiggsPull:
         records = await asyncio.gather(*(self.get_record(sites[site],agencyR[site]) for site in range(len(sites))))
         return records
 
+    
+        
     def pull(self):
         """Pulls riggs data and (?) and stores in usgs_dict."""
 
