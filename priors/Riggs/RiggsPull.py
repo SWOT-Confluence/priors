@@ -151,11 +151,13 @@ class RiggsPull:
         NEWt=[]
         NEWq=[]
         NEWst=[]
-        if ~np.isnan(np.nanmax(ID['Date'])):
-                STid=site
-                NEWst.append(STid)
-                sd = dt.fromordinal(int(np.nanmax(ID['Date'])+1))
-                sd.strftime("%Y-%m-%d")
+        if ~np.isnan(np.nanmax(ID['ConvertedDate'])):
+                ORD=ID['ConvertedDate'].apply(pd.Timestamp.toordinal)               
+                ID['ConvertedDate']=ORD
+                STid=site            
+                sd = ID['ConvertedDate'][-1]               
+                sd=sd+1
+                sd=dt.fromordinal(sd)               
                 sd=sd.strftime("%Y-%m-%d")
                 now=dt.now()
                 ed=now.strftime("%Y-%m-%d")
@@ -167,7 +169,7 @@ class RiggsPull:
                 #pull Q and days
                 if len(CSVd)>0:
                     for d in range(0,len(CSVd)):               
-                        
+                      
                         ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
                         dates.append(ddd.toordinal())
                         q.append(CSVd[d][3])
@@ -185,38 +187,44 @@ class RiggsPull:
                     #generate new daily series with fill for all missing dates
                     tsd=[]
                     tsq=[]  
-                    DAYs=list(range(int(np.nanmax(ID['Twrite'])+1),np.max(Udates)))
+                    DAYs=list(range(int(np.nanmax(ID['ConvertedDate'])+1),np.max(Udates)))
                     k=0
                     for d in range(len(DAYs)):
+                       
                         if DAYs[d] in Udates:
                             tsd.append(DAYs[d])
                             tsq.append(Uq[k])
+                          
                             k=k+1
-                        else:
-                            tsd.append(np.nan)
-                            tsq.append(np.nan)                  
+                                       
                        
                             
                     #append new and old
-                    tNEWt=np.append(ID['Date'],np.array(tsd))
+                    tNEWt=np.append(ID['ConvertedDate'],np.array(tsd))
                     NEWt.append(tNEWt)
                     tNEWq=np.append(ID['Q'],np.array(tsq))
                     NEWq.append(tNEWq)
                    
-                else:
-                    NEWt.append(np.append(ID['Date'],np.nan))
-                    NEWq.append(np.append(ID['Q'],np.nan))
+                   
+                
                
         else: 
                 NEWt.append(np.nan)
                 NEWq.append(np.nan)
-                NEWst.append(np.nan)
+              
                 
-                FMr['Date']=NEWt
-                FMr['Q']=NEWq
-                FMr['STATION_NUMBER']=NEWst
                 
-                return FMr
+        
+        NEWst=np.repeat(STid,len(NEWt[0]))
+        NEWfmr=pd.DataFrame()
+        NEWfmr['STATION_NUMBER']=NEWst
+        NEWfmr['Q']=NEWq[0]
+       
+        NEWfmr['date']=NEWt[0].astype(int)
+        strd=NEWfmr['date'].apply(dt.fromordinal)
+        NEWfmr['date']=strd
+        FMr=NEWfmr
+        return FMr
     
     
 
