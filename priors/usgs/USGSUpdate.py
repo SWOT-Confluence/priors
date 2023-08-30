@@ -106,7 +106,7 @@ class USGSUpdate:
 
             usgs = sos["USGS"]
             
-            usgs["num_days"][:] = self.map_dict["days"][:-105]      
+            usgs["num_days"][:] = self.map_dict["days"] 
             self.set_variable_atts(usgs["num_days"], self.variable_atts["num_days"])
 
             # this variable is not in the SOS
@@ -146,10 +146,10 @@ class USGSUpdate:
             usgs["USGS_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S100"))
             self.set_variable_atts(usgs["USGS_id"], self.variable_atts["USGS_id"])            
             
-            usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
             self.set_variable_atts(usgs["USGS_q"], self.variable_atts["USGS_q"])
             
-            usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+            usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)
             self.set_variable_atts(usgs["USGS_qt"], self.variable_atts["USGS_qt"])
                 
             sos.close()

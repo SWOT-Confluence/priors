@@ -163,7 +163,7 @@ class RiggsUpdate:
                 
                 Riggs = sos[agency]
                 
-                Riggs["num_days"][:] = self.map_dict[agency]["days"][:-105] 
+                Riggs["num_days"][:] = self.map_dict[agency]["days"]
                 self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
                 
                 # used f string for agency so it generalizes the sos creation for different agencies
@@ -192,10 +192,10 @@ class RiggsUpdate:
                 Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
                 self.set_variable_atts(Riggs[f"{agency}_id"], variable_atts[f"{agency}_id"])
                 
-                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
                 self.set_variable_atts(Riggs[f"{agency}_q"], variable_atts[f"{agency}_q"])
                 
-                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"][:,0:-105], copy=True, nan=self.FLOAT_FILL)
+                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
                 self.set_variable_atts(Riggs[f"{agency}_qt"], variable_atts[f"{agency}_qt"])
                 
             sos.close()
