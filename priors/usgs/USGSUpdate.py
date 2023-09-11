@@ -106,7 +106,7 @@ class USGSUpdate:
 
             usgs = sos["USGS"]
             
-            usgs["num_days"][:] = self.map_dict["days"] 
+            usgs["num_days"][:] = self.map_dict["days"]     
             self.set_variable_atts(usgs["num_days"], self.variable_atts["num_days"])
 
             # this variable is not in the SOS
