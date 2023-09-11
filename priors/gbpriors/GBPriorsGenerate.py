@@ -222,6 +222,7 @@ class GBPriorsGenerate:
         prior_dict["upperbound_logDb"][rch_i] = np.array(river_priors.rx2("upperbound_logDb"))
         prior_dict["lowerbound_logr"][rch_i] = np.array(river_priors.rx2("lowerbound_logr"))
         prior_dict["upperbound_logr"][rch_i] = np.array(river_priors.rx2("upperbound_logr"))
+        
         prior_dict["logA0_hat"][nod_i] = self.__insert_invalid_float(np.array(river_priors.rx2("logA0_hat")), invalid)
         prior_dict["logn_hat"][nod_i] = self.__insert_invalid_float(np.array(river_priors.rx2("logn_hat")), invalid)
         prior_dict["b_hat"][nod_i] = self.__insert_invalid_float(np.array(river_priors.rx2("b_hat")), invalid)
@@ -251,6 +252,8 @@ class GBPriorsGenerate:
         prior_dict["sigma_man"][nod_i] = self.__insert_invalid_float(np.mean(np.array(other_priors.rx2("sigma_man")), axis=1), invalid)
         prior_dict["sigma_amhg"][nod_i] = self.__insert_invalid_float(np.mean(np.array(other_priors.rx2("sigma_amhg")), axis=1), invalid)
         prior_dict["overwritten_indexes"][nod_i] = np.full(nod_i[0].shape, fill_value=1, dtype=np.int32) 
+        print('------------------finished writing node dict')
+        return prior_dict
 
     def __extract_reach_priors(self, priors, prior_dict, index):
         """Extract priors and store them in reach key of the prior_dict by index.
@@ -267,6 +270,8 @@ class GBPriorsGenerate:
         
         prior_dict["river_type"][index] = np.array(priors.rx2("River_Type"))
         river_priors = priors.rx2("river_type_priors")
+        print('---------------extract reach priors river type ---------------')
+        print(river_priors)
         prior_dict["lowerbound_A0"][index] = np.array(river_priors.rx2("lowerbound_A0"))
         prior_dict["upperbound_A0"][index] = np.array(river_priors.rx2("upperbound_A0"))
         prior_dict["lowerbound_logn"][index] = np.array(river_priors.rx2("lowerbound_logn"))
@@ -292,7 +297,11 @@ class GBPriorsGenerate:
         prior_dict["logDb_sd"][index] = np.array(river_priors.rx2("logDb_sd"))
         prior_dict["logr_sd"][index] = np.array(river_priors.rx2("logr_sd"))
 
+
+        print('---------------extract reach priors other type ---------------')
+
         other_priors = priors.rx2("other_priors")
+        print(other_priors)
         prior_dict["lowerbound_logWc"][index] = np.array(other_priors.rx2("lowerbound_logWc"))
         prior_dict["upperbound_logWc"][index] = np.array(other_priors.rx2("upperbound_logWc"))
         prior_dict["lowerbound_logQc"][index] = np.array(other_priors.rx2("lowerbound_logQc"))
@@ -302,12 +311,20 @@ class GBPriorsGenerate:
         prior_dict["logQ_sd"][index] = np.mean(np.array(other_priors.rx2("logQ_sd")))
         prior_dict["logWc_sd"][index] = np.array(other_priors.rx2("logWc_sd"))
         prior_dict["logQc_sd"][index] = np.array(other_priors.rx2("logQc_sd"))
+        print('wderrr----------------------------------------------before')
+        print(prior_dict["Werr_sd"][index])
+        print('wderrr----------------------------------------------replacing with')
+        print(np.array(other_priors.rx2("Werr_sd")))
         prior_dict["Werr_sd"][index] = np.array(other_priors.rx2("Werr_sd"))
+        print('wderrr----------------------------------------------after')
+        print(prior_dict["Werr_sd"][index])
         prior_dict["Serr_sd"][index] = np.array(other_priors.rx2("Serr_sd"))
         prior_dict["dAerr_sd"][index] = np.array(other_priors.rx2("dAerr_sd"))
         prior_dict["sigma_man"][index] = np.mean(np.array(other_priors.rx2("sigma_man")))
         prior_dict["sigma_amhg"][index] = np.mean(np.array(other_priors.rx2("sigma_amhg")))
         prior_dict["overwritten_indexes"][index] = 1
+        print('----------finished writing reach dict--------------------')
+        return prior_dict
 
     def __insert_invalid_int(self, prior, invalid_indexes):
         """Insert NaN value at invalid indezes in river_priors array."""
@@ -362,17 +379,23 @@ class GBPriorsGenerate:
                 if swot_data["reach"]:
                     gb = GB(swot_data["reach"])
                     data = gb.bam_data_reach()
+                    print('------bam reach data------')
+                    print(data)
                     priors = gb.bam_priors(data)
-                    self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
+                    print('----gbreachpriors-----')
+                    print(priors)
+                    reach_temp_dict = self.__extract_reach_priors(priors, reach_temp_dict, sos_ri)
                 
                 if swot_data["node"]:
                     gb = GB(swot_data["node"])
                     data = gb.bam_data_node()
                     priors = gb.bam_priors(data)
                     sos_ni = np.where(self.sos_dict["reach_node_id"] == reach_id)
-                    self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
-            except:
-                # print(swot_file.name, 'failed')
+                    node_temp_dict = self.__extract_node_priors(priors, node_temp_dict, sos_ri, sos_ni, swot_data["node"]["invalid_indexes"])
+            except Exception as e:
+                print(swot_file.name, 'failed')
+                print('---------------important error--------------')
+                print(e)
                 pass
         
         self.gb_dict["reach"] = reach_temp_dict

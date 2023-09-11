@@ -57,9 +57,6 @@ RUN /app/env/bin/pip install -r /app/requirements.txt
 
 # Stage 4 - Copy priors code
 FROM stage2 as stage3
-COPY metadata/ /app/metadata/
-COPY priors/ /app/priors/
-COPY update_priors.py /app/update_priors.py
 RUN /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)'
 
 # Stage 5 - Download tidyhydat database
@@ -67,6 +64,9 @@ FROM stage3 as stage4
 RUN sudo mkdir -p /root/.local/share/tidyhydat/\
 	&& /usr/bin/Rscript -e 'library(tidyhydat)'\
 	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(ask=FALSE)'
+COPY metadata/ /app/metadata/
+COPY priors/ /app/priors/
+COPY update_priors.py /app/update_priors.py
 
 # Stage 6 - Execute algorithm
 FROM stage4 as stage5

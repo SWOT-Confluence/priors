@@ -305,8 +305,12 @@ class RiggsPull:
                         NEWfmr['date']=strd
                         NEWfmr['ConvertedDate']=NEWfmr['date']
                         FMr=NEWfmr
+                        print('Found data through URL pull')
+                        print(FMr)
+                        print('top date:', NEWfmr['ConvertedDate'].max())
                         return FMr
                     else:
+                        print('could not find new data from url pull')
                         return FMr
     
 
