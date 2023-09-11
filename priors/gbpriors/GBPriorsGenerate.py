@@ -376,6 +376,8 @@ class GBPriorsGenerate:
                 qhat = self.sos_dict["qhat"][sos_ri[0]]
                 swot_data = extract_swot(swot_file, qhat)
                 self.swot_time.extend(swot_data["time"])
+                print('-----------------swot data--------------')
+                print(swot_data)
                 if swot_data["reach"]:
                     gb = GB(swot_data["reach"])
                     data = gb.bam_data_reach()
