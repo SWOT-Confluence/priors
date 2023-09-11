@@ -164,6 +164,7 @@ class RiggsUpdate:
                 Riggs = sos[agency]
                 
                 Riggs["num_days"][:] = self.map_dict[agency]["days"]
+                print('how many days',len(Riggs["num_days"][:]))
                 self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
                 
                 # used f string for agency so it generalizes the sos creation for different agencies
