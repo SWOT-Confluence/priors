@@ -180,7 +180,7 @@ class Sos:
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.version = f"{''.join(padding)}{self.version}"
         sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-        sos.date_created = datetime.now().strftime('%Y-%m%dT%H:%M:%S')
+        sos.date_created = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
@@ -418,6 +418,13 @@ class Sos:
             bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
             bps.comment = "Source of invalid gage priors."
 
+    def update_time_coverage(self, min_qt, max_qt):
+        """Update time coverage global attributes for sos_file."""
+        
+        sos = Dataset(self.sos_file, 'a')
+        sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
+        sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+        sos.close()
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
