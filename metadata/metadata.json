@@ -1,1433 +1,1461 @@
 {
-  "global_attributes": {
-    "title": "placeholder",
-    "summary": "placeholder",
-    "keywords": "placeholder",
-    "keywords_vocabulary": "placeholder",
-    "Conventions": "placeholder",
-    "uuid": "placeholder",
-    "history": "placeholder",
-    "source": "placeholder",
-    "processing_level": "placeholder",
-    "comment": "placeholder",
-    "standard_name_vocabulary": "placeholder",
-    "product_version": "placeholder",
-    "references": "placeholder",
-    "creator_name": "placeholder",
-    "creator_email": "placeholder",
-    "creator_url": "placeholder",
-    "creator_type": "placeholder",
-    "creator_institution": "placeholder",
-    "institution": "placeholder",
-    "project": "placeholder",
-    "program": "placeholder",
-    "publisher_name": "placeholder",
-    "publisher_email": "placeholder",
-    "publisher_url": "placeholder",
-    "publisher_type": "placeholder",
-    "publisher_institution": "placeholder",
-    "geospatial_lat_min": "placeholder",
-    "geospatial_lat_max": "placeholder",
-    "geospatial_lat_units": "placeholder",
-    "geospatial_lat_resolution": "placeholder",
-    "geospatial_lon_min": "placeholder",
-    "geospatial_lon_max": "placeholder",
-    "geospatial_lon_units": "placeholder",
-    "geospatial_lon_resolution": "placeholder",
-    "time_coverage_start": "placeholder",
-    "time_coverage_end": "placeholder"
-  },
-  "reaches": {
-    "reach_id": {
-      "long_name": "SWORD reach identifier",
-      "comment": "Taken from SWORD PDD:  id of each reach. The format of none the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream, T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost reach)",
-      "units": "none",
-      "valid_min": -998,
-      "valid_max": 999999999999
+    "global_attributes": {
+        "title": "SWOT Discharge Prior Information",
+        "summary": "All the necessary prior information to produce SWOT discharge; including gauges, hydrologic model output, and geomorphic attributes from the geoBAM prior generation method.",
+        "keywords": "Gauges, discharge, model input, n, A0, r, slope",
+        "processing_level": "L4",
+        "creator_name": "JPL PO.DAAC",
+        "creator_email": "podaac@podaac.jpl.nasa",
+        "creator_url": "http://podaac.jpl.nasa.gov/",
+        "creator_type": "Institution",
+        "creator_institution": "JPL PO.DAAC",
+        "institution": "NASA Jet Propulsion Laboratory (JPL) Physical Oceanography Distributed Active Archive Center (PO.DAAC)/University of Massachusetts Amherst (UMass)/Ohio State University",
+        "project": "Surface Water And Ocean Topography Discharge Algorithms Working Group (SWOT DAWG)",
+        "program": "NASA SWOT Mission",
+        "publisher_name": "JPL PO.DAAC",
+        "publisher_email": "podaac@podaac.jpl.nasa",
+        "publisher_url": "http://podaac.jpl.nasa.gov/",
+        "publisher_type": "Institution",
+        "publisher_institution": "JPL PO.DAAC",
+        "geospatial_lat_units": "degree",
+        "geospatial_lon_units": "degree"
+    },
+    "global_attributes_extra": {
+        "continent_agency": {
+            "af": [
+                "GDRC"
+            ],
+            "as": [
+                "GDRC",
+                "MLIT"
+            ],
+            "eu": [
+                "GDRC",
+                "DEFRA",
+                "EAU"
+            ],
+            "na": [
+                "GDRC",
+                "USGS",
+                "WSC"
+            ],
+            "oc": [
+                "GDRC",
+                "ABOM"
+            ],
+            "sa": [
+                "GDRC",
+                "DGA",
+                "Hidroweb"
+            ]
+        },
+        "confluence_version": "0.1.0",
+        "references": {
+            "constrained": "GRADES: https://www.reachhydro.org/home/records/grades",
+            "unconstrained": "WBMsed: https://doi.org/10.1016/j.gloplacha.2014.01.011",
+            "gbpriors": "GeoBAM: https://doi.org/10.1029/2020WR027949",
+            "GDRC": "GDRC: https://www.bafg.de/GRDC/EN/Home/homepage_node.html",
+            "MLIT": "MLIT: https://www.mlit.go.jp/en/",
+            "DEFRA": "Defra: https://environment.data.gov.uk/",
+            "EAU": "EAU: https://hubeau.eaufrance.fr/page/a-propos",
+            "USGS": "USGS: https://www.usgs.gov/",
+            "WSC": "WSC: https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey.html",
+            "ABOM": "ABOM: http://www.bom.gov.au/water/",
+            "DGA": "DGA: https://explorador.cr2.cl/",
+            "Hidroweb": "Hidroweb: https://www.snirh.gov.br/hidroweb/apresentacao"
+        }
+    },
+    "reaches": {
+        "reach_id": {
+            "long_name": "SWORD reach identifier",
+            "comment": "Taken from SWORD PDD:  id of each reach. The format of none the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream, T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost reach)",
+            "units": "none",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "nodes": {
+        "node_id": {
+            "long_name": "SWORD node identifier",
+            "comment": "Taken from SWORD PDD:  id of each node. The format of the id is as follows: CBBBBBRRRRNNNT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin code up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), N = Node id (assigned sequentially within a reach starting at the downstream end working upstream), T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost node)",
+            "units": "none",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "reach_id": {
+            "long_name": "SWORD reach identifier",
+            "comment": "Taken from SWORD PDD: id of the reach each node is associated with. The format of the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost reach)",
+            "units": "none",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "model": {
+        "num_months": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "month",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "probability": {
+            "long_name": "GRADES Flow_Duration_curve_probability",
+            "comment": "GRADES probability values from the flow duration curve for this cell",
+            "units": "percentage",
+            "valid_min": 0,
+            "valid_max": 1
+        },
+        "flow_duration_q": {
+            "long_name": "GRADES flow_Duration_curve_discharge",
+            "comment": "GRADES discharge values from the flow duration curve for this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "max_q": {
+            "long_name": "GRADES maximum_discharge",
+            "comment": "GRADES highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "monthly_q": {
+            "long_name": "GRADES mean_monthly_discharge",
+            "comment": "GRADES monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "mean_q": {
+            "long_name": "GRADES mean_discharge",
+            "comment": "GRADES mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "min_q": {
+            "long_name": "GRADES minimum_discharge",
+            "comment": "GRADES lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "two_year_return_q": {
+            "long_name": "GRADES two_Year_Return",
+            "comment": "GRADES two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "area_estimate_flag": {
+            "long_name": "GRADES Area_Estimation_Flag",
+            "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
+            "units": "placeholder",
+            "valid_min": 0,
+            "valid_max": 1
+        },
+        "comid": {
+            "long_name": "COMID",
+            "comment": "ID in the MERIT Hydro system",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "gbpriors": {
+        "reach": {
+            "river_type": {
+                "long_name": "Brinkerhoff_class_number",
+                "comment": "river class from Brinkerhoff et al 2019",
+                "units": "NA",
+                "valid_min": 1,
+                "valid_max": 17
+            },
+            "lowerbound_A0": {
+                "long_name": "GeoBAM Median_area_min",
+                "comment": "GeoBAM Median_area_min",
+                "units": "m^2",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "upperbound_A0": {
+                "long_name": "GeoBAM Median_area_max",
+                "comment": "GeoBAM Median_area_max",
+                "units": "m^2",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "lowerbound_logn": {
+                "long_name": "GeoBAM Mannings_n_min",
+                "comment": "natual log of minimum n",
+                "units": "NA",
+                "valid_min": -10,
+                "valid_max": -1
+            },
+            "upperbound_logn": {
+                "long_name": "GeoBAM Mannings_n_max",
+                "comment": "natual log of maximum n",
+                "units": "NA",
+                "valid_min": -10,
+                "valid_max": -1
+            },
+            "lowerbound_b": {
+                "long_name": "GeoBAM AHG_b_min",
+                "comment": "GeoBAM AHG_b_min",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1
+            },
+            "upperbound_b": {
+                "long_name": "GeoBAM AHG_b_max",
+                "comment": "GeoBAM AHG_b_max",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1
+            },
+            "lowerbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_min",
+                "comment": "GeoBAM Bankfull_width_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_max",
+                "comment": "GeoBAM Bankfull_width_max",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_min",
+                "comment": "GeoBAM Bankfull_depth_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_max",
+                "comment": "GeoBAM Bankfull_depth_max",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_min",
+                "comment": "GeoBAM Dingman_shape_min",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 2
+            },
+            "upperbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_max",
+                "comment": "GeoBAM Dingman_shape_max",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 2
+            },
+            "logA0_hat": {
+                "long_name": "GeoBAM Median_area_mean",
+                "comment": "GeoBAM Median_area_mean",
+                "units": "m^2",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logn_hat": {
+                "long_name": "GeoBAM Mannings_n_mean",
+                "comment": "GeoBAM Mannings_n_mean",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "b_hat": {
+                "long_name": "GeoBAM AHG_b_mean",
+                "comment": "GeoBAM AHG_b_mean",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "logWb_hat": {
+                "long_name": "GeoBAM Bankfull_width_mean",
+                "comment": "GeoBAM Bankfull_width_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logDb_hat": {
+                "long_name": "GeoBAM Bankfull_depth_mean",
+                "comment": "GeoBAM Bankfull_depth_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logr_hat": {
+                "long_name": "GeoBAM Dingman_shape_mean",
+                "comment": "GeoBAM Dingman_shape_mean",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logA0_sd": {
+                "long_name": "GeoBAM Median_area_sd",
+                "comment": "GeoBAM Median_area_sd",
+                "units": "m^2",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logn_sd": {
+                "long_name": "GeoBAM Mannings_n_sd",
+                "comment": "GeoBAM Mannings_n_sd",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "b_sd": {
+                "long_name": "GeoBAM AHG_b_sd",
+                "comment": "GeoBAM AHG_b_sd",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "logWb_sd": {
+                "long_name": "GeoBAM Bankfull_width_sd",
+                "comment": "GeoBAM Bankfull_width_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logDb_sd": {
+                "long_name": "GeoBAM Bankfull_depth_sd",
+                "comment": "GeoBAM Bankfull_depth_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logr_sd": {
+                "long_name": "GeoBAM Dingman_shape_sd",
+                "comment": "GeoBAM Dingman_shape_sd",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_min",
+                "comment": "GeoBAM AMHG_Qc_min",
+                "units": "m^3/s",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "upperbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_max",
+                "comment": "GeoBAM AMHG_Qc_max",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logWc_hat": {
+                "long_name": "GeoBAM AMHG_wc_mean",
+                "comment": "GeoBAM AMHG_wc_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQc_hat": {
+                "long_name": "GeoBAM AMHG_Qc_mean",
+                "comment": "GeoBAM AMHG_Qc_mean",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQ_sd": {
+                "long_name": "GeoBAM Discharge_sd",
+                "comment": "GeoBAM Discharge_sd",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logWc_sd": {
+                "long_name": "GeoBAM AMHG_wc_sd",
+                "comment": "GeoBAM AMHG_wc_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQc_sd": {
+                "long_name": "GeoBAM AMHG_qc_min",
+                "comment": "GeoBAM AMHG_qc_min",
+                "units": "m^3/s",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "Werr_sd": {
+                "long_name": "GeoBAM Width_measurement_error",
+                "comment": "GeoBAM Width_measurement_error",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "Serr_sd": {
+                "long_name": "GeoBAM Slope_measurement_error",
+                "comment": "GeoBAM Slope_measurement_error",
+                "units": "m/m",
+                "valid_min": 1e-10,
+                "valid_max": 1
+            },
+            "dAerr_sd": {
+                "long_name": "GeoBAM d_Area_measurement_error",
+                "comment": "GeoBAM d_Area_measurement_error",
+                "units": "m",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "sigma_man": {
+                "long_name": "GeoBAM Manning_structural_error",
+                "comment": "GeoBAM Manning_structural_error",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "sigma_amhg": {
+                "long_name": "GeoBAM AMHG_structural_error",
+                "comment": "GeoBAM AMHG_structural_error",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1000000
+            }
+        },
+        "node": {
+            "river_type": {
+                "long_name": "Brinkerhoff_class_number",
+                "comment": "Brinkerhoff_class_number",
+                "units": "NA",
+                "valid_min": 1,
+                "valid_max": 17
+            },
+            "lowerbound_A0": {
+                "long_name": "GeoBAM Median_area_min",
+                "comment": "GeoBAM Median_area_min",
+                "units": "m^2",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "upperbound_A0": {
+                "long_name": "GeoBAM Median_area_max",
+                "comment": "GeoBAM Median_area_max",
+                "units": "m^2",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "lowerbound_logn": {
+                "long_name": "GeoBAM Mannings_n_min",
+                "comment": "natual log of minimum n",
+                "units": "NA",
+                "valid_min": -10,
+                "valid_max": -1
+            },
+            "upperbound_logn": {
+                "long_name": "GeoBAM Mannings_n_max",
+                "comment": "natual log of maximum n",
+                "units": "NA",
+                "valid_min": -10,
+                "valid_max": -1
+            },
+            "lowerbound_b": {
+                "long_name": "GeoBAM AHG_b_min",
+                "comment": "GeoBAM AHG_b_min",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1
+            },
+            "upperbound_b": {
+                "long_name": "GeoBAM AHG_b_max",
+                "comment": "GeoBAM AHG_b_max",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1
+            },
+            "lowerbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_min",
+                "comment": "GeoBAM Bankfull_width_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_max",
+                "comment": "GeoBAM Bankfull_width_max",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_min",
+                "comment": "GeoBAM Bankfull_depth_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_max",
+                "comment": "GeoBAM Bankfull_depth_max",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_min",
+                "comment": "GeoBAM Dingman_shape_min",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 2
+            },
+            "upperbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_max",
+                "comment": "GeoBAM Dingman_shape_max",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 2
+            },
+            "logA0_hat": {
+                "long_name": "GeoBAM Median_area_mean",
+                "comment": "GeoBAM Median_area_mean",
+                "units": "m^2",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logn_hat": {
+                "long_name": "GeoBAM Mannings_n_mean",
+                "comment": "GeoBAM Mannings_n_mean",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "b_hat": {
+                "long_name": "GeoBAM AHG_b_mean",
+                "comment": "GeoBAM AHG_b_mean",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "logWb_hat": {
+                "long_name": "GeoBAM Bankfull_width_mean",
+                "comment": "GeoBAM Bankfull_width_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logDb_hat": {
+                "long_name": "GeoBAM Bankfull_depth_mean",
+                "comment": "GeoBAM Bankfull_depth_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logr_hat": {
+                "long_name": "GeoBAM Dingman_shape_mean",
+                "comment": "GeoBAM Dingman_shape_mean",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logA0_sd": {
+                "long_name": "GeoBAM Median_area_sd",
+                "comment": "GeoBAM Median_area_sd",
+                "units": "m^2",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logn_sd": {
+                "long_name": "GeoBAM Mannings_n_sd",
+                "comment": "GeoBAM Mannings_n_sd",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "b_sd": {
+                "long_name": "GeoBAM AHG_b_sd",
+                "comment": "GeoBAM AHG_b_sd",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "logWb_sd": {
+                "long_name": "GeoBAM Bankfull_width_sd",
+                "comment": "GeoBAM Bankfull_width_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logDb_sd": {
+                "long_name": "GeoBAM Bankfull_depth_sd",
+                "comment": "GeoBAM Bankfull_depth_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logr_sd": {
+                "long_name": "GeoBAM Dingman_shape_sd",
+                "comment": "GeoBAM Dingman_shape_sd",
+                "units": "NA",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "upperbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "lowerbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_min",
+                "comment": "GeoBAM AMHG_Qc_min",
+                "units": "m^3/s",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "upperbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_max",
+                "comment": "GeoBAM AMHG_Qc_max",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logWc_hat": {
+                "long_name": "GeoBAM AMHG_wc_mean",
+                "comment": "GeoBAM AMHG_wc_mean",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQc_hat": {
+                "long_name": "GeoBAM AMHG_Qc_mean",
+                "comment": "GeoBAM AMHG_Qc_mean",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQ_sd": {
+                "long_name": "GeoBAM Discharge_sd",
+                "comment": "GeoBAM Discharge_sd",
+                "units": "m^3/s",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logWc_sd": {
+                "long_name": "GeoBAM AMHG_wc_sd",
+                "comment": "GeoBAM AMHG_wc_sd",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "logQc_sd": {
+                "long_name": "GeoBAM AMHG_qc_min",
+                "comment": "GeoBAM AMHG_qc_min",
+                "units": "m^3/s",
+                "valid_min": 0,
+                "valid_max": 7
+            },
+            "Werr_sd": {
+                "long_name": "GeoBAM Width_measurement_error",
+                "comment": "GeoBAM Width_measurement_error",
+                "units": "m",
+                "valid_min": -1,
+                "valid_max": 7
+            },
+            "Serr_sd": {
+                "long_name": "GeoBAM Slope_measurement_error",
+                "comment": "GeoBAM Slope_measurement_error",
+                "units": "m/m",
+                "valid_min": 1e-10,
+                "valid_max": 1
+            },
+            "dAerr_sd": {
+                "long_name": "GeoBAM d_Area_measurement_error",
+                "comment": "GeoBAM d_Area_measurement_error",
+                "units": "m",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "sigma_man": {
+                "long_name": "GeoBAM Manning_structural_error",
+                "comment": "GeoBAM Manning_structural_error",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1000000
+            },
+            "sigma_amhg": {
+                "long_name": "GeoBAM AMHG_structural_error",
+                "comment": "GeoBAM AMHG_structural_error",
+                "units": "NA",
+                "valid_min": 0,
+                "valid_max": 1000000
+            }
+        }
+    },
+    "USGS": {
+        "CAL": {
+            "long_name": "USGScalibration_clag",
+            "comment": "USGS1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_flow_duration_q": {
+            "long_name": "USGS flow_Duration_curve_discharge",
+            "comment": "USGS discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_max_q": {
+            "long_name": "USGS maximum_discharge",
+            "comment": "USGShighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_monthly_q": {
+            "long_name": "USGSmean_monthly_discharge",
+            "comment": "USGSmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_mean_q": {
+            "long_name": "USGSmean_discharge",
+            "comment": "USGSmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_min_q": {
+            "long_name": "USGS minimum_discharge",
+            "comment": "USGS lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_two_year_return_q": {
+            "long_name": "USGS two_Year_Return",
+            "comment": "USGS two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_q": {
+            "long_name": "USGS_discharge_time_series_(daily)",
+            "comment": "Direct port from USGS",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_qt": {
+            "long_name": "USGS_discharge_time_series_(daily)",
+            "comment": "Direct port from USGS",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_id": {
+            "long_name": "USGS_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "USGS_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "WSC": {
+        "CAL": {
+            "long_name": "WSCcalibration_clag",
+            "comment": "WSC1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_flow_duration_q": {
+            "long_name": "WSC flow_Duration_curve_discharge",
+            "comment": "WSC discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_max_q": {
+            "long_name": "WSC maximum_discharge",
+            "comment": "WSChighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_monthly_q": {
+            "long_name": "WSCmean_monthly_discharge",
+            "comment": "WSCmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_mean_q": {
+            "long_name": "WSCmean_discharge",
+            "comment": "WSCmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_min_q": {
+            "long_name": "WSC minimum_discharge",
+            "comment": "WSC lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_two_year_return_q": {
+            "long_name": "WSC two_Year_Return",
+            "comment": "WSC two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_q": {
+            "long_name": "WSC_discharge_time_series_(daily)",
+            "comment": "Direct port from WSC",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_qt": {
+            "long_name": "WSC_discharge_time_series_(daily)",
+            "comment": "Direct port from WSC",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "WSC_id": {
+            "long_name": "WSC_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "MLIT": {
+        "MLIT_flow_duration_q": {
+            "long_name": "MLIT flow_Duration_curve_discharge",
+            "comment": "MLIT discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_max_q": {
+            "long_name": "MLIT maximum_discharge",
+            "comment": "MLIThighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_monthly_q": {
+            "long_name": "MLITmean_monthly_discharge",
+            "comment": "MLITmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_mean_q": {
+            "long_name": "MLITmean_discharge",
+            "comment": "MLITmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_min_q": {
+            "long_name": "MLIT minimum_discharge",
+            "comment": "MLIT lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_two_year_return_q": {
+            "long_name": "MLIT two_Year_Return",
+            "comment": "MLIT two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_q": {
+            "long_name": "MLIT_discharge_time_series_(daily)",
+            "comment": "Direct port from MLIT",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_qt": {
+            "long_name": "MLIT_discharge_time_series_(daily)",
+            "comment": "Direct port from MLIT",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "MLITcalibration_clag",
+            "comment": "MLIT1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "MLIT_id": {
+            "long_name": "MLIT_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "DEFRA": {
+        "DEFRA_flow_duration_q": {
+            "long_name": "DEFRA flow_Duration_curve_discharge",
+            "comment": "DEFRA discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_max_q": {
+            "long_name": "DEFRA maximum_discharge",
+            "comment": "DEFRAhighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_monthly_q": {
+            "long_name": "DEFRAmean_monthly_discharge",
+            "comment": "DEFRAmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_mean_q": {
+            "long_name": "DEFRAmean_discharge",
+            "comment": "DEFRAmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_min_q": {
+            "long_name": "DEFRA minimum_discharge",
+            "comment": "DEFRA lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_two_year_return_q": {
+            "long_name": "DEFRA two_Year_Return",
+            "comment": "DEFRA two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_q": {
+            "long_name": "DEFRA_discharge_time_series_(daily)",
+            "comment": "Direct port from DEFRA",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_qt": {
+            "long_name": "DEFRA_discharge_time_series_(daily)",
+            "comment": "Direct port from DEFRA",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "DEFRAcalibration_clag",
+            "comment": "DEFRA1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DEFRA_id": {
+            "long_name": "DEFRA_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "EAU": {
+        "EAU_flow_duration_q": {
+            "long_name": "EAU flow_Duration_curve_discharge",
+            "comment": "EAU discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_max_q": {
+            "long_name": "EAU maximum_discharge",
+            "comment": "EAUhighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_monthly_q": {
+            "long_name": "EAUmean_monthly_discharge",
+            "comment": "EAUmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_mean_q": {
+            "long_name": "EAUmean_discharge",
+            "comment": "EAUmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_min_q": {
+            "long_name": "EAU minimum_discharge",
+            "comment": "EAU lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_two_year_return_q": {
+            "long_name": "EAU two_Year_Return",
+            "comment": "EAU two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_q": {
+            "long_name": "EAU_discharge_time_series_(daily)",
+            "comment": "Direct port from EAU",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_qt": {
+            "long_name": "EAU_discharge_time_series_(daily)",
+            "comment": "Direct port from EAU",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "EAUcalibration_clag",
+            "comment": "EAU1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "EAU_id": {
+            "long_name": "EAU_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "ABOM": {
+        "ABOM_flow_duration_q": {
+            "long_name": "ABOM flow_Duration_curve_discharge",
+            "comment": "ABOM discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_max_q": {
+            "long_name": "ABOM maximum_discharge",
+            "comment": "ABOMhighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_monthly_q": {
+            "long_name": "ABOMmean_monthly_discharge",
+            "comment": "ABOMmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_mean_q": {
+            "long_name": "ABOMmean_discharge",
+            "comment": "ABOMmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_min_q": {
+            "long_name": "ABOM minimum_discharge",
+            "comment": "ABOM lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_two_year_return_q": {
+            "long_name": "ABOM two_Year_Return",
+            "comment": "ABOM two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_q": {
+            "long_name": "ABOM_discharge_time_series_(daily)",
+            "comment": "Direct port from ABOM",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_qt": {
+            "long_name": "ABOM_discharge_time_series_(daily)",
+            "comment": "Direct port from ABOM",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "ABOMcalibration_clag",
+            "comment": "ABOM1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "ABOM_id": {
+            "long_name": "ABOM_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "DGA": {
+        "DGA_flow_duration_q": {
+            "long_name": "DGA flow_Duration_curve_discharge",
+            "comment": "DGA discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_max_q": {
+            "long_name": "DGA maximum_discharge",
+            "comment": "DGAhighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_monthly_q": {
+            "long_name": "DGAmean_monthly_discharge",
+            "comment": "DGAmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_mean_q": {
+            "long_name": "DGAmean_discharge",
+            "comment": "DGAmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_min_q": {
+            "long_name": "DGA minimum_discharge",
+            "comment": "DGA lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_two_year_return_q": {
+            "long_name": "DGA two_Year_Return",
+            "comment": "DGA two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_q": {
+            "long_name": "DGA_discharge_time_series_(daily)",
+            "comment": "Direct port from DGA",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_qt": {
+            "long_name": "DGA_discharge_time_series_(daily)",
+            "comment": "Direct port from DGA",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "DGAcalibration_clag",
+            "comment": "DGA1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "DGA_id": {
+            "long_name": "DGA_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
+    },
+    "Hidroweb": {
+        "Hidroweb_flow_duration_q": {
+            "long_name": "Hidroweb flow_Duration_curve_discharge",
+            "comment": "Hidroweb discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_max_q": {
+            "long_name": "Hidroweb maximum_discharge",
+            "comment": "Hidrowebhighest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_monthly_q": {
+            "long_name": "Hidrowebmean_monthly_discharge",
+            "comment": "Hidrowebmonthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_mean_q": {
+            "long_name": "Hidrowebmean_discharge",
+            "comment": "Hidrowebmean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_min_q": {
+            "long_name": "Hidroweb minimum_discharge",
+            "comment": "Hidroweb lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_two_year_return_q": {
+            "long_name": "Hidroweb two_Year_Return",
+            "comment": "Hidroweb two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_q": {
+            "long_name": "Hidroweb_discharge_time_series_(daily)",
+            "comment": "Direct port from Hidroweb",
+            "units": "m^3/s",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_qt": {
+            "long_name": "Hidroweb_discharge_time_series_(daily)",
+            "comment": "Direct port from Hidroweb",
+            "units": "days since Jan 1 Year 1",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "CAL": {
+            "long_name": "Hidrowebcalibration_clag",
+            "comment": "Hidroweb1=Calibration 2=validation",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "num_days": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_reaches": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "reach",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_reach_id": {
+            "long_name": "placeholder",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "Hidroweb_id": {
+            "long_name": "Hidroweb_ID_number",
+            "comment": "placeholder",
+            "units": "placeholder",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        }
     }
-  },
-  "nodes": {
-    "node_id": {
-      "long_name": "SWORD node identifier",
-      "comment": "Taken from SWORD PDD:  id of each node. The format of the id is as follows: CBBBBBRRRRNNNT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin code up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), N = Node id (assigned sequentially within a reach starting at the downstream end working upstream), T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost node)",
-      "units": "none",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "reach_id": {
-      "long_name": "SWORD reach identifier",
-      "comment": "Taken from SWORD PDD: id of the reach each node is associated with. The format of the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost reach)",
-      "units": "none",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "model": {
-    "num_months": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "month",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "probability": {
-      "long_name": "GRADES Flow_Duration_curve_probability",
-      "comment": "GRADES probability values from the flow duration curve for this cell",
-      "units": "percentage",
-      "valid_min": 0.0,
-      "valid_max": 1.0
-    },
-    "flow_duration_q": {
-      "long_name": "GRADES flow_Duration_curve_discharge",
-      "comment": "GRADES discharge values from the flow duration curve for this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "max_q": {
-      "long_name": "GRADES maximum_discharge",
-      "comment": "GRADES highest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "monthly_q": {
-      "long_name": "GRADES mean_monthly_discharge",
-      "comment": "GRADES monthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "mean_q": {
-      "long_name": "GRADES mean_discharge",
-      "comment": "GRADES mean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "min_q": {
-      "long_name": "GRADES minimum_discharge",
-      "comment": "GRADES lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "two_year_return_q": {
-      "long_name": "GRADES two_Year_Return",
-      "comment": "GRADES two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": 0.0,
-      "valid_max": 1000000.0
-    },
-    "area_estimate_flag": {
-      "long_name": "GRADES Area_Estimation_Flag",
-      "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
-      "units": "placeholder",
-      "valid_min": 0.0,
-      "valid_max": 1.0
-    },
-    "comid": {
-      "long_name": "COMID",
-      "comment": "ID in the MERIT Hydro system",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "gbpriors": {
-    "reach": {
-      "river_type": {
-        "long_name": "Brinkerhoff_class_number",
-        "comment": "river class from Brinkerhoff et al 2019",
-        "units": "NA",
-        "valid_min": 1.0,
-        "valid_max": 17.0
-      },
-      "lowerbound_A0": {
-        "long_name": "GeoBAM Median_area_min",
-        "comment": "GeoBAM Median_area_min",
-        "units": "m^2",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "upperbound_A0": {
-        "long_name": "GeoBAM Median_area_max",
-        "comment": "GeoBAM Median_area_max",
-        "units": "m^2",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "lowerbound_logn": {
-        "long_name": "GeoBAM Mannings_n_min",
-        "comment": "natual log of minimum n",
-        "units": "NA",
-        "valid_min": -10.0,
-        "valid_max": -1.0
-      },
-      "upperbound_logn": {
-        "long_name": "GeoBAM Mannings_n_max",
-        "comment": "natual log of maximum n",
-        "units": "NA",
-        "valid_min": -10.0,
-        "valid_max": -1.0
-      },
-      "lowerbound_b": {
-        "long_name": "GeoBAM AHG_b_min",
-        "comment": "GeoBAM AHG_b_min",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1.0
-      },
-      "upperbound_b": {
-        "long_name": "GeoBAM AHG_b_max",
-        "comment": "GeoBAM AHG_b_max",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1.0
-      },
-      "lowerbound_logWb": {
-        "long_name": "GeoBAM Bankfull_width_min",
-        "comment": "GeoBAM Bankfull_width_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logWb": {
-        "long_name": "GeoBAM Bankfull_width_max",
-        "comment": "GeoBAM Bankfull_width_max",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logDb": {
-        "long_name": "GeoBAM Bankfull_depth_min",
-        "comment": "GeoBAM Bankfull_depth_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logDb": {
-        "long_name": "GeoBAM Bankfull_depth_max",
-        "comment": "GeoBAM Bankfull_depth_max",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logr": {
-        "long_name": "GeoBAM Dingman_shape_min",
-        "comment": "GeoBAM Dingman_shape_min",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 2.0
-      },
-      "upperbound_logr": {
-        "long_name": "GeoBAM Dingman_shape_max",
-        "comment": "GeoBAM Dingman_shape_max",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 2.0
-      },
-      "logA0_hat": {
-        "long_name": "GeoBAM Median_area_mean",
-        "comment": "GeoBAM Median_area_mean",
-        "units": "m^2",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logn_hat": {
-        "long_name": "GeoBAM Mannings_n_mean",
-        "comment": "GeoBAM Mannings_n_mean",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "b_hat": {
-        "long_name": "GeoBAM AHG_b_mean",
-        "comment": "GeoBAM AHG_b_mean",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "logWb_hat": {
-        "long_name": "GeoBAM Bankfull_width_mean",
-        "comment": "GeoBAM Bankfull_width_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logDb_hat": {
-        "long_name": "GeoBAM Bankfull_depth_mean",
-        "comment": "GeoBAM Bankfull_depth_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logr_hat": {
-        "long_name": "GeoBAM Dingman_shape_mean",
-        "comment": "GeoBAM Dingman_shape_mean",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logA0_sd": {
-        "long_name": "GeoBAM Median_area_sd",
-        "comment": "GeoBAM Median_area_sd",
-        "units": "m^2",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logn_sd": {
-        "long_name": "GeoBAM Mannings_n_sd",
-        "comment": "GeoBAM Mannings_n_sd",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "b_sd": {
-        "long_name": "GeoBAM AHG_b_sd",
-        "comment": "GeoBAM AHG_b_sd",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "logWb_sd": {
-        "long_name": "GeoBAM Bankfull_width_sd",
-        "comment": "GeoBAM Bankfull_width_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logDb_sd": {
-        "long_name": "GeoBAM Bankfull_depth_sd",
-        "comment": "GeoBAM Bankfull_depth_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logr_sd": {
-        "long_name": "GeoBAM Dingman_shape_sd",
-        "comment": "GeoBAM Dingman_shape_sd",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logWc": {
-        "long_name": "GeoBAM AMHG_wc_min",
-        "comment": "GeoBAM AMHG_wc_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logWc": {
-        "long_name": "GeoBAM AMHG_wc_min",
-        "comment": "GeoBAM AMHG_wc_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logQc": {
-        "long_name": "GeoBAM AMHG_Qc_min",
-        "comment": "GeoBAM AMHG_Qc_min",
-        "units": "m^3/s",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logQc": {
-        "long_name": "GeoBAM AMHG_Qc_max",
-        "comment": "GeoBAM AMHG_Qc_max",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logWc_hat": {
-        "long_name": "GeoBAM AMHG_wc_mean",
-        "comment": "GeoBAM AMHG_wc_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQc_hat": {
-        "long_name": "GeoBAM AMHG_Qc_mean",
-        "comment": "GeoBAM AMHG_Qc_mean",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQ_sd": {
-        "long_name": "GeoBAM Discharge_sd",
-        "comment": "GeoBAM Discharge_sd",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logWc_sd": {
-        "long_name": "GeoBAM AMHG_wc_sd",
-        "comment": "GeoBAM AMHG_wc_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQc_sd": {
-        "long_name": "GeoBAM AMHG_qc_min",
-        "comment": "GeoBAM AMHG_qc_min",
-        "units": "m^3/s",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "Werr_sd": {
-        "long_name": "GeoBAM Width_measurement_error",
-        "comment": "GeoBAM Width_measurement_error",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "Serr_sd": {
-        "long_name": "GeoBAM Slope_measurement_error",
-        "comment": "GeoBAM Slope_measurement_error",
-        "units": "m/m",
-        "valid_min": 1e-10,
-        "valid_max": 1.0
-      },
-      "dAerr_sd": {
-        "long_name": "GeoBAM d_Area_measurement_error",
-        "comment": "GeoBAM d_Area_measurement_error",
-        "units": "m",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "sigma_man": {
-        "long_name": "GeoBAM Manning_structural_error",
-        "comment": "GeoBAM Manning_structural_error",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "sigma_amhg": {
-        "long_name": "GeoBAM AMHG_structural_error",
-        "comment": "GeoBAM AMHG_structural_error",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      }
-    },
-    "node": {
-      "river_type": {
-        "long_name": "Brinkerhoff_class_number",
-        "comment": "Brinkerhoff_class_number",
-        "units": "NA",
-        "valid_min": 1.0,
-        "valid_max": 17.0
-      },
-      "lowerbound_A0": {
-        "long_name": "GeoBAM Median_area_min",
-        "comment": "GeoBAM Median_area_min",
-        "units": "m^2",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "upperbound_A0": {
-        "long_name": "GeoBAM Median_area_max",
-        "comment": "GeoBAM Median_area_max",
-        "units": "m^2",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "lowerbound_logn": {
-        "long_name": "GeoBAM Mannings_n_min",
-        "comment": "natual log of minimum n",
-        "units": "NA",
-        "valid_min": -10.0,
-        "valid_max": -1.0
-      },
-      "upperbound_logn": {
-        "long_name": "GeoBAM Mannings_n_max",
-        "comment": "natual log of maximum n",
-        "units": "NA",
-        "valid_min": -10.0,
-        "valid_max": -1.0
-      },
-      "lowerbound_b": {
-        "long_name": "GeoBAM AHG_b_min",
-        "comment": "GeoBAM AHG_b_min",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1.0
-      },
-      "upperbound_b": {
-        "long_name": "GeoBAM AHG_b_max",
-        "comment": "GeoBAM AHG_b_max",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1.0
-      },
-      "lowerbound_logWb": {
-        "long_name": "GeoBAM Bankfull_width_min",
-        "comment": "GeoBAM Bankfull_width_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logWb": {
-        "long_name": "GeoBAM Bankfull_width_max",
-        "comment": "GeoBAM Bankfull_width_max",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logDb": {
-        "long_name": "GeoBAM Bankfull_depth_min",
-        "comment": "GeoBAM Bankfull_depth_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logDb": {
-        "long_name": "GeoBAM Bankfull_depth_max",
-        "comment": "GeoBAM Bankfull_depth_max",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logr": {
-        "long_name": "GeoBAM Dingman_shape_min",
-        "comment": "GeoBAM Dingman_shape_min",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 2.0
-      },
-      "upperbound_logr": {
-        "long_name": "GeoBAM Dingman_shape_max",
-        "comment": "GeoBAM Dingman_shape_max",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 2.0
-      },
-      "logA0_hat": {
-        "long_name": "GeoBAM Median_area_mean",
-        "comment": "GeoBAM Median_area_mean",
-        "units": "m^2",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logn_hat": {
-        "long_name": "GeoBAM Mannings_n_mean",
-        "comment": "GeoBAM Mannings_n_mean",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "b_hat": {
-        "long_name": "GeoBAM AHG_b_mean",
-        "comment": "GeoBAM AHG_b_mean",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "logWb_hat": {
-        "long_name": "GeoBAM Bankfull_width_mean",
-        "comment": "GeoBAM Bankfull_width_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logDb_hat": {
-        "long_name": "GeoBAM Bankfull_depth_mean",
-        "comment": "GeoBAM Bankfull_depth_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logr_hat": {
-        "long_name": "GeoBAM Dingman_shape_mean",
-        "comment": "GeoBAM Dingman_shape_mean",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logA0_sd": {
-        "long_name": "GeoBAM Median_area_sd",
-        "comment": "GeoBAM Median_area_sd",
-        "units": "m^2",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logn_sd": {
-        "long_name": "GeoBAM Mannings_n_sd",
-        "comment": "GeoBAM Mannings_n_sd",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "b_sd": {
-        "long_name": "GeoBAM AHG_b_sd",
-        "comment": "GeoBAM AHG_b_sd",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "logWb_sd": {
-        "long_name": "GeoBAM Bankfull_width_sd",
-        "comment": "GeoBAM Bankfull_width_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logDb_sd": {
-        "long_name": "GeoBAM Bankfull_depth_sd",
-        "comment": "GeoBAM Bankfull_depth_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logr_sd": {
-        "long_name": "GeoBAM Dingman_shape_sd",
-        "comment": "GeoBAM Dingman_shape_sd",
-        "units": "NA",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logWc": {
-        "long_name": "GeoBAM AMHG_wc_min",
-        "comment": "GeoBAM AMHG_wc_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logWc": {
-        "long_name": "GeoBAM AMHG_wc_min",
-        "comment": "GeoBAM AMHG_wc_min",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "lowerbound_logQc": {
-        "long_name": "GeoBAM AMHG_Qc_min",
-        "comment": "GeoBAM AMHG_Qc_min",
-        "units": "m^3/s",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "upperbound_logQc": {
-        "long_name": "GeoBAM AMHG_Qc_max",
-        "comment": "GeoBAM AMHG_Qc_max",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logWc_hat": {
-        "long_name": "GeoBAM AMHG_wc_mean",
-        "comment": "GeoBAM AMHG_wc_mean",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQc_hat": {
-        "long_name": "GeoBAM AMHG_Qc_mean",
-        "comment": "GeoBAM AMHG_Qc_mean",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQ_sd": {
-        "long_name": "GeoBAM Discharge_sd",
-        "comment": "GeoBAM Discharge_sd",
-        "units": "m^3/s",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logWc_sd": {
-        "long_name": "GeoBAM AMHG_wc_sd",
-        "comment": "GeoBAM AMHG_wc_sd",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "logQc_sd": {
-        "long_name": "GeoBAM AMHG_qc_min",
-        "comment": "GeoBAM AMHG_qc_min",
-        "units": "m^3/s",
-        "valid_min": 0.0,
-        "valid_max": 7.0
-      },
-      "Werr_sd": {
-        "long_name": "GeoBAM Width_measurement_error",
-        "comment": "GeoBAM Width_measurement_error",
-        "units": "m",
-        "valid_min": -1.0,
-        "valid_max": 7.0
-      },
-      "Serr_sd": {
-        "long_name": "GeoBAM Slope_measurement_error",
-        "comment": "GeoBAM Slope_measurement_error",
-        "units": "m/m",
-        "valid_min": 1e-10,
-        "valid_max": 1.0
-      },
-      "dAerr_sd": {
-        "long_name": "GeoBAM d_Area_measurement_error",
-        "comment": "GeoBAM d_Area_measurement_error",
-        "units": "m",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "sigma_man": {
-        "long_name": "GeoBAM Manning_structural_error",
-        "comment": "GeoBAM Manning_structural_error",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      },
-      "sigma_amhg": {
-        "long_name": "GeoBAM AMHG_structural_error",
-        "comment": "GeoBAM AMHG_structural_error",
-        "units": "NA",
-        "valid_min": 0.0,
-        "valid_max": 1000000.0
-      }
-    }
-  },
-  "USGS": {
-    "CAL": {
-      "long_name": "USGScalibration_clag",
-      "comment": "USGS1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_flow_duration_q": {
-      "long_name": "USGS flow_Duration_curve_discharge",
-      "comment": "USGS discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_max_q": {
-      "long_name": "USGS maximum_discharge",
-      "comment": "USGShighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_monthly_q": {
-      "long_name": "USGSmean_monthly_discharge",
-      "comment": "USGSmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_mean_q": {
-      "long_name": "USGSmean_discharge",
-      "comment": "USGSmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_min_q": {
-      "long_name": "USGS minimum_discharge",
-      "comment": "USGS lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_two_year_return_q": {
-      "long_name": "USGS two_Year_Return",
-      "comment": "USGS two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_q": {
-      "long_name": "USGS_discharge_time_series_(daily)",
-      "comment": "Direct port from USGS",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_qt": {
-      "long_name": "USGS_discharge_time_series_(daily)",
-      "comment": "Direct port from USGS",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_id": {
-      "long_name": "USGS_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "USGS_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "WSC": {
-    "CAL": {
-      "long_name": "WSCcalibration_clag",
-      "comment": "WSC1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_flow_duration_q": {
-      "long_name": "WSC flow_Duration_curve_discharge",
-      "comment": "WSC discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_max_q": {
-      "long_name": "WSC maximum_discharge",
-      "comment": "WSChighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_monthly_q": {
-      "long_name": "WSCmean_monthly_discharge",
-      "comment": "WSCmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_mean_q": {
-      "long_name": "WSCmean_discharge",
-      "comment": "WSCmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_min_q": {
-      "long_name": "WSC minimum_discharge",
-      "comment": "WSC lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_two_year_return_q": {
-      "long_name": "WSC two_Year_Return",
-      "comment": "WSC two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_q": {
-      "long_name": "WSC_discharge_time_series_(daily)",
-      "comment": "Direct port from WSC",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_qt": {
-      "long_name": "WSC_discharge_time_series_(daily)",
-      "comment": "Direct port from WSC",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "WSC_id": {
-      "long_name": "WSC_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "MLIT": {
-    "MLIT_flow_duration_q": {
-      "long_name": "MLIT flow_Duration_curve_discharge",
-      "comment": "MLIT discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_max_q": {
-      "long_name": "MLIT maximum_discharge",
-      "comment": "MLIThighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_monthly_q": {
-      "long_name": "MLITmean_monthly_discharge",
-      "comment": "MLITmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_mean_q": {
-      "long_name": "MLITmean_discharge",
-      "comment": "MLITmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_min_q": {
-      "long_name": "MLIT minimum_discharge",
-      "comment": "MLIT lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_two_year_return_q": {
-      "long_name": "MLIT two_Year_Return",
-      "comment": "MLIT two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_q": {
-      "long_name": "MLIT_discharge_time_series_(daily)",
-      "comment": "Direct port from MLIT",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_qt": {
-      "long_name": "MLIT_discharge_time_series_(daily)",
-      "comment": "Direct port from MLIT",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "MLITcalibration_clag",
-      "comment": "MLIT1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "MLIT_id": {
-      "long_name": "MLIT_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "DEFRA": {
-    "DEFRA_flow_duration_q": {
-      "long_name": "DEFRA flow_Duration_curve_discharge",
-      "comment": "DEFRA discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_max_q": {
-      "long_name": "DEFRA maximum_discharge",
-      "comment": "DEFRAhighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_monthly_q": {
-      "long_name": "DEFRAmean_monthly_discharge",
-      "comment": "DEFRAmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_mean_q": {
-      "long_name": "DEFRAmean_discharge",
-      "comment": "DEFRAmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_min_q": {
-      "long_name": "DEFRA minimum_discharge",
-      "comment": "DEFRA lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_two_year_return_q": {
-      "long_name": "DEFRA two_Year_Return",
-      "comment": "DEFRA two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_q": {
-      "long_name": "DEFRA_discharge_time_series_(daily)",
-      "comment": "Direct port from DEFRA",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_qt": {
-      "long_name": "DEFRA_discharge_time_series_(daily)",
-      "comment": "Direct port from DEFRA",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "DEFRAcalibration_clag",
-      "comment": "DEFRA1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DEFRA_id": {
-      "long_name": "DEFRA_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "EAU": {
-    "EAU_flow_duration_q": {
-      "long_name": "EAU flow_Duration_curve_discharge",
-      "comment": "EAU discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_max_q": {
-      "long_name": "EAU maximum_discharge",
-      "comment": "EAUhighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_monthly_q": {
-      "long_name": "EAUmean_monthly_discharge",
-      "comment": "EAUmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_mean_q": {
-      "long_name": "EAUmean_discharge",
-      "comment": "EAUmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_min_q": {
-      "long_name": "EAU minimum_discharge",
-      "comment": "EAU lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_two_year_return_q": {
-      "long_name": "EAU two_Year_Return",
-      "comment": "EAU two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_q": {
-      "long_name": "EAU_discharge_time_series_(daily)",
-      "comment": "Direct port from EAU",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_qt": {
-      "long_name": "EAU_discharge_time_series_(daily)",
-      "comment": "Direct port from EAU",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "EAUcalibration_clag",
-      "comment": "EAU1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "EAU_id": {
-      "long_name": "EAU_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "ABOM": {
-    "ABOM_flow_duration_q": {
-      "long_name": "ABOM flow_Duration_curve_discharge",
-      "comment": "ABOM discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_max_q": {
-      "long_name": "ABOM maximum_discharge",
-      "comment": "ABOMhighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_monthly_q": {
-      "long_name": "ABOMmean_monthly_discharge",
-      "comment": "ABOMmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_mean_q": {
-      "long_name": "ABOMmean_discharge",
-      "comment": "ABOMmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_min_q": {
-      "long_name": "ABOM minimum_discharge",
-      "comment": "ABOM lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_two_year_return_q": {
-      "long_name": "ABOM two_Year_Return",
-      "comment": "ABOM two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_q": {
-      "long_name": "ABOM_discharge_time_series_(daily)",
-      "comment": "Direct port from ABOM",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_qt": {
-      "long_name": "ABOM_discharge_time_series_(daily)",
-      "comment": "Direct port from ABOM",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "ABOMcalibration_clag",
-      "comment": "ABOM1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "ABOM_id": {
-      "long_name": "ABOM_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "DGA": {
-    "DGA_flow_duration_q": {
-      "long_name": "DGA flow_Duration_curve_discharge",
-      "comment": "DGA discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_max_q": {
-      "long_name": "DGA maximum_discharge",
-      "comment": "DGAhighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_monthly_q": {
-      "long_name": "DGAmean_monthly_discharge",
-      "comment": "DGAmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_mean_q": {
-      "long_name": "DGAmean_discharge",
-      "comment": "DGAmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_min_q": {
-      "long_name": "DGA minimum_discharge",
-      "comment": "DGA lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_two_year_return_q": {
-      "long_name": "DGA two_Year_Return",
-      "comment": "DGA two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_q": {
-      "long_name": "DGA_discharge_time_series_(daily)",
-      "comment": "Direct port from DGA",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_qt": {
-      "long_name": "DGA_discharge_time_series_(daily)",
-      "comment": "Direct port from DGA",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "DGAcalibration_clag",
-      "comment": "DGA1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "DGA_id": {
-      "long_name": "DGA_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  },
-  "Hidroweb": {
-    "Hidroweb_flow_duration_q": {
-      "long_name": "Hidroweb flow_Duration_curve_discharge",
-      "comment": "Hidroweb discharge values from the flow duration curve for this reach",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_max_q": {
-      "long_name": "Hidroweb maximum_discharge",
-      "comment": "Hidrowebhighest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_monthly_q": {
-      "long_name": "Hidrowebmean_monthly_discharge",
-      "comment": "Hidrowebmonthly mean discharge time series in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_mean_q": {
-      "long_name": "Hidrowebmean_discharge",
-      "comment": "Hidrowebmean discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_min_q": {
-      "long_name": "Hidroweb minimum_discharge",
-      "comment": "Hidroweb lowest discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_two_year_return_q": {
-      "long_name": "Hidroweb two_Year_Return",
-      "comment": "Hidroweb two year return interval discharge value in this cell",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_q": {
-      "long_name": "Hidroweb_discharge_time_series_(daily)",
-      "comment": "Direct port from Hidroweb",
-      "units": "m^3/s",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_qt": {
-      "long_name": "Hidroweb_discharge_time_series_(daily)",
-      "comment": "Direct port from Hidroweb",
-      "units": "days since Jan 1 Year 1",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "CAL": {
-      "long_name": "Hidrowebcalibration_clag",
-      "comment": "Hidroweb1=Calibration 2=validation",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "num_days": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "day",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_reaches": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "reach",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_reach_id": {
-      "long_name": "placeholder",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    },
-    "Hidroweb_id": {
-      "long_name": "Hidroweb_ID_number",
-      "comment": "placeholder",
-      "units": "placeholder",
-      "valid_min": -998,
-      "valid_max": 999999999999
-    }
-  }
 }

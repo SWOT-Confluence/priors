@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import uuid
 
 # Third-party imports
 import boto3
@@ -61,7 +62,7 @@ class Sos:
     VERS_LENGTH = 4
     MOD_TIME = 18000    # seconds
 
-    def __init__(self, continent, run_type, sos_dir, metadata_json):
+    def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list):
         """
         Parameters
         ----------
@@ -83,6 +84,7 @@ class Sos:
         self.sos_dir = sos_dir
         self.sos_file = None
         self.version = ""
+        self.priors_list = priors_list
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
@@ -176,11 +178,44 @@ class Sos:
             setattr(sos, name, value)
             
         # Update attributes for current execution
+        global_atts_extra = self.metadata_json["global_attributes_extra"]
+        today = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        
+        # Version and UUID
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
-        sos.version = f"{''.join(padding)}{self.version}"
-        sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-        sos.date_created = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        sos.product_version = f"{''.join(padding)}{self.version}"
+        sos.date_created = today
+        sos.uuid = str(uuid.uuid4())
+        
+        # History, source, comment, references
+        sos.history = f"{today}: SoS version {''.join(padding)}{self.version} created by Confluence version {global_atts_extra['confluence_version']}"
+        source = f"Gage data sources: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
+        if self.run_type == "constrained":
+            source += f"; Model data source: GRADES"
+        else:
+            source += f"; Model data source: WBM-Sed"
+        if "gbpriors" in self.priors_list:
+            source += f"; Other data source: GeoBAM"
+        sos.source = source  
+        comment = f"Prior data was taken from gage agencies: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
+        if self.run_type == "constrained":
+            comment += f"; Model data source for constrained run: Global Reach-scale A priori Discharge Estimates (GRADES)"
+        else:
+            comment += f"; Model data source for unconstrained run: Water Balance Model (WBM-Sed)"
+        if "gbpriors" in self.priors_list:
+            comment += f"; GeoBAM priors created from SWOT shapefiles"
+        sos.comment = comment
+        reference = ""
+        for agency in global_atts_extra["continent_agency"][self.continent]:
+            reference += f"{global_atts_extra['references'][agency]}; "
+        if self.run_type == "constrained":
+            reference += f"{global_atts_extra['references']['constrained']}; "
+        else:
+            reference += f"{global_atts_extra['references']['unconstrained']}; "
+        if "gbpriors" in self.priors_list:
+            reference += f"{global_atts_extra['references']['gbpriors']}; "
+        sos.references = reference
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
