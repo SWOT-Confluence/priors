@@ -1,5 +1,6 @@
 # Standard imports
 from datetime import datetime, timezone
+from dateutil import relativedelta
 import json
 from pathlib import Path
 import uuid
@@ -181,14 +182,14 @@ class Sos:
         global_atts_extra = self.metadata_json["global_attributes_extra"]
         today = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         
-        # Version and UUID
+        # # Version and UUID
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
         sos.date_created = today
         sos.uuid = str(uuid.uuid4())
         
-        # History, source, comment, references
+        # # History and source
         sos.history = f"{today}: SoS version {''.join(padding)}{self.version} created by Confluence version {global_atts_extra['confluence_version']}"
         source = f"Gage data sources: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
         if self.run_type == "constrained":
@@ -198,6 +199,8 @@ class Sos:
         if "gbpriors" in self.priors_list:
             source += f"; Other data source: GeoBAM"
         sos.source = source  
+        
+        # # Comment and references
         comment = f"Prior data was taken from gage agencies: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
         if self.run_type == "constrained":
             comment += f"; Model data source for constrained run: Global Reach-scale A priori Discharge Estimates (GRADES)"
@@ -219,6 +222,59 @@ class Sos:
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
+        
+    def store_geospatial_data(self, sword_file):
+        """Store geospatial data - lat, lon, river names and coverage."""
+        
+        sword = Dataset(sword_file)
+        sos = Dataset(self.sos_file, 'a')
+        
+        # Global attributes
+        sos.geospatial_lat_min = sword.y_min
+        sos.geospatial_lat_max = sword.y_max
+        sos.geospatial_lon_min = sword.x_min
+        sos.geospatial_lon_max = sword.y_min
+        
+        # Reach-level data
+        reaches = sos["reaches"]
+        # # Latitude
+        x = reaches.createVariable("x", "f8", ("num_reaches"),)
+        x[:] = sword["reaches"]["x"][:]
+        self.set_variable_atts(x, self.metadata_json["reaches"]["x"])
+        # # Longitude
+        y = reaches.createVariable("y", "f8", ("num_reaches"),)
+        y[:] = sword["reaches"]["y"][:]
+        self.set_variable_atts(y, self.metadata_json["reaches"]["y"])
+        ## River names
+        river_name = reaches.createVariable("river_name", str, ("num_reaches"),)
+        river_name._Encoding = "ascii"
+        river_name[:] = sword["reaches"]["river_name"][:]
+        self.set_variable_atts(river_name, self.metadata_json["reaches"]["river_name"])
+        
+        # Node-level data
+        nodes = sos["nodes"]
+        # # Latitude
+        x = nodes.createVariable("x", "f8", ("num_nodes"),)
+        x[:] = sword["nodes"]["x"][:]
+        self.set_variable_atts(x, self.metadata_json["nodes"]["x"])
+        # # Longitude
+        y = nodes.createVariable("y", "f8", ("num_nodes"),)
+        y[:] = sword["nodes"]["y"][:]
+        self.set_variable_atts(y, self.metadata_json["nodes"]["y"])
+        ## River names
+        river_name = nodes.createVariable("river_name", str, ("num_nodes"),)
+        river_name._Encoding = "ascii"
+        river_name[:] = sword["nodes"]["river_name"][:]
+        self.set_variable_atts(river_name, self.metadata_json["nodes"]["river_name"])
+                
+        sword.close()
+        sos.close()
+        
+    def set_variable_atts(self, variable, variable_dict):
+        """Set the variable attribute metdata."""
+        
+        for name, value in variable_dict.items():
+            setattr(variable, name, value)
 
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
@@ -459,6 +515,8 @@ class Sos:
         sos = Dataset(self.sos_file, 'a')
         sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
         sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+        duration = relativedelta.relativedelta(max_qt, min_qt)
+        sos.time_coverage_duration = f"P{duration.years}Y{duration.months}M{duration.days}DT{duration.hours}H{duration.minutes}M{duration.seconds}S"
         sos.close()
 
     def upload_file(self):

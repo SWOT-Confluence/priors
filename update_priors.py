@@ -4,13 +4,6 @@ Module overwrites GRADES data with gaged data for constrained run type after
 uploading all new prior data to the Confluence S3 bucket. The module uses 
 command line arguments to determine which priors to generate.
 
-Command line arguments
-----------------------
-1 run_type (required): 'unconstrained' or 'constrained' 
-2 grdc (optional): 'grdc'
-3 usgs (optional): 'usgs'
-4 gbpriors (optional): 'gbpriors'
-
 Classes
 -------
 Priors
@@ -44,6 +37,7 @@ import numpy as np
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
+SWORD_VERSION = "v15"
 
 class Priors:
     """Class that coordinates the priors to be generated and stores them in 
@@ -69,7 +63,8 @@ class Priors:
 
     """
 
-    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, fake_current, metadata_json, historic_qt):
+    def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, 
+                 fake_current, metadata_json, historic_qt, add_geospatial):
         """
         Parameters
         ----------
@@ -95,6 +90,7 @@ class Priors:
         self.time_dict = {
             "historic_qt": historic_qt[cont]
         }
+        self.add_geospatial = add_geospatial
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -216,7 +212,8 @@ class Priors:
 
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
-        sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json)
+        sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
+                  self.priors_list)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -229,6 +226,11 @@ class Priors:
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
+        
+        # Retrieve geospatial coverage - pull if true flag
+        if self.add_geospatial:
+            sos.store_geospatial_data(INPUT_DIR / "sword" / f"{self.cont}_sword_{SWORD_VERSION}.nc")
+            print('Set geospatial coverage for reaches and nodes including maximum and minimum coverage.')
 
         # Determine run type and add requested gage priors
         # removed constrained run logic check as both unconstrained and constrained now pull gauge data
@@ -264,9 +266,9 @@ class Priors:
         sos.update_time_coverage(min_qt, max_qt)
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
 
-        # # Upload priors results to S3 bucket
-        # print("Uploading new SoS priors version.")
-        # sos.upload_file()
+        # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
 
 def create_args():
     """Create and return argparser with arguments."""
@@ -303,6 +305,10 @@ def create_args():
                             type=Path,
                             default=Path(__file__).parent / "metadata" / "historicQt.json",
                             help="Path to JSON file that contains historic timestamps for discharge from gage agencies")
+    arg_parser.add_argument("-g",
+                            "--addgeospatial",
+                            action="store_true",
+                            help="Indicate requirement to add geospatial data")
     return arg_parser
 
 def main():
@@ -329,7 +335,9 @@ def main():
         historicqt = json.load(jf)
 
     # Retrieve and update priors
-    priors = Priors(cont, args.runtype, args.priors, INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts, historicqt)
+    priors = Priors(cont, args.runtype, args.priors, 
+                    INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts, 
+                    historicqt, args.addgeospatial)
     priors.update()
 
 if __name__ == "__main__":
