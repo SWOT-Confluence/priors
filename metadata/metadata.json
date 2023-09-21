@@ -128,11 +128,11 @@
     },
     "model": {
         "num_months": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "Number of months",
+            "comment": "Number of months that monthly values are indexed on",
             "units": "month",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 1,
+            "valid_max": 12
         },
         "probability": {
             "long_name": "GRADES Flow_Duration_curve_probability",
@@ -186,16 +186,32 @@
         "area_estimate_flag": {
             "long_name": "GRADES Area_Estimation_Flag",
             "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
-            "units": "placeholder",
             "valid_min": 0,
             "valid_max": 1
         },
         "comid": {
             "long_name": "COMID",
-            "comment": "ID in the MERIT Hydro system",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "ID in the MERIT Hydro system"
+        },
+        "overwritten_indexes": {
+            "long_name": "overwritten priors indexes",
+            "comment": "Indexes of GRADES priors that were overwritten by priors module.",
+            "valid_min": 0,
+            "valid_max": 1
+        },
+        "overwritten_source": {
+            "long_name": "overwritten priors sources",
+            "comment": "Source of gage data that overwrote GRADES priors."
+        },
+        "bad_priors": {
+            "long_name": "invalid gage prior indexes",
+            "comment": "Indexes of invalid gage priors that were not overwritten.",
+            "valid_min": 0,
+            "valid_max": 1
+        },
+        "bad_prior_source": {
+            "long_name": "invalid gage prior sources",
+            "comment": "Source of invalid gage priors."
         }
     },
     "gbpriors": {
@@ -753,14 +769,13 @@
     "USGS": {
         "CAL": {
             "long_name": "USGScalibration_clag",
-            "comment": "USGS1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "USGS1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "number_of_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
@@ -769,91 +784,87 @@
             "long_name": "USGS flow_Duration_curve_discharge",
             "comment": "USGS discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_max_q": {
             "long_name": "USGS maximum_discharge",
             "comment": "USGShighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_monthly_q": {
             "long_name": "USGSmean_monthly_discharge",
             "comment": "USGSmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_mean_q": {
             "long_name": "USGSmean_discharge",
             "comment": "USGSmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_min_q": {
             "long_name": "USGS minimum_discharge",
             "comment": "USGS lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_two_year_return_q": {
             "long_name": "USGS two_Year_Return",
             "comment": "USGS two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_q": {
             "long_name": "USGS_discharge_time_series_(daily)",
             "comment": "Direct port from USGS",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_qt": {
             "long_name": "USGS_discharge_time_series_(daily)",
             "comment": "Direct port from USGS",
             "units": "day",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "USGS_id": {
             "long_name": "USGS_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "comment": "USGS internal identification number (matches USGS database)",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "USGS_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "USGS_reaches_index",
+            "comment": "Number of USGS reaches present in data",
+            "valid_min": 1,
+            "valid_max": 2000
         },
         "USGS_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "USGS_reach_id",
+            "comment": "reach id within SWORD where the USS gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         }
     },
     "WSC": {
         "CAL": {
             "long_name": "WSCcalibration_clag",
-            "comment": "WSC1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "WSC1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
@@ -862,50 +873,50 @@
             "long_name": "WSC flow_Duration_curve_discharge",
             "comment": "WSC discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_max_q": {
             "long_name": "WSC maximum_discharge",
             "comment": "WSChighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_monthly_q": {
             "long_name": "WSCmean_monthly_discharge",
             "comment": "WSCmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_mean_q": {
             "long_name": "WSCmean_discharge",
             "comment": "WSCmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_min_q": {
             "long_name": "WSC minimum_discharge",
             "comment": "WSC lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_two_year_return_q": {
             "long_name": "WSC two_Year_Return",
             "comment": "WSC two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_q": {
             "long_name": "WSC_discharge_time_series_(daily)",
             "comment": "Direct port from WSC",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "WSC_qt": {
             "long_name": "WSC_discharge_time_series_(daily)",
@@ -915,23 +926,21 @@
             "valid_max": 999999999999
         },
         "WSC_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "WSC_reaches",
+            "comment": "Number of WSC reaches present in data",
             "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 999999
         },
         "WSC_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "WSC_reach_id",
+            "comment": "reach id within SWORD where the WSC gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "WSC_id": {
-            "long_name": "WSC_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "WSC_ID",
+            "comment": "WSC internal identification code (matches WSC database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -941,90 +950,87 @@
             "long_name": "MLIT flow_Duration_curve_discharge",
             "comment": "MLIT discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_max_q": {
             "long_name": "MLIT maximum_discharge",
             "comment": "MLIThighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_monthly_q": {
             "long_name": "MLITmean_monthly_discharge",
             "comment": "MLITmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_mean_q": {
             "long_name": "MLITmean_discharge",
             "comment": "MLITmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_min_q": {
             "long_name": "MLIT minimum_discharge",
             "comment": "MLIT lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_two_year_return_q": {
             "long_name": "MLIT two_Year_Return",
             "comment": "MLIT two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_q": {
             "long_name": "MLIT_discharge_time_series_(daily)",
             "comment": "Direct port from MLIT",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "MLIT_qt": {
             "long_name": "MLIT_discharge_time_series_(daily)",
             "comment": "Direct port from MLIT",
             "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "CAL": {
             "long_name": "MLITcalibration_clag",
-            "comment": "MLIT1=Calibration 2=validation",
-            "units": "placeholder",
+            "comment": "MLIT1=Calibration 0=validation",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "MLIT_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "MLIT_reaches",
+            "comment": "Number of MLIT reaches present in data",
             "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 9999999
         },
         "MLIT_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "MLIT_reach_id",
+            "comment": "reach id within SWORD where the MLIT gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "MLIT_id": {
             "long_name": "MLIT_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "comment": "MLIT internal identification code (matches MLIT database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -1034,90 +1040,87 @@
             "long_name": "DEFRA flow_Duration_curve_discharge",
             "comment": "DEFRA discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_max_q": {
             "long_name": "DEFRA maximum_discharge",
             "comment": "DEFRAhighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_monthly_q": {
             "long_name": "DEFRAmean_monthly_discharge",
             "comment": "DEFRAmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_mean_q": {
             "long_name": "DEFRAmean_discharge",
             "comment": "DEFRAmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_min_q": {
             "long_name": "DEFRA minimum_discharge",
             "comment": "DEFRA lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_two_year_return_q": {
             "long_name": "DEFRA two_Year_Return",
             "comment": "DEFRA two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_q": {
             "long_name": "DEFRA_discharge_time_series_(daily)",
             "comment": "Direct port from DEFRA",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DEFRA_qt": {
             "long_name": "DEFRA_discharge_time_series_(daily)",
             "comment": "Direct port from DEFRA",
             "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "CAL": {
             "long_name": "DEFRAcalibration_clag",
-            "comment": "DEFRA1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "DEFRA1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "DEFRA_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "DEFRA_reaches",
+            "comment": "Number of DEFRA reaches present in data",
             "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 9999
         },
         "DEFRA_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "DEFRA_reach_id",
+            "comment": "reach id within SWORD where the DEFRA gage is located",
             "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_max": 99999999999
         },
         "DEFRA_id": {
             "long_name": "DEFRA_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "comment": "DEFRA internal identification code (matches DEFRA database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -1127,90 +1130,85 @@
             "long_name": "EAU flow_Duration_curve_discharge",
             "comment": "EAU discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_max_q": {
             "long_name": "EAU maximum_discharge",
             "comment": "EAUhighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_monthly_q": {
             "long_name": "EAUmean_monthly_discharge",
             "comment": "EAUmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_mean_q": {
             "long_name": "EAUmean_discharge",
             "comment": "EAUmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_min_q": {
             "long_name": "EAU minimum_discharge",
             "comment": "EAU lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_two_year_return_q": {
             "long_name": "EAU two_Year_Return",
             "comment": "EAU two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_q": {
             "long_name": "EAU_discharge_time_series_(daily)",
             "comment": "Direct port from EAU",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "EAU_qt": {
             "long_name": "EAU_discharge_time_series_(daily)",
             "comment": "Direct port from EAU",
             "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "CAL": {
             "long_name": "EAUcalibration_clag",
-            "comment": "EAU1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "EAU1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "EAU_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "EAU_reaches",
+            "comment": "Number of EAU reaches present in data",
+            "units": "reach"
         },
         "EAU_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "EAU_reach_id",
+            "comment": "reach id within SWORD where the EAU gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "EAU_id": {
-            "long_name": "EAU_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "EAU_ID",
+            "comment": "EAU internal identification code (matches EAU database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -1220,90 +1218,83 @@
             "long_name": "ABOM flow_Duration_curve_discharge",
             "comment": "ABOM discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_max_q": {
             "long_name": "ABOM maximum_discharge",
             "comment": "ABOMhighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_monthly_q": {
             "long_name": "ABOMmean_monthly_discharge",
             "comment": "ABOMmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_mean_q": {
             "long_name": "ABOMmean_discharge",
             "comment": "ABOMmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_min_q": {
             "long_name": "ABOM minimum_discharge",
             "comment": "ABOM lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_two_year_return_q": {
             "long_name": "ABOM two_Year_Return",
             "comment": "ABOM two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_q": {
             "long_name": "ABOM_discharge_time_series_(daily)",
             "comment": "Direct port from ABOM",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "ABOM_qt": {
             "long_name": "ABOM_discharge_time_series_(daily)",
             "comment": "Direct port from ABOM",
-            "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "units": "days since Jan 1 Year 1"
         },
         "CAL": {
             "long_name": "ABOMcalibration_clag",
             "comment": "ABOM1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "ABOM_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "ABOM_reaches",
+            "comment": "Number of ABOM reaches present in data",
+            "units": "reach"
         },
         "ABOM_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "ABOM_reach_id",
+            "comment": "reach id within SWORD where the  ABOM gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "ABOM_id": {
-            "long_name": "ABOM_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "ABOM_ID",
+            "comment": "ABOM internal identification code (matches ABOM database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -1313,90 +1304,83 @@
             "long_name": "DGA flow_Duration_curve_discharge",
             "comment": "DGA discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_max_q": {
             "long_name": "DGA maximum_discharge",
             "comment": "DGAhighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_monthly_q": {
             "long_name": "DGAmean_monthly_discharge",
             "comment": "DGAmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_mean_q": {
             "long_name": "DGAmean_discharge",
             "comment": "DGAmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_min_q": {
             "long_name": "DGA minimum_discharge",
             "comment": "DGA lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_two_year_return_q": {
             "long_name": "DGA two_Year_Return",
             "comment": "DGA two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_q": {
             "long_name": "DGA_discharge_time_series_(daily)",
             "comment": "Direct port from DGA",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "DGA_qt": {
             "long_name": "DGA_discharge_time_series_(daily)",
             "comment": "Direct port from DGA",
-            "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "units": "days since Jan 1 Year 1"
         },
         "CAL": {
             "long_name": "DGAcalibration_clag",
-            "comment": "DGA1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "DGA1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "DGA_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "DGA_reaches",
+            "comment": "Number of DGA reaches present in data",
+            "units": "reach"
         },
         "DGA_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "DGA_reach_id",
+            "comment": "reach id within SWORD where the  DGA gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "DGA_id": {
-            "long_name": "DGA_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "DGA_ID",
+            "comment": "DGA  internal identification code (matches ABOM database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }
@@ -1406,90 +1390,83 @@
             "long_name": "Hidroweb flow_Duration_curve_discharge",
             "comment": "Hidroweb discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_max_q": {
             "long_name": "Hidroweb maximum_discharge",
             "comment": "Hidrowebhighest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_monthly_q": {
             "long_name": "Hidrowebmean_monthly_discharge",
             "comment": "Hidrowebmonthly mean discharge time series in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_mean_q": {
             "long_name": "Hidrowebmean_discharge",
             "comment": "Hidrowebmean discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_min_q": {
             "long_name": "Hidroweb minimum_discharge",
             "comment": "Hidroweb lowest discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_two_year_return_q": {
             "long_name": "Hidroweb two_Year_Return",
             "comment": "Hidroweb two year return interval discharge value in this cell",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_q": {
             "long_name": "Hidroweb_discharge_time_series_(daily)",
             "comment": "Direct port from Hidroweb",
             "units": "m^3/s",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "valid_min": 0,
+            "valid_max": 1000000
         },
         "Hidroweb_qt": {
             "long_name": "Hidroweb_discharge_time_series_(daily)",
             "comment": "Direct port from Hidroweb",
-            "units": "days since Jan 1 Year 1",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "units": "days since Jan 1 Year 1"
         },
         "CAL": {
             "long_name": "Hidrowebcalibration_clag",
-            "comment": "Hidroweb1=Calibration 2=validation",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "comment": "Hidroweb1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1
         },
         "num_days": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
             "units": "day",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "Hidroweb_reaches": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "reach",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "Hidroweb_reaches",
+            "comment": "Number of Hidroweb reaches present in data",
+            "units": "reach"
         },
         "Hidroweb_reach_id": {
-            "long_name": "placeholder",
-            "comment": "placeholder",
-            "units": "placeholder",
-            "valid_min": -998,
-            "valid_max": 999999999999
+            "long_name": "Hidroweb_reach_id",
+            "comment": "reach id within SWORD where the  Hidroweb gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         },
         "Hidroweb_id": {
-            "long_name": "Hidroweb_ID_number",
-            "comment": "placeholder",
-            "units": "placeholder",
+            "long_name": "Hidroweb_ID",
+            "comment": "Hidroweb  internal identification code (matches Hidroweb database)",
             "valid_min": -998,
             "valid_max": 999999999999
         }

@@ -169,6 +169,9 @@ class RiggsUpdate:
                 
                 # used f string for agency so it generalizes the sos creation for different agencies
                 
+                self.set_variable_atts(Riggs[f"{agency}_reaches"], variable_atts[f"{agency}_reaches"])
+                self.set_variable_atts(Riggs["CAL"], variable_atts["CAL"])
+                
                 Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
                 self.set_variable_atts(Riggs[f"{agency}_reach_id"], variable_atts[f"{agency}_reach_id"])
                 
