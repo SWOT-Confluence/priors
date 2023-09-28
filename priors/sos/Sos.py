@@ -513,17 +513,28 @@ class Sos:
         """Update time coverage global attributes for sos_file."""
         
         sos = Dataset(self.sos_file, 'a')
-        sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
-        sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
-        duration = relativedelta.relativedelta(max_qt, min_qt)
-        sos.time_coverage_duration = f"P{duration.years}Y{duration.months}M{duration.days}DT{duration.hours}H{duration.minutes}M{duration.seconds}S"
+        if min_qt == "NO TIME DATA" or max_qt == "NO TIME DATA":
+            if min_qt == "NO TIME DATA":
+                sos.time_coverage_start = "NO TIME DATA"
+            else:
+                sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            if max_qt == "NO TIME DATA":
+                sos.time_coverage_end = "NO TIME DATA"
+            else:
+                sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            duration = "NO TIME DATA"
+        else:
+            sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            duration = relativedelta.relativedelta(max_qt, min_qt)
+            sos.time_coverage_duration = f"P{duration.years}Y{duration.months}M{duration.days}DT{duration.hours}H{duration.minutes}M{duration.seconds}S"
         sos.close()
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
 
         sos_ds = Dataset(self.sos_file, 'r')
-        vers = sos_ds.version
+        vers = sos_ds.product_version
         sos_ds.close()
 
         s3 = boto3.client("s3")

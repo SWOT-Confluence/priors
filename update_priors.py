@@ -198,14 +198,26 @@ class Priors:
                 continue
             
             # All other gage agencies
-            time_min = datetime.datetime.fromordinal(int(np.nanmin(time)))
-            time_max = datetime.datetime.fromordinal(int(np.nanmax(time)))
-            if time_min < min_qt or min_qt == datetime.datetime(1965,1,1,0,0,0):
-                min_qt = time_min
-            if time_max > max_qt or max_qt == datetime.datetime(1965,1,1,0,0,0):
-                max_qt = time_max
+            if not np.isnan(time).all():
+                time_min = datetime.datetime.fromordinal(int(np.nanmin(time)))
+                time_max = datetime.datetime.fromordinal(int(np.nanmax(time)))
+                if time_min < min_qt or min_qt == datetime.datetime(1965,1,1,0,0,0):
+                    min_qt = time_min
+                if time_max > max_qt or max_qt == datetime.datetime(1965,1,1,0,0,0):
+                    max_qt = time_max
         
-        return min_qt, max_qt      
+        # Convert time to string data
+        if min_qt == datetime.datetime(1965,1,1,0,0,0):
+            min_qt = "NO TIME DATA"
+        else:
+            min_qt = min_qt
+            
+        if max_qt == datetime.datetime(1965,1,1,0,0,0):
+            max_qt = "NO TIME DATA"
+        else:
+            max_qt = max_qt
+        
+        return min_qt, max_qt
     
     def update(self):
         """Generate and update priors based on arguments."""
