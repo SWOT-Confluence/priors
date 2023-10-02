@@ -141,123 +141,123 @@ class GBPriorsUpdate:
         """
         sos = Dataset(self.sos_file, 'a')
         sos['gbpriors'][level]["river_type"][:] = np.nan_to_num(self.gb_dict[level]["river_type"], copy=True, nan=self.INT_FILL)
-        # self.set_variable_atts(grp["river_type"], self.variable_atts[level]["river_type"])
+        self.set_variable_atts(grp["river_type"], self.variable_atts[level]["river_type"])
         
         sos['gbpriors'][level]["lowerbound_A0"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_A0"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_A0"], self.variable_atts[level]["lowerbound_A0"])
+        self.set_variable_atts(grp["lowerbound_A0"], self.variable_atts[level]["lowerbound_A0"])
         
         sos['gbpriors'][level]["upperbound_A0"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_A0"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_A0"], self.variable_atts[level]["upperbound_A0"])
+        self.set_variable_atts(grp["upperbound_A0"], self.variable_atts[level]["upperbound_A0"])
         
         sos['gbpriors'][level]["lowerbound_logn"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logn"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logn"], self.variable_atts[level]["lowerbound_logn"])
+        self.set_variable_atts(grp["lowerbound_logn"], self.variable_atts[level]["lowerbound_logn"])
         
         sos['gbpriors'][level]["upperbound_logn"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logn"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logn"], self.variable_atts[level]["upperbound_logn"])
+        self.set_variable_atts(grp["upperbound_logn"], self.variable_atts[level]["upperbound_logn"])
         
         sos['gbpriors'][level]["lowerbound_b"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_b"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_b"], self.variable_atts[level]["lowerbound_b"])
+        self.set_variable_atts(grp["lowerbound_b"], self.variable_atts[level]["lowerbound_b"])
 
         sos['gbpriors'][level]["upperbound_b"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_b"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_b"], self.variable_atts[level]["upperbound_b"])
+        self.set_variable_atts(grp["upperbound_b"], self.variable_atts[level]["upperbound_b"])
 
         sos['gbpriors'][level]["lowerbound_logWb"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logWb"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logWb"], self.variable_atts[level]["lowerbound_logWb"])
+        self.set_variable_atts(grp["lowerbound_logWb"], self.variable_atts[level]["lowerbound_logWb"])
 
         sos['gbpriors'][level]["upperbound_logWb"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logWb"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logWb"], self.variable_atts[level]["upperbound_logWb"])
+        self.set_variable_atts(grp["upperbound_logWb"], self.variable_atts[level]["upperbound_logWb"])
 
         sos['gbpriors'][level]["lowerbound_logDb"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logDb"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logDb"], self.variable_atts[level]["lowerbound_logDb"])
+        self.set_variable_atts(grp["lowerbound_logDb"], self.variable_atts[level]["lowerbound_logDb"])
 
         sos['gbpriors'][level]["upperbound_logDb"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logDb"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logDb"], self.variable_atts[level]["upperbound_logDb"])
+        self.set_variable_atts(grp["upperbound_logDb"], self.variable_atts[level]["upperbound_logDb"])
 
         sos['gbpriors'][level]["lowerbound_logr"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logr"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logr"], self.variable_atts[level]["lowerbound_logr"])
+        self.set_variable_atts(grp["lowerbound_logr"], self.variable_atts[level]["lowerbound_logr"])
 
         sos['gbpriors'][level]["upperbound_logr"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logr"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logr"], self.variable_atts[level]["upperbound_logr"])
+        self.set_variable_atts(grp["upperbound_logr"], self.variable_atts[level]["upperbound_logr"])
 
         sos['gbpriors'][level]["logA0_hat"][:] = np.nan_to_num(self.gb_dict[level]["logA0_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logA0_hat"], self.variable_atts[level]["logA0_hat"])
+        self.set_variable_atts(grp["logA0_hat"], self.variable_atts[level]["logA0_hat"])
 
         sos['gbpriors'][level]["logn_hat"][:] = np.nan_to_num(self.gb_dict[level]["logn_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logn_hat"], self.variable_atts[level]["logn_hat"])
+        self.set_variable_atts(grp["logn_hat"], self.variable_atts[level]["logn_hat"])
 
         sos['gbpriors'][level]["b_hat"][:] = np.nan_to_num(self.gb_dict[level]["b_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["b_hat"], self.variable_atts[level]["b_hat"])
+        self.set_variable_atts(grp["b_hat"], self.variable_atts[level]["b_hat"])
 
         sos['gbpriors'][level]["logWb_hat"][:] = np.nan_to_num(self.gb_dict[level]["logWb_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logWb_hat"], self.variable_atts[level]["logWb_hat"])
+        self.set_variable_atts(grp["logWb_hat"], self.variable_atts[level]["logWb_hat"])
 
         sos['gbpriors'][level]["logDb_hat"][:] = np.nan_to_num(self.gb_dict[level]["logDb_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logDb_hat"], self.variable_atts[level]["logDb_hat"])
+        self.set_variable_atts(grp["logDb_hat"], self.variable_atts[level]["logDb_hat"])
 
         sos['gbpriors'][level]["logr_hat"][:] = np.nan_to_num(self.gb_dict[level]["logr_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logr_hat"], self.variable_atts[level]["logr_hat"])
+        self.set_variable_atts(grp["logr_hat"], self.variable_atts[level]["logr_hat"])
 
         sos['gbpriors'][level]["logA0_sd"][:] = np.nan_to_num(self.gb_dict[level]["logA0_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logA0_sd"], self.variable_atts[level]["logA0_sd"])
+        self.set_variable_atts(grp["logA0_sd"], self.variable_atts[level]["logA0_sd"])
 
         sos['gbpriors'][level]["logn_sd"][:] = np.nan_to_num(self.gb_dict[level]["logn_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logn_sd"], self.variable_atts[level]["logn_sd"])
+        self.set_variable_atts(grp["logn_sd"], self.variable_atts[level]["logn_sd"])
 
         sos['gbpriors'][level]["b_sd"][:] = np.nan_to_num(self.gb_dict[level]["b_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["b_sd"], self.variable_atts[level]["b_sd"])
+        self.set_variable_atts(grp["b_sd"], self.variable_atts[level]["b_sd"])
 
         sos['gbpriors'][level]["logWb_sd"][:] = np.nan_to_num(self.gb_dict[level]["logWb_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logWb_sd"], self.variable_atts[level]["logWb_sd"])
+        self.set_variable_atts(grp["logWb_sd"], self.variable_atts[level]["logWb_sd"])
 
         sos['gbpriors'][level]["logDb_sd"][:] = np.nan_to_num(self.gb_dict[level]["logDb_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logDb_sd"], self.variable_atts[level]["logDb_sd"])
+        self.set_variable_atts(grp["logDb_sd"], self.variable_atts[level]["logDb_sd"])
 
         sos['gbpriors'][level]["logr_sd"][:] = np.nan_to_num(self.gb_dict[level]["logr_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logr_sd"], self.variable_atts[level]["logr_sd"])
+        self.set_variable_atts(grp["logr_sd"], self.variable_atts[level]["logr_sd"])
 
         sos['gbpriors'][level]["lowerbound_logWc"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logWc"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logWc"], self.variable_atts[level]["lowerbound_logWc"])
+        self.set_variable_atts(grp["lowerbound_logWc"], self.variable_atts[level]["lowerbound_logWc"])
 
         sos['gbpriors'][level]["upperbound_logWc"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logWc"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logWc"], self.variable_atts[level]["upperbound_logWc"])
+        self.set_variable_atts(grp["upperbound_logWc"], self.variable_atts[level]["upperbound_logWc"])
 
         sos['gbpriors'][level]["lowerbound_logQc"][:] = np.nan_to_num(self.gb_dict[level]["lowerbound_logQc"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["lowerbound_logQc"], self.variable_atts[level]["lowerbound_logQc"])
+        self.set_variable_atts(grp["lowerbound_logQc"], self.variable_atts[level]["lowerbound_logQc"])
 
         sos['gbpriors'][level]["upperbound_logQc"][:] = np.nan_to_num(self.gb_dict[level]["upperbound_logQc"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["upperbound_logQc"], self.variable_atts[level]["upperbound_logQc"])
+        self.set_variable_atts(grp["upperbound_logQc"], self.variable_atts[level]["upperbound_logQc"])
 
         sos['gbpriors'][level]["logWc_hat"][:] = np.nan_to_num(self.gb_dict[level]["logWc_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logWc_hat"], self.variable_atts[level]["logWc_hat"])
+        self.set_variable_atts(grp["logWc_hat"], self.variable_atts[level]["logWc_hat"])
 
         sos['gbpriors'][level]["logQc_hat"][:] = np.nan_to_num(self.gb_dict[level]["logQc_hat"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logQc_hat"], self.variable_atts[level]["logQc_hat"])
+        self.set_variable_atts(grp["logQc_hat"], self.variable_atts[level]["logQc_hat"])
 
         sos['gbpriors'][level]["logQ_sd"][:] = np.nan_to_num(self.gb_dict[level]["logQ_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logQ_sd"], self.variable_atts[level]["logQ_sd"])
+        self.set_variable_atts(grp["logQ_sd"], self.variable_atts[level]["logQ_sd"])
 
         sos['gbpriors'][level]["logWc_sd"][:] = np.nan_to_num(self.gb_dict[level]["logWc_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logWc_sd"], self.variable_atts[level]["logWc_sd"])
+        self.set_variable_atts(grp["logWc_sd"], self.variable_atts[level]["logWc_sd"])
 
         sos['gbpriors'][level]["logQc_sd"][:] = np.nan_to_num(self.gb_dict[level]["logQc_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["logQc_sd"], self.variable_atts[level]["logQc_sd"])
+        self.set_variable_atts(grp["logQc_sd"], self.variable_atts[level]["logQc_sd"])
 
         print('---------------werr getting written to sos-----------------------')
         print(np.nan_to_num(self.gb_dict[level]["Werr_sd"], copy=True, nan=self.FLOAT_FILL))
         sos['gbpriors'][level]["Werr_sd"][:] = np.nan_to_num(self.gb_dict[level]["Werr_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["Werr_sd"], self.variable_atts[level]["Werr_sd"])
+        self.set_variable_atts(grp["Werr_sd"], self.variable_atts[level]["Werr_sd"])
 
         sos['gbpriors'][level]["Serr_sd"][:] = np.nan_to_num(self.gb_dict[level]["Serr_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["Serr_sd"], self.variable_atts[level]["Serr_sd"])
+        self.set_variable_atts(grp["Serr_sd"], self.variable_atts[level]["Serr_sd"])
 
         sos['gbpriors'][level]["dAerr_sd"][:] = np.nan_to_num(self.gb_dict[level]["dAerr_sd"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["dAerr_sd"], self.variable_atts[level]["dAerr_sd"])
+        self.set_variable_atts(grp["dAerr_sd"], self.variable_atts[level]["dAerr_sd"])
 
         sos['gbpriors'][level]["sigma_man"][:] = np.nan_to_num(self.gb_dict[level]["sigma_man"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["sigma_man"], self.variable_atts[level]["sigma_man"])
+        self.set_variable_atts(grp["sigma_man"], self.variable_atts[level]["sigma_man"])
 
         sos['gbpriors'][level]["sigma_amhg"][:] = np.nan_to_num(self.gb_dict[level]["sigma_amhg"], copy=True, nan=self.FLOAT_FILL)
-        # self.set_variable_atts(grp["sigma_amhg"], self.variable_atts[level]["sigma_amhg"])
+        self.set_variable_atts(grp["sigma_amhg"], self.variable_atts[level]["sigma_amhg"])
         sos.close()
 
         # copy the nodes if they are empty
