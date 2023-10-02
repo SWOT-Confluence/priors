@@ -126,7 +126,7 @@
             "comment": "all river names associated with a node. If there are multiple names for a node they are listed in alphabetical order and separated by a semicolon."
         }
     },
-    "model": {
+    "model_constrained": {
         "num_months": {
             "long_name": "Number of months",
             "comment": "Number of months that monthly values are indexed on",
@@ -212,6 +212,70 @@
         "bad_prior_source": {
             "long_name": "invalid gage prior sources",
             "comment": "Source of invalid gage priors."
+        }
+    },
+    "model_unconstrained": {
+        "num_months": {
+            "long_name": "Number of months",
+            "comment": "Number of months that monthly values are indexed on",
+            "units": "month",
+            "valid_min": 1,
+            "valid_max": 12
+        },
+        "probability": {
+            "long_name": "WBM Flow_Duration_curve_probability",
+            "comment": "WBM probability values from the flow duration curve for this cell",
+            "units": "percentage",
+            "valid_min": 0,
+            "valid_max": 1
+        },
+        "flow_duration_q": {
+            "long_name": "WBM flow_Duration_curve_discharge",
+            "comment": "WBM discharge values from the flow duration curve for this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "max_q": {
+            "long_name": "WBM maximum_discharge",
+            "comment": "WBM highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "monthly_q": {
+            "long_name": "WBM mean_monthly_discharge",
+            "comment": "WBM monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "mean_q": {
+            "long_name": "WBM mean_discharge",
+            "comment": "WBM mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "min_q": {
+            "long_name": "WBM minimum_discharge",
+            "comment": "WBM lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "two_year_return_q": {
+            "long_name": "WBM two_Year_Return",
+            "comment": "WBM two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "area_estimate_flag": {
+            "long_name": "WBM Area_Estimation_Flag",
+            "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
+            "valid_min": 0,
+            "valid_max": 1
         }
     },
     "gbpriors": {
@@ -764,6 +828,83 @@
                 "valid_min": 0,
                 "valid_max": 1000000
             }
+        }
+    },
+    "GDRC": {
+        "num_days": {
+            "long_name": "number_of_days",
+            "comment": "Number of days that daily values are indexed on",
+            "units": "day",
+            "valid_min": -998,
+            "valid_max": 999999999999
+        },
+        "gdrc_flow_duration_q": {
+            "long_name": "GRDC flow_Duration_curve_discharge",
+            "comment": "GRDC discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_max_q": {
+            "long_name": "GRDC maximum_discharge",
+            "comment": "GRDC highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_monthly_q": {
+            "long_name": "GRDC mean_monthly_discharge",
+            "comment": "GRDC monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_mean_q": {
+            "long_name": "GRDC mean_discharge",
+            "comment": "GRDC mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_min_q": {
+            "long_name": "GRDC minimum_discharge",
+            "comment": "GRDC lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_two_year_return_q": {
+            "long_name": "GRDC two_Year_Return",
+            "comment": "GRDC two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_q": {
+            "long_name": "gdrc_discharge_time_series_(daily)",
+            "comment": "GDRC discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "gdrc_qt": {
+            "long_name": "gdrc_discharge_time_series_(daily)",
+            "comment": "GDRC discharge time series daily time values",
+            "units": "day",
+            "valid_min": 0,
+            "valid_max": 1000000
+        },
+        "num_gdrc_reaches": {
+            "long_name": "gdrc_reaches_index",
+            "comment": "Number of GRDC reaches present in data",
+            "valid_min": 1,
+            "valid_max": 2000
+        },
+        "gdrc_reach_id": {
+            "long_name": "gdrc_reach_id",
+            "comment": "reach id within SWORD where the GRDC gage is located",
+            "valid_min": 0,
+            "valid_max": 99999999999
         }
     },
     "USGS": {
