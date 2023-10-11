@@ -115,17 +115,21 @@ class GBPriorsUpdate:
         if "overwritten_indexes" in sos["gbpriors"]["reach"].variables:
             oi = sos["gbpriors"]["reach"]["overwritten_indexes"]
             oi[:] = [self.gb_dict["reach"]["overwritten_indexes"]]
+            self.set_variable_atts(oi, self.variable_atts["gbpriors"]["reach"]["overwritten_indexes"])
         else:
-            oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",), compression="zlib")
+            oi.long_name = "GeoBAM overwritten_prior_indexes"
             oi.comment = "Indexes of geoBAM priors that were overwritten."
             oi[:] = self.gb_dict["reach"]["overwritten_indexes"]
         
         if "overwritten_indexes" in sos["gbpriors"]["node"].variables:
             oi = sos["gbpriors"]["node"]["overwritten_indexes"]
             oi[:] = [self.gb_dict["node"]["overwritten_indexes"]]
+            self.set_variable_atts(oi, self.variable_atts["gbpriors"]["node"]["overwritten_indexes"])
 
         else:
-            oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",))
+            oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",), compression="zlib")
+            oi.long_name = "GeoBAM overwritten_prior_indexes"
             oi.comment = "Indexes of geoBAM priors that were overwritten."
             oi[:] = self.gb_dict["node"]["overwritten_indexes"]
 
