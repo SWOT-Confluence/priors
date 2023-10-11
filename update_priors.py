@@ -188,7 +188,7 @@ class Priors:
                 continue
             
             # GeoBAM priors SWOT time
-            if agency == "gbpriors":
+            if agency == "gbpriors" and len(time) > 0:
                 gb_min = swot_ts + datetime.timedelta(seconds=np.nanmin(time))
                 gb_max = swot_ts + datetime.timedelta(seconds=np.nanmax(time))
                 if gb_min < min_qt or min_qt == datetime.datetime(1965,1,1,0,0,0):
