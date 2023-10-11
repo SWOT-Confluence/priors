@@ -3,6 +3,8 @@
         "title": "SWOT Discharge Prior Information",
         "summary": "All the necessary prior information to produce SWOT discharge; including gauges, hydrologic model output, and geomorphic attributes from the geoBAM prior generation method.",
         "keywords": "Gauges, discharge, model input, n, A0, r, slope",
+        "platform": "SWOT",
+        "instrument": "KaRIn",
         "processing_level": "L4",
         "creator_name": "JPL PO.DAAC",
         "creator_email": "podaac@podaac.jpl.nasa",
@@ -69,7 +71,6 @@
         "reach_id": {
             "long_name": "SWORD reach identifier",
             "comment": "Taken from SWORD PDD:  id of each reach. The format of none the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream, T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost reach)",
-            "units": "none",
             "valid_min": -998,
             "valid_max": 999999999999
         },
@@ -96,14 +97,12 @@
         "node_id": {
             "long_name": "SWORD node identifier",
             "comment": "Taken from SWORD PDD:  id of each node. The format of the id is as follows: CBBBBBRRRRNNNT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin code up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), N = Node id (assigned sequentially within a reach starting at the downstream end working upstream), T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost node)",
-            "units": "none",
             "valid_min": -998,
             "valid_max": 999999999999
         },
         "reach_id": {
             "long_name": "SWORD reach identifier",
             "comment": "Taken from SWORD PDD: id of the reach each node is associated with. The format of the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), T = Type (1 – river, 3 – lake on river, 4 – dam or waterfall, 5 – unreliable topology, 6 – ghost reach)",
-            "units": "none",
             "valid_min": -998,
             "valid_max": 999999999999
         },
@@ -187,7 +186,9 @@
             "long_name": "GRADES Area_Estimation_Flag",
             "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
             "valid_min": 0,
-            "valid_max": 1
+            "valid_max": 1,
+            "flag_values": "0 1",
+            "flag_meanings": "match no_match"
         },
         "comid": {
             "long_name": "COMID",
@@ -197,7 +198,9 @@
             "long_name": "overwritten priors indexes",
             "comment": "Indexes of GRADES priors that were overwritten by priors module.",
             "valid_min": 0,
-            "valid_max": 1
+            "valid_max": 1,
+            "flag_values": "0 1",
+            "flag_meanings": "not_overwritten overwritten"
         },
         "overwritten_source": {
             "long_name": "overwritten priors sources",
@@ -207,7 +210,9 @@
             "long_name": "invalid gage prior indexes",
             "comment": "Indexes of invalid gage priors that were not overwritten.",
             "valid_min": 0,
-            "valid_max": 1
+            "valid_max": 1,
+            "flag_values": "0 1",
+            "flag_meanings": "not_overwritten overwritten"
         },
         "bad_prior_source": {
             "long_name": "invalid gage prior sources",
@@ -275,7 +280,9 @@
             "long_name": "WBM Area_Estimation_Flag",
             "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
             "valid_min": 0,
-            "valid_max": 1
+            "valid_max": 1,
+            "flag_values": "0 1",
+            "flag_meanings": "match no_match"
         }
     },
     "gbpriors": {
@@ -283,7 +290,6 @@
             "river_type": {
                 "long_name": "Brinkerhoff_class_number",
                 "comment": "river class from Brinkerhoff et al 2019",
-                "units": "NA",
                 "valid_min": 1,
                 "valid_max": 17
             },
@@ -304,28 +310,24 @@
             "lowerbound_logn": {
                 "long_name": "GeoBAM Mannings_n_min",
                 "comment": "natual log of minimum n",
-                "units": "NA",
                 "valid_min": -10,
                 "valid_max": -1
             },
             "upperbound_logn": {
                 "long_name": "GeoBAM Mannings_n_max",
                 "comment": "natual log of maximum n",
-                "units": "NA",
                 "valid_min": -10,
                 "valid_max": -1
             },
             "lowerbound_b": {
                 "long_name": "GeoBAM AHG_b_min",
                 "comment": "GeoBAM AHG_b_min",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1
             },
             "upperbound_b": {
                 "long_name": "GeoBAM AHG_b_max",
                 "comment": "GeoBAM AHG_b_max",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1
             },
@@ -360,14 +362,12 @@
             "lowerbound_logr": {
                 "long_name": "GeoBAM Dingman_shape_min",
                 "comment": "GeoBAM Dingman_shape_min",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 2
             },
             "upperbound_logr": {
                 "long_name": "GeoBAM Dingman_shape_max",
                 "comment": "GeoBAM Dingman_shape_max",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 2
             },
@@ -381,14 +381,12 @@
             "logn_hat": {
                 "long_name": "GeoBAM Mannings_n_mean",
                 "comment": "GeoBAM Mannings_n_mean",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
             "b_hat": {
                 "long_name": "GeoBAM AHG_b_mean",
                 "comment": "GeoBAM AHG_b_mean",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 7
             },
@@ -409,7 +407,6 @@
             "logr_hat": {
                 "long_name": "GeoBAM Dingman_shape_mean",
                 "comment": "GeoBAM Dingman_shape_mean",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
@@ -423,14 +420,12 @@
             "logn_sd": {
                 "long_name": "GeoBAM Mannings_n_sd",
                 "comment": "GeoBAM Mannings_n_sd",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
             "b_sd": {
                 "long_name": "GeoBAM AHG_b_sd",
                 "comment": "GeoBAM AHG_b_sd",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 7
             },
@@ -451,7 +446,6 @@
             "logr_sd": {
                 "long_name": "GeoBAM Dingman_shape_sd",
                 "comment": "GeoBAM Dingman_shape_sd",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
@@ -542,23 +536,24 @@
             "sigma_man": {
                 "long_name": "GeoBAM Manning_structural_error",
                 "comment": "GeoBAM Manning_structural_error",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1000000
             },
             "sigma_amhg": {
                 "long_name": "GeoBAM AMHG_structural_error",
                 "comment": "GeoBAM AMHG_structural_error",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1000000
+            },
+            "overwritten_indexes": {
+                "long_name": "GeoBAM overwritten_prior_indexes",
+                "comment": "Indexes of geoBAM priors that were overwritten"
             }
         },
         "node": {
             "river_type": {
                 "long_name": "Brinkerhoff_class_number",
                 "comment": "Brinkerhoff_class_number",
-                "units": "NA",
                 "valid_min": 1,
                 "valid_max": 17
             },
@@ -579,28 +574,24 @@
             "lowerbound_logn": {
                 "long_name": "GeoBAM Mannings_n_min",
                 "comment": "natual log of minimum n",
-                "units": "NA",
                 "valid_min": -10,
                 "valid_max": -1
             },
             "upperbound_logn": {
                 "long_name": "GeoBAM Mannings_n_max",
                 "comment": "natual log of maximum n",
-                "units": "NA",
                 "valid_min": -10,
                 "valid_max": -1
             },
             "lowerbound_b": {
                 "long_name": "GeoBAM AHG_b_min",
                 "comment": "GeoBAM AHG_b_min",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1
             },
             "upperbound_b": {
                 "long_name": "GeoBAM AHG_b_max",
                 "comment": "GeoBAM AHG_b_max",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1
             },
@@ -635,14 +626,12 @@
             "lowerbound_logr": {
                 "long_name": "GeoBAM Dingman_shape_min",
                 "comment": "GeoBAM Dingman_shape_min",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 2
             },
             "upperbound_logr": {
                 "long_name": "GeoBAM Dingman_shape_max",
                 "comment": "GeoBAM Dingman_shape_max",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 2
             },
@@ -656,14 +645,12 @@
             "logn_hat": {
                 "long_name": "GeoBAM Mannings_n_mean",
                 "comment": "GeoBAM Mannings_n_mean",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
             "b_hat": {
                 "long_name": "GeoBAM AHG_b_mean",
                 "comment": "GeoBAM AHG_b_mean",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 7
             },
@@ -684,7 +671,6 @@
             "logr_hat": {
                 "long_name": "GeoBAM Dingman_shape_mean",
                 "comment": "GeoBAM Dingman_shape_mean",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
@@ -698,14 +684,12 @@
             "logn_sd": {
                 "long_name": "GeoBAM Mannings_n_sd",
                 "comment": "GeoBAM Mannings_n_sd",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
             "b_sd": {
                 "long_name": "GeoBAM AHG_b_sd",
                 "comment": "GeoBAM AHG_b_sd",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 7
             },
@@ -726,7 +710,6 @@
             "logr_sd": {
                 "long_name": "GeoBAM Dingman_shape_sd",
                 "comment": "GeoBAM Dingman_shape_sd",
-                "units": "NA",
                 "valid_min": -1,
                 "valid_max": 7
             },
@@ -817,16 +800,18 @@
             "sigma_man": {
                 "long_name": "GeoBAM Manning_structural_error",
                 "comment": "GeoBAM Manning_structural_error",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1000000
             },
             "sigma_amhg": {
                 "long_name": "GeoBAM AMHG_structural_error",
                 "comment": "GeoBAM AMHG_structural_error",
-                "units": "NA",
                 "valid_min": 0,
                 "valid_max": 1000000
+            },
+            "overwritten_indexes": {
+                "long_name": "GeoBAM overwritten_prior_indexes",
+                "comment": "Indexes of geoBAM priors that were overwritten"
             }
         }
     },
