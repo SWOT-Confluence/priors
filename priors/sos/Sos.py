@@ -238,15 +238,15 @@ class Sos:
         # Reach-level data
         reaches = sos["reaches"]
         # # Latitude
-        x = reaches.createVariable("x", "f8", ("num_reaches"),)
+        x = reaches.createVariable("x", "f8", ("num_reaches"), compression="zlib")
         x[:] = sword["reaches"]["x"][:]
         self.set_variable_atts(x, self.metadata_json["reaches"]["x"])
         # # Longitude
-        y = reaches.createVariable("y", "f8", ("num_reaches"),)
+        y = reaches.createVariable("y", "f8", ("num_reaches"), compression="zlib")
         y[:] = sword["reaches"]["y"][:]
         self.set_variable_atts(y, self.metadata_json["reaches"]["y"])
         ## River names
-        river_name = reaches.createVariable("river_name", str, ("num_reaches"),)
+        river_name = reaches.createVariable("river_name", str, ("num_reaches"))
         river_name._Encoding = "ascii"
         river_name[:] = sword["reaches"]["river_name"][:]
         self.set_variable_atts(river_name, self.metadata_json["reaches"]["river_name"])
@@ -254,15 +254,15 @@ class Sos:
         # Node-level data
         nodes = sos["nodes"]
         # # Latitude
-        x = nodes.createVariable("x", "f8", ("num_nodes"),)
+        x = nodes.createVariable("x", "f8", ("num_nodes"), compression="zlib")
         x[:] = sword["nodes"]["x"][:]
         self.set_variable_atts(x, self.metadata_json["nodes"]["x"])
         # # Longitude
-        y = nodes.createVariable("y", "f8", ("num_nodes"),)
+        y = nodes.createVariable("y", "f8", ("num_nodes"), compression="zlib")
         y[:] = sword["nodes"]["y"][:]
         self.set_variable_atts(y, self.metadata_json["nodes"]["y"])
         ## River names
-        river_name = nodes.createVariable("river_name", str, ("num_nodes"),)
+        river_name = nodes.createVariable("river_name", str, ("num_nodes"))
         river_name._Encoding = "ascii"
         river_name[:] = sword["nodes"]["river_name"][:]
         self.set_variable_atts(river_name, self.metadata_json["nodes"]["river_name"])
@@ -393,10 +393,16 @@ class Sos:
         self._create_dims_vars(sos)
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
+        self.set_variable_atts(sos["model"]["overwritten_indexes"], self.metadata_json["model_constrained"]["overwritten_indexes"])
+        
         sos["model"]["overwritten_source"][:] = stringtochar(np.array(self.overwritten_source, dtype="S4"))
+        self.set_variable_atts(sos["model"]["overwritten_source"], self.metadata_json["model_constrained"]["overwritten_source"])
         
         sos["model"]["bad_priors"][:] = self.bad_prior
+        self.set_variable_atts(sos["model"]["bad_priors"], self.metadata_json["model_constrained"]["bad_priors"])
+        
         sos["model"]["bad_prior_source"][:] = stringtochar(np.array(self.bad_prior_source, dtype="S4"))
+        self.set_variable_atts(sos["model"]["bad_prior_source"], self.metadata_json["model_constrained"]["bad_prior_source"])
 
         sos.close()
 
@@ -491,23 +497,33 @@ class Sos:
             sos NetCDF Dataset
         """
         if "overwritten_indexes" not in sos["model"].variables:
-            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",), compression="zlib")
             oi.comment = "Indexes of GRADES priors that were overwritten."
+            oi.long_name = "overwritten priors indexes"
+            oi.valid_min = 0
+            oi.valid_max = 1
+            oi.flag_values = "0 1"
+            oi.flag_meanings = "not_overwritten overwritten"
 
         if "overwritten_source" not in sos["model"].variables:
-            print(sos["model"].dimensions)
             if "nchar" not in sos["model"].dimensions:
                 sos["model"].createDimension("nchar", 4)
-            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
+            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             os.comment = "Source of gage data that overwrote GRADES priors."
+            os.long_name = "overwritten priors sources"
         
         if "bad_priors" not in sos["model"].variables:
-            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",), compression="zlib")
             bp.comment = "Indexes of invalid gage priors that were not overwritten."
+            bp.valid_min = 0
+            bp.valid_max = 1
+            bp.flag_values = "0 1"
+            bp.flag_meanings = "not_overwritten overwritten"
 
         if "bad_prior_source" not in sos["model"].variables:
-            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             bps.comment = "Source of invalid gage priors."
+            bps.long_name = "invalid gage prior sources"
 
     def update_time_coverage(self, min_qt, max_qt):
         """Update time coverage global attributes for sos_file."""
