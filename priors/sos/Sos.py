@@ -220,6 +220,13 @@ class Sos:
             reference += f"{global_atts_extra['references']['gbpriors']}; "
         sos.references = reference
         
+        # Update reach and node variables
+        self.set_variable_atts(sos["reaches"]["reach_id"], self.metadata_json["reaches"]["reach_id"])
+        self.set_variable_atts(sos["nodes"]["node_id"], self.metadata_json["nodes"]["node_id"])
+        self.set_variable_atts(sos["nodes"]["reach_id"], self.metadata_json["nodes"]["reach_id"])
+        
+        print(sos["reaches"]["reach_id"])
+        
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
         
@@ -496,6 +503,7 @@ class Sos:
         sos: netCDF4._netCDF4.Dataset
             sos NetCDF Dataset
         """
+        
         if "overwritten_indexes" not in sos["model"].variables:
             oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",), compression="zlib")
             oi.comment = "Indexes of GRADES priors that were overwritten."
@@ -504,6 +512,7 @@ class Sos:
             oi.valid_max = 1
             oi.flag_values = "0 1"
             oi.flag_meanings = "not_overwritten overwritten"
+            oi.coverage_content_type = "qualityInformation"
 
         if "overwritten_source" not in sos["model"].variables:
             if "nchar" not in sos["model"].dimensions:
@@ -511,6 +520,7 @@ class Sos:
             os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             os.comment = "Source of gage data that overwrote GRADES priors."
             os.long_name = "overwritten priors sources"
+            os.coverage_content_type = "referenceInformation"
         
         if "bad_priors" not in sos["model"].variables:
             bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",), compression="zlib")
@@ -519,11 +529,13 @@ class Sos:
             bp.valid_max = 1
             bp.flag_values = "0 1"
             bp.flag_meanings = "not_overwritten overwritten"
+            bp.coverage_content_type = "qualityInformation"
 
         if "bad_prior_source" not in sos["model"].variables:
             bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             bps.comment = "Source of invalid gage priors."
             bps.long_name = "invalid gage prior sources"
+            bps.coverage_content_type = "referenceInformation"
 
     def update_time_coverage(self, min_qt, max_qt):
         """Update time coverage global attributes for sos_file."""

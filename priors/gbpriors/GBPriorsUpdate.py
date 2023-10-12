@@ -120,6 +120,7 @@ class GBPriorsUpdate:
             oi = sos["gbpriors"]["reach"].createVariable("overwritten_indexes", "i4", ("num_reaches",), compression="zlib")
             oi.long_name = "GeoBAM overwritten_prior_indexes"
             oi.comment = "Indexes of geoBAM priors that were overwritten."
+            oi.coverage_content_type = "qualityInformation"
             oi[:] = self.gb_dict["reach"]["overwritten_indexes"]
         
         if "overwritten_indexes" in sos["gbpriors"]["node"].variables:
@@ -131,6 +132,7 @@ class GBPriorsUpdate:
             oi = sos["gbpriors"]["node"].createVariable("overwritten_indexes", "i4", ("num_nodes",), compression="zlib")
             oi.long_name = "GeoBAM overwritten_prior_indexes"
             oi.comment = "Indexes of geoBAM priors that were overwritten."
+            oi.coverage_content_type = "qualityInformation"
             oi[:] = self.gb_dict["node"]["overwritten_indexes"]
 
     def __update_level(self, grp, level):
