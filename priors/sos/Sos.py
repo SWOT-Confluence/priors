@@ -186,7 +186,7 @@ class Sos:
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
-        sos.date_created = today
+        sos.date_modified = today
         sos.uuid = str(uuid.uuid4())
         
         # # History and source
