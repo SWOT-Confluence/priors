@@ -221,11 +221,15 @@ class Sos:
         sos.references = reference
         
         # Update reach and node variables
-        self.set_variable_atts(sos["reaches"]["reach_id"], self.metadata_json["reaches"]["reach_id"])
-        self.set_variable_atts(sos["nodes"]["node_id"], self.metadata_json["nodes"]["node_id"])
-        self.set_variable_atts(sos["nodes"]["reach_id"], self.metadata_json["nodes"]["reach_id"])
+        set_variable_atts(sos["reaches"]["reach_id"], self.metadata_json["reaches"]["reach_id"])
+        set_variable_atts(sos["nodes"]["node_id"], self.metadata_json["nodes"]["node_id"])
+        set_variable_atts(sos["nodes"]["reach_id"], self.metadata_json["nodes"]["reach_id"])
         
-        print(sos["reaches"]["reach_id"])
+        # Update model variables
+        update_model(sos["model"], self.metadata_json[f"model_{self.run_type}"])
+        
+        # Update historicQ
+        update_historic_gauges(sos["historicQ"], self.metadata_json, self.continent)
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
@@ -245,43 +249,55 @@ class Sos:
         # Reach-level data
         reaches = sos["reaches"]
         # # Latitude
-        x = reaches.createVariable("x", "f8", ("num_reaches"), compression="zlib")
-        x[:] = sword["reaches"]["x"][:]
-        self.set_variable_atts(x, self.metadata_json["reaches"]["x"])
+        if "x" not in reaches.variables:
+            x = reaches.createVariable("x", "f8", ("num_reaches"), compression="zlib")
+            x[:] = sword["reaches"]["x"][:]
+        else:
+            x = reaches["x"]
+        set_variable_atts(x, self.metadata_json["reaches"]["x"])
         # # Longitude
-        y = reaches.createVariable("y", "f8", ("num_reaches"), compression="zlib")
-        y[:] = sword["reaches"]["y"][:]
-        self.set_variable_atts(y, self.metadata_json["reaches"]["y"])
+        if "y" not in reaches.variables:
+            y = reaches.createVariable("y", "f8", ("num_reaches"), compression="zlib")
+            y[:] = sword["reaches"]["y"][:]
+        else:
+            y = reaches["y"]
+        set_variable_atts(y, self.metadata_json["reaches"]["y"])
         ## River names
-        river_name = reaches.createVariable("river_name", str, ("num_reaches"))
-        river_name._Encoding = "ascii"
-        river_name[:] = sword["reaches"]["river_name"][:]
-        self.set_variable_atts(river_name, self.metadata_json["reaches"]["river_name"])
+        if "river_name" not in reaches.variables:
+            river_name = reaches.createVariable("river_name", str, ("num_reaches"))
+            river_name._Encoding = "ascii"
+            river_name[:] = sword["reaches"]["river_name"][:]
+        else:
+            river_name = reaches["river_name"]
+        set_variable_atts(river_name, self.metadata_json["reaches"]["river_name"])
         
         # Node-level data
         nodes = sos["nodes"]
         # # Latitude
-        x = nodes.createVariable("x", "f8", ("num_nodes"), compression="zlib")
-        x[:] = sword["nodes"]["x"][:]
-        self.set_variable_atts(x, self.metadata_json["nodes"]["x"])
+        if "x" not in nodes.variables:
+            x = nodes.createVariable("x", "f8", ("num_nodes"), compression="zlib")
+            x[:] = sword["nodes"]["x"][:]
+        else:
+            x = nodes["x"]
+        set_variable_atts(x, self.metadata_json["nodes"]["x"])
         # # Longitude
-        y = nodes.createVariable("y", "f8", ("num_nodes"), compression="zlib")
-        y[:] = sword["nodes"]["y"][:]
-        self.set_variable_atts(y, self.metadata_json["nodes"]["y"])
+        if "y" not in nodes.variables:
+            y = nodes.createVariable("y", "f8", ("num_nodes"), compression="zlib")
+            y[:] = sword["nodes"]["y"][:]
+        else:
+            y = nodes["y"]
+        set_variable_atts(y, self.metadata_json["nodes"]["y"])
         ## River names
-        river_name = nodes.createVariable("river_name", str, ("num_nodes"))
-        river_name._Encoding = "ascii"
-        river_name[:] = sword["nodes"]["river_name"][:]
-        self.set_variable_atts(river_name, self.metadata_json["nodes"]["river_name"])
+        if "river_name" not in nodes.variables:
+            river_name = nodes.createVariable("river_name", str, ("num_nodes"))
+            river_name._Encoding = "ascii"
+            river_name[:] = sword["nodes"]["river_name"][:]
+        else:
+            river_name = nodes["river_name"]
+        set_variable_atts(river_name, self.metadata_json["nodes"]["river_name"])
                 
         sword.close()
         sos.close()
-        
-    def set_variable_atts(self, variable, variable_dict):
-        """Set the variable attribute metdata."""
-        
-        for name, value in variable_dict.items():
-            setattr(variable, name, value)
 
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
@@ -400,16 +416,16 @@ class Sos:
         self._create_dims_vars(sos)
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
-        self.set_variable_atts(sos["model"]["overwritten_indexes"], self.metadata_json["model_constrained"]["overwritten_indexes"])
+        set_variable_atts(sos["model"]["overwritten_indexes"], self.metadata_json["model_constrained"]["overwritten_indexes"])
         
         sos["model"]["overwritten_source"][:] = stringtochar(np.array(self.overwritten_source, dtype="S4"))
-        self.set_variable_atts(sos["model"]["overwritten_source"], self.metadata_json["model_constrained"]["overwritten_source"])
+        set_variable_atts(sos["model"]["overwritten_source"], self.metadata_json["model_constrained"]["overwritten_source"])
         
         sos["model"]["bad_priors"][:] = self.bad_prior
-        self.set_variable_atts(sos["model"]["bad_priors"], self.metadata_json["model_constrained"]["bad_priors"])
+        set_variable_atts(sos["model"]["bad_priors"], self.metadata_json["model_constrained"]["bad_priors"])
         
         sos["model"]["bad_prior_source"][:] = stringtochar(np.array(self.bad_prior_source, dtype="S4"))
-        self.set_variable_atts(sos["model"]["bad_prior_source"], self.metadata_json["model_constrained"]["bad_prior_source"])
+        set_variable_atts(sos["model"]["bad_prior_source"], self.metadata_json["model_constrained"]["bad_prior_source"])
 
         sos.close()
 
@@ -568,3 +584,28 @@ class Sos:
         s3 = boto3.client("s3")
         response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
         print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
+
+def set_variable_atts(variable, variable_dict):
+        """Set the variable attribute metdata."""
+        
+        for name, value in variable_dict.items():
+            setattr(variable, name, value)
+                
+def update_model(model_grp, metadata_json):
+    """Update model metadata."""
+    
+    for name, variable in model_grp.variables.items():
+        set_variable_atts(variable, metadata_json[name])
+        
+def update_historic_gauges(historicq_grp, metadata_json, continent):
+    """Update historic gauge data metadata."""
+    
+    # Locate agencies for continent
+    gauge_agencies = metadata_json["global_attributes_extra"]["continent_agency"][continent]
+    
+    # Update metadata for each gauge agency
+    for gauge_agency in gauge_agencies:
+        if gauge_agency == "GRDC": gauge_agency = gauge_agency.lower()
+        gauge_grp = historicq_grp[gauge_agency]
+        for name, variable in gauge_grp.variables.items():
+            set_variable_atts(variable, metadata_json[gauge_agency.upper()][name])

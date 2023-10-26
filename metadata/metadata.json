@@ -38,28 +38,28 @@
     "global_attributes_extra": {
         "continent_agency": {
             "af": [
-                "GDRC"
+                "GRDC"
             ],
             "as": [
-                "GDRC",
+                "GRDC",
                 "MLIT"
             ],
             "eu": [
-                "GDRC",
+                "GRDC",
                 "DEFRA",
                 "EAU"
             ],
             "na": [
-                "GDRC",
+                "GRDC",
                 "USGS",
                 "WSC"
             ],
             "oc": [
-                "GDRC",
+                "GRDC",
                 "ABOM"
             ],
             "sa": [
-                "GDRC",
+                "GRDC",
                 "DGA",
                 "Hidroweb"
             ]
@@ -69,7 +69,7 @@
             "constrained": "GRADES: https://www.reachhydro.org/home/records/grades",
             "unconstrained": "WBMsed: https://doi.org/10.1016/j.gloplacha.2014.01.011",
             "gbpriors": "GeoBAM: https://doi.org/10.1029/2020WR027949",
-            "GDRC": "GDRC: https://www.bafg.de/GRDC/EN/Home/homepage_node.html",
+            "GRDC": "GRDC: https://www.bafg.de/GRDC/EN/Home/homepage_node.html",
             "MLIT": "MLIT: https://www.mlit.go.jp/en/",
             "DEFRA": "Defra: https://environment.data.gov.uk/",
             "EAU": "EAU: https://hubeau.eaufrance.fr/page/a-propos",
@@ -996,7 +996,7 @@
         },
         "grdc_q": {
             "long_name": "grdc_discharge_time_series_daily",
-            "comment": "GDRC discharge time series daily discharge values",
+            "comment": "GRDC discharge time series daily discharge values",
             "units": "m^3/s",
             "valid_min": 0,
             "valid_max": 1000000,
@@ -1004,7 +1004,7 @@
         },
         "grdc_qt": {
             "long_name": "grdc_discharge_time",
-            "comment": "GDRC discharge time series daily time values (days since Jan 1 Year 1)",
+            "comment": "GRDC discharge time series daily time values (days since Jan 1 Year 1)",
             "units": "days since 0001-01-01",
             "valid_min": 0,
             "valid_max": 1000000,
@@ -1012,7 +1012,7 @@
         },
         "num_grdc_reaches": {
             "long_name": "grdc_reaches_index",
-            "comment": "Number of GDRC reaches present in data",
+            "comment": "Number of GRDC reaches present in data",
             "valid_min": 1,
             "valid_max": 2000,
             "coverage_content_type": "referenceInformation"
