@@ -605,7 +605,9 @@ def update_historic_gauges(historicq_grp, metadata_json, continent):
     
     # Update metadata for each gauge agency
     for gauge_agency in gauge_agencies:
-        if gauge_agency == "GRDC": gauge_agency = gauge_agency.lower()
-        gauge_grp = historicq_grp[gauge_agency]
+        if gauge_agency == "GRDC": 
+            gauge_grp = historicq_grp["grdc"]
+        else:
+            gauge_grp = historicq_grp[gauge_agency]
         for name, variable in gauge_grp.variables.items():
-            set_variable_atts(variable, metadata_json[gauge_agency.upper()][name])
+            set_variable_atts(variable, metadata_json[gauge_agency][name])
