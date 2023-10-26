@@ -229,7 +229,7 @@ class Sos:
         update_model(sos["model"], self.metadata_json[f"model_{self.run_type}"])
         
         # Update historicQ
-        update_historic_gauges(sos["historicQ"], self.metadata_json, self.continent)
+        if "historicQ" in sos.groups.keys(): update_historic_gauges(sos["historicQ"], self.metadata_json, self.continent)
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
