@@ -64,6 +64,7 @@ class RiggsRead:
             # st = ncf["StationID"][:].filled(np.nan) #new python methods no longer return a masked array for station id
             st = ncf["StationID"][:]
             # print(st, 'before')
+
             
 
             current = []
@@ -73,6 +74,10 @@ class RiggsRead:
                 current_group_agency_reach_ids = [''.join(x) for x in current_group_agency_reach_ids]
 
             st = [''.join(x) for x in st]
+
+            print('-----------------------------------')
+            print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
+            print('-----------------------------------')
 
 
 
@@ -134,11 +139,45 @@ class RiggsRead:
             # print(rid)
             #calibration flag
             cal= ncf["CAL"][:].filled(np.nan)
-            if len(current_group_agency_reach_ids)!=0:
-                print('second round matchup, defra isnt matching---------------------------')
-                print(st[0], current_group_agency_reach_ids[0])
-                print(st[-1], current_group_agency_reach_ids[-1])
-                print(type(st[-1]), type(current_group_agency_reach_ids[-1]))
+            # if len(current_group_agency_reach_ids)!=0:
+                # print('second round matchup, defra isnt matching---------------------------')
+                # print(st[0], current_group_agency_reach_ids[0])
+                # print(st[-1], current_group_agency_reach_ids[-1])
+                # print(type(st[-1]), type(current_group_agency_reach_ids[-1]))
+
+            print(f'here is all of st {len(st)}, should be 269')
+
+            all_cal_strings = [str(int(i)) for i in cal]
+            cal_cnt = 0
+            for cal_string in all_cal_strings:
+                if cal_string in ['0','1']:
+                    cal_cnt += 1
+
+            print(f'there are {cal_cnt} ntr gauges for {filenames[i]}')
+
+
+            
+            m_cnt = 0
+            for id in st:
+                if id in current_group_agency_reach_ids:
+                    m_cnt+=1
+
+            print(f'there are {len(current_group_agency_reach_ids)} for {filenames[i]}. This is how many should be pulled. however there are only {m_cnt} matches!!')
+
+            id_cnt = 0
+            cal_cnt = 0
+            for j in range(len(st)):
+                if st[j] in current_group_agency_reach_ids:
+                    id_cnt += 1
+                    if str(int(cal[j])) in ['0','1']:
+                        cal_cnt += 1
+
+            print('id_cnt', id_cnt, 'cal_cnt', cal_cnt)
+
+
+
+
+
 
             for j in range(len(st)):
                 #this is set up for multiple agencies to run in the same module
@@ -150,7 +189,7 @@ class RiggsRead:
 
                     if st[j] in current_group_agency_reach_ids:
                     
-                        if str(int(cal[j])) in ['0','1']:
+                        if all_cal_strings[j] in ['0','1']:
                             # print(filenames[i])
 
                             if 'brazil' in filenames[i]:
@@ -175,7 +214,7 @@ class RiggsRead:
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
                             if 'uk' in filenames[i]:
-                                print('found defra')
+                                # print('found defra')
                                 agencyR.append('DEFRA')
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
@@ -232,6 +271,12 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
-        print('most of the below should not be 23303200391')
-        print(agencyR, reachIDR)
+        # print('most of the below should not be 23303200391')
+        # print(agencyR, reachIDR)
+
+        print(f'at the end or reading, there are {len(agencyR)} in the dict')
+        print(f'at the end or reading, there are {len(datariggs)} in the dict')
+        print(f'at the end or reading, there are {len(reachIDR)} in the dict')
+        print(f'at the end or reading, there are {len(RIGGScal)} in the dict')
+
         return datariggs, reachIDR, agencyR, RIGGScal

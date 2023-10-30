@@ -131,7 +131,7 @@ qdownload_b = function(site){
   tab2$Date = paste(tab2$year, tab2$month, tab2$Day, sep = "")
   out = data.frame(Date=tab2$Date, Q = as.numeric(tab2$value))
   out = out[order(out$Date),]
-  print(out)
+  # print(out)
   return(out)
 }
 ################################################################################
@@ -275,6 +275,6 @@ qdownload_f =function(site){
                   Date=as.character(as.Date(df$date_obs_elab)))
     df = df[df$Q>=0,]
   }
-  print(df)
+  # print(df)
   return(df)
 }
