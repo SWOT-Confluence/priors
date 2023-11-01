@@ -131,7 +131,7 @@ qdownload_b = function(site){
   tab2$Date = paste(tab2$year, tab2$month, tab2$Day, sep = "")
   out = data.frame(Date=tab2$Date, Q = as.numeric(tab2$value))
   out = out[order(out$Date),]
-  print(out)
+  # print(out)
   return(out)
 }
 ################################################################################
@@ -268,13 +268,13 @@ qdownload_f =function(site){
   ##website
   ##########################################################################################################
   station_specific = 'https://hubeau.eaufrance.fr/api/v1/hydrometrie/obs_elab?code_entite='
-  web = paste0(station_specific,site,'&date_debut_obs_elab=1800-01-01&date_fin_obs_elab=2022-12-31&grandeur_hydro_elab=QmJ&size=20000')
+  web = paste0(station_specific,site,'&date_debut_obs_elab=1800-01-01&date_fin_obs_elab=',Sys.Date(),'&grandeur_hydro_elab=QmJ&size=20000')
   df =fromJSON(web)$data
   if(is.null(nrow(df))){return(NULL)}else{
     df=data.table(Q=as.numeric(df$resultat_obs_elab)/1000,
                   Date=as.character(as.Date(df$date_obs_elab)))
     df = df[df$Q>=0,]
   }
-  print(df)
+  # print(df)
   return(df)
 }

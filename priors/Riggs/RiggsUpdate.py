@@ -85,27 +85,32 @@ class RiggsUpdate:
             # we find the indexes all of the data in riggs dict associated with that agency here
             agency_indexes = np.where(np.array(self.Riggs_dict['Agency'][:]) == agency)
 
+            print(f'there were {len(agency_indexes[0])} entries in riggs dict for {agency}')
+            print(f'there were {len(self.Riggs_dict["Agency"][:])} entries total in riggs dict')
+
 
             # Reach identifiers
             Riggs_ids_all = self.Riggs_dict["reachId"]
-            print(Riggs_ids_all, '1')
-            print(Riggs_ids_all[0], '2')
+            # print(Riggs_ids_all, '1')
+            # print(Riggs_ids_all[0], '2')
             Riggs_ids = []
 
             for i in agency_indexes[0]:
-                print(i)
+                # print(i)
                 single_id = Riggs_ids_all[i]
-                print(single_id, '-------------------------')
+                # print(single_id, '-------------------------')
                 Riggs_ids.append(int(single_id))
             # Riggs_ids = [int(Riggs_ids_all[i]) for i in agency_indexes]
-            print('looking to match')
-            print(Riggs_ids[:10])
-            print('with')
-            print(self.sos_reaches[:10])
+            # print('looking to match')
+            # print(Riggs_ids[:10])
+            # print('with')
+            # print(self.sos_reaches[:10])
+            # print('riggs ids')
+            print(len(Riggs_ids), 'riggsids')
             same_ids = np.intersect1d(self.sos_reaches, Riggs_ids)
             indexes = np.where(np.isin(Riggs_ids, same_ids))[0]
-            print('indexes here --------------------------')
-            print(indexes)
+            # print('indexes here --------------------------')
+            print(len(indexes), 'indexes here')
             
             if indexes.size == 0:
                 self.map_dict[agency] = None
@@ -152,7 +157,7 @@ class RiggsUpdate:
         """
 
         if self.map_dict:
-            print(self.map_dict)
+            # print(self.map_dict)
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
             agencies = set(list(self.Riggs_dict["Agency"]))
@@ -165,6 +170,8 @@ class RiggsUpdate:
                 
                 Riggs["num_days"][:] = self.map_dict[agency]["days"]
                 print('how many days',len(Riggs["num_days"][:]))
+                print('how many gauges found', len(self.map_dict[agency]["Riggs_reach_id"]))
+                print('how many are there', len(Riggs[f"{agency}_reach_id"][:]))
                 self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
                 
                 # used f string for agency so it generalizes the sos creation for different agencies

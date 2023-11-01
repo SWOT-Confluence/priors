@@ -305,9 +305,9 @@ class RiggsPull:
                         NEWfmr['date']=strd
                         NEWfmr['ConvertedDate']=NEWfmr['date']
                         FMr=NEWfmr
-                        print('Found data through URL pull')
-                        print(FMr)
-                        print('top date:', NEWfmr['ConvertedDate'].max())
+                        # print('Found data through URL pull')
+                        # print(FMr)
+                        # print('top date:', NEWfmr['ConvertedDate'].max())
                         return FMr
                     else:
                         print('could not find new data from url pull')
@@ -324,16 +324,16 @@ class RiggsPull:
         """
         #Rcode pull entire record, will need to filter after DL within this function
         if 'EAU' in agencyR:
-            print("Pulling French gages")
+            # print("Pulling French gages")
             try:
                 FMr=downloadQ_f(site)
                 try:
                     with localconverter(ro.default_converter + pandas2ri.converter):
-                        print('pulling gauge')
+                        # print('pulling gauge')
                         FMr = ro.conversion.rpy2py(FMr)
                         FMr = FMr.rename(columns={"Date":'ConvertedDate'})                      
                         FMr =  FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
-                        print('successuflly pulled gauge')
+                        # print('successuflly pulled gauge')
                         return FMr
             
                 except AttributeError:
@@ -409,8 +409,9 @@ class RiggsPull:
                   FMr['ConvertedDate']=pd.to_datetime(FMr.date)
                   return FMr
 
+        
         if 'DEFRA' in agencyR:
-            print('pulling uk gauges')
+            # print('pulling uk gauges')
             FMr=downloadQ_u(site)
             with localconverter(ro.default_converter + pandas2ri.converter):
                  FMr = ro.conversion.rpy2py(FMr)
@@ -467,7 +468,7 @@ class RiggsPull:
         for agency in list(set(list(agencyR))):
 
             agency_ids_from_sos =  list(sos[agency][f'{agency}_id'][:])
-            print(agency_ids_from_sos)
+            # print(agency_ids_from_sos)
 
             for x in agency_ids_from_sos:
                 single_id = []
@@ -479,13 +480,13 @@ class RiggsPull:
                             single_id.append('-')
                     else:
                         single_id.append(i)
-                print(single_id)
+                # print(single_id)
                 try:
                     single_id = ''.join(single_id)
                 except TypeError:
                     single_id = [i.decode('utf-8') for i in single_id]
                     single_id = ''.join(single_id)
-                print(single_id)
+                # print(single_id)
                 current_parsed_agency_ids.append(single_id)
 
 
@@ -555,8 +556,8 @@ class RiggsPull:
         #     current.append(test)
 
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_parsed_agency_ids)
-        print(' reaches here should be good, this is after second pull, first was good')
-        print(len(reachIDR), reachIDR)
+        # print(' reaches here should be good, this is after second pull, first was good')
+        # print(len(reachIDR), reachIDR)
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6
@@ -599,7 +600,7 @@ class RiggsPull:
                     Q=df_list[i]['Q']
                     #Q=Q[Mask]
                     if Q.empty is False:
-                        print(i)
+                        # print(i)
                         Q=Q.to_numpy()
                         #Q=Q*0.0283168#convertcfs to meters        
                         T=df_list[i]['ConvertedDate']        
@@ -669,4 +670,4 @@ class RiggsPull:
             "FDQS": FDQS,
             "TwoYr": TwoYr
         }
-        print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])
+        # print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])
