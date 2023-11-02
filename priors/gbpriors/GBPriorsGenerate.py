@@ -88,6 +88,7 @@ class GBPriorsGenerate:
         self.sos_file = sos_file
         self.sos_dict = extract_sos(sos_file)
         self.swot_dir = swot_dir
+        self.swot_time = []
 
     def __create_node_temp_dict(self, num_nodes):
         """Create a dict to initialize numpy arrays for node-level priors."""
@@ -374,6 +375,7 @@ class GBPriorsGenerate:
                 
                 qhat = self.sos_dict["qhat"][sos_ri[0]]
                 swot_data = extract_swot(swot_file, qhat)
+                self.swot_time.extend(swot_data["time"])
                 print('-----------------swot data--------------')
                 print(swot_data)
                 if swot_data["reach"]:
@@ -443,11 +445,13 @@ def extract_swot(swot_file, qhat):
     reach_width = swot["reach/width"][:].filled(np.nan)
     reach_d_x_area = swot["reach/d_x_area"][:].filled(np.nan)
     reach_slope = swot["reach/slope2"][:].filled(np.nan)
+    swot_time = swot["reach/time"][:].filled(np.nan)
     swot.close()
 
     swot_dict = {
         "node" : check_observations_node(node_width, node_d_x_area, node_slope, qhat),
-        "reach" : check_observations_reach(reach_width, reach_d_x_area, reach_slope, qhat)
+        "reach" : check_observations_reach(reach_width, reach_d_x_area, reach_slope, qhat),
+        "time": swot_time
     }
     return swot_dict
 
@@ -467,6 +471,9 @@ def check_observations_node(width, d_x_area, slope2, qhat):
     width[width < 0] = np.NaN
 
     # Qhat
+    if len(qhat) == 0:
+        return {}
+
     if np.isnan(qhat[0]):
         return {}
 
@@ -558,6 +565,9 @@ def check_observations_reach(width, d_x_area, slope2, qhat):
     width[width < 0] = np.NaN
 
     # Qhat
+    if len(qhat) == 0:
+        return {}
+        
     if np.isnan(qhat[0]):
         return {}
 

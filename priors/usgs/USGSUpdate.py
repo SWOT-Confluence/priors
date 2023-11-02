@@ -106,6 +106,9 @@ class USGSUpdate:
 
             usgs = sos["USGS"]
             
+            self.set_variable_atts(usgs["USGS_reaches"], self.variable_atts["USGS_reaches"])
+            self.set_variable_atts(usgs["CAL"], self.variable_atts["CAL"])
+            
             usgs["num_days"][:] = self.map_dict["days"]     
             self.set_variable_atts(usgs["num_days"], self.variable_atts["num_days"])
 

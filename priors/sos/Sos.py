@@ -1,7 +1,9 @@
 # Standard imports
 from datetime import datetime, timezone
+from dateutil import relativedelta
 import json
 from pathlib import Path
+import uuid
 
 # Third-party imports
 import boto3
@@ -61,7 +63,7 @@ class Sos:
     VERS_LENGTH = 4
     MOD_TIME = 18000    # seconds
 
-    def __init__(self, continent, run_type, sos_dir, metadata_json):
+    def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list):
         """
         Parameters
         ----------
@@ -83,6 +85,7 @@ class Sos:
         self.sos_dir = sos_dir
         self.sos_file = None
         self.version = ""
+        self.priors_list = priors_list
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
@@ -176,14 +179,125 @@ class Sos:
             setattr(sos, name, value)
             
         # Update attributes for current execution
+        global_atts_extra = self.metadata_json["global_attributes_extra"]
+        today = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        
+        # # Version and UUID
         self.version = str(int(sos.version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
-        sos.version = f"{''.join(padding)}{self.version}"
-        sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-        sos.date_created = datetime.now().strftime('%Y-%m%dT%H:%M:%S')
+        sos.product_version = f"{''.join(padding)}{self.version}"
+        sos.date_modified = today
+        sos.uuid = str(uuid.uuid4())
+        
+        # # History and source
+        sos.history = f"{today}: SoS version {''.join(padding)}{self.version} created by Confluence version {global_atts_extra['confluence_version']}"
+        source = f"Gage data sources: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
+        if self.run_type == "constrained":
+            source += f"; Model data source: GRADES"
+        else:
+            source += f"; Model data source: WBM-Sed"
+        if "gbpriors" in self.priors_list:
+            source += f"; Other data source: GeoBAM"
+        sos.source = source  
+        
+        # # Comment and references
+        comment = f"Prior data was taken from gage agencies: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
+        if self.run_type == "constrained":
+            comment += f"; Model data source for constrained run: Global Reach-scale A priori Discharge Estimates (GRADES)"
+        else:
+            comment += f"; Model data source for unconstrained run: Water Balance Model (WBM-Sed)"
+        if "gbpriors" in self.priors_list:
+            comment += f"; GeoBAM priors created from SWOT shapefiles"
+        sos.comment = comment
+        reference = ""
+        for agency in global_atts_extra["continent_agency"][self.continent]:
+            reference += f"{global_atts_extra['references'][agency]}; "
+        if self.run_type == "constrained":
+            reference += f"{global_atts_extra['references']['constrained']}; "
+        else:
+            reference += f"{global_atts_extra['references']['unconstrained']}; "
+        if "gbpriors" in self.priors_list:
+            reference += f"{global_atts_extra['references']['gbpriors']}; "
+        sos.references = reference
+        
+        # Update reach and node variables
+        set_variable_atts(sos["reaches"]["reach_id"], self.metadata_json["reaches"]["reach_id"])
+        set_variable_atts(sos["nodes"]["node_id"], self.metadata_json["nodes"]["node_id"])
+        set_variable_atts(sos["nodes"]["reach_id"], self.metadata_json["nodes"]["reach_id"])
+        
+        # Update model variables
+        update_model(sos["model"], self.metadata_json[f"model_{self.run_type}"])
+        
+        # Update historicQ
+        if "historicQ" in sos.groups.keys(): update_historic_gauges(sos["historicQ"], self.metadata_json, self.continent)
         
         sos.close()
         print(f"Created version {''.join(padding)}{self.version} of: {self.sos_file.name}")
+        
+    def store_geospatial_data(self, sword_file):
+        """Store geospatial data - lat, lon, river names and coverage."""
+        
+        sword = Dataset(sword_file)
+        sos = Dataset(self.sos_file, 'a')
+        
+        # Global attributes
+        sos.geospatial_lat_min = sword.y_min
+        sos.geospatial_lat_max = sword.y_max
+        sos.geospatial_lon_min = sword.x_min
+        sos.geospatial_lon_max = sword.y_min
+        
+        # Reach-level data
+        reaches = sos["reaches"]
+        # # Latitude
+        if "x" not in reaches.variables:
+            x = reaches.createVariable("x", "f8", ("num_reaches"), compression="zlib")
+            x[:] = sword["reaches"]["x"][:]
+        else:
+            x = reaches["x"]
+        set_variable_atts(x, self.metadata_json["reaches"]["x"])
+        # # Longitude
+        if "y" not in reaches.variables:
+            y = reaches.createVariable("y", "f8", ("num_reaches"), compression="zlib")
+            y[:] = sword["reaches"]["y"][:]
+        else:
+            y = reaches["y"]
+        set_variable_atts(y, self.metadata_json["reaches"]["y"])
+        ## River names
+        if "river_name" not in reaches.variables:
+            river_name = reaches.createVariable("river_name", str, ("num_reaches"))
+            river_name._Encoding = "ascii"
+            river_name[:] = sword["reaches"]["river_name"][:]
+        else:
+            river_name = reaches["river_name"]
+        set_variable_atts(river_name, self.metadata_json["reaches"]["river_name"])
+        
+        # Node-level data
+        nodes = sos["nodes"]
+        # # Latitude
+        if "x" not in nodes.variables:
+            x = nodes.createVariable("x", "f8", ("num_nodes"), compression="zlib")
+            x[:] = sword["nodes"]["x"][:]
+        else:
+            x = nodes["x"]
+        set_variable_atts(x, self.metadata_json["nodes"]["x"])
+        # # Longitude
+        if "y" not in nodes.variables:
+            y = nodes.createVariable("y", "f8", ("num_nodes"), compression="zlib")
+            y[:] = sword["nodes"]["y"][:]
+        else:
+            y = nodes["y"]
+        set_variable_atts(y, self.metadata_json["nodes"]["y"])
+        ## River names
+        if "river_name" not in nodes.variables:
+            river_name = nodes.createVariable("river_name", str, ("num_nodes"))
+            river_name._Encoding = "ascii"
+            river_name[:] = sword["nodes"]["river_name"][:]
+        else:
+            river_name = nodes["river_name"]
+        set_variable_atts(river_name, self.metadata_json["nodes"]["river_name"])
+                
+        sword.close()
+        sos.close()
 
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
@@ -302,10 +416,16 @@ class Sos:
         self._create_dims_vars(sos)
 
         sos["model"]["overwritten_indexes"][:] = self.overwritten_indexes
+        set_variable_atts(sos["model"]["overwritten_indexes"], self.metadata_json["model_constrained"]["overwritten_indexes"])
+        
         sos["model"]["overwritten_source"][:] = stringtochar(np.array(self.overwritten_source, dtype="S4"))
+        set_variable_atts(sos["model"]["overwritten_source"], self.metadata_json["model_constrained"]["overwritten_source"])
         
         sos["model"]["bad_priors"][:] = self.bad_prior
+        set_variable_atts(sos["model"]["bad_priors"], self.metadata_json["model_constrained"]["bad_priors"])
+        
         sos["model"]["bad_prior_source"][:] = stringtochar(np.array(self.bad_prior_source, dtype="S4"))
+        set_variable_atts(sos["model"]["bad_prior_source"], self.metadata_json["model_constrained"]["bad_prior_source"])
 
         sos.close()
 
@@ -399,33 +519,95 @@ class Sos:
         sos: netCDF4._netCDF4.Dataset
             sos NetCDF Dataset
         """
+        
         if "overwritten_indexes" not in sos["model"].variables:
-            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",))
+            oi = sos["model"].createVariable("overwritten_indexes", "i4", ("num_reaches",), compression="zlib")
             oi.comment = "Indexes of GRADES priors that were overwritten."
+            oi.long_name = "overwritten priors indexes"
+            oi.valid_min = 0
+            oi.valid_max = 1
+            oi.flag_values = "0 1"
+            oi.flag_meanings = "not_overwritten overwritten"
+            oi.coverage_content_type = "qualityInformation"
 
         if "overwritten_source" not in sos["model"].variables:
-            print(sos["model"].dimensions)
             if "nchar" not in sos["model"].dimensions:
                 sos["model"].createDimension("nchar", 4)
-            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"))
+            os = sos["model"].createVariable("overwritten_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             os.comment = "Source of gage data that overwrote GRADES priors."
+            os.long_name = "overwritten priors sources"
+            os.coverage_content_type = "referenceInformation"
         
         if "bad_priors" not in sos["model"].variables:
-            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",))
+            bp = sos["model"].createVariable("bad_priors", "i4", ("num_reaches",), compression="zlib")
             bp.comment = "Indexes of invalid gage priors that were not overwritten."
+            bp.valid_min = 0
+            bp.valid_max = 1
+            bp.flag_values = "0 1"
+            bp.flag_meanings = "not_overwritten overwritten"
+            bp.coverage_content_type = "qualityInformation"
 
         if "bad_prior_source" not in sos["model"].variables:
-            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"))
+            bps = sos["model"].createVariable("bad_prior_source", "S1", ("num_reaches", "nchar"), compression="zlib")
             bps.comment = "Source of invalid gage priors."
+            bps.long_name = "invalid gage prior sources"
+            bps.coverage_content_type = "referenceInformation"
 
+    def update_time_coverage(self, min_qt, max_qt):
+        """Update time coverage global attributes for sos_file."""
+        
+        sos = Dataset(self.sos_file, 'a')
+        if min_qt == "NO TIME DATA" or max_qt == "NO TIME DATA":
+            if min_qt == "NO TIME DATA":
+                sos.time_coverage_start = "NO TIME DATA"
+            else:
+                sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            if max_qt == "NO TIME DATA":
+                sos.time_coverage_end = "NO TIME DATA"
+            else:
+                sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            duration = "NO TIME DATA"
+        else:
+            sos.time_coverage_start = min_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            sos.time_coverage_end = max_qt.strftime("%Y-%m-%dT%H:%M:%S")
+            duration = relativedelta.relativedelta(max_qt, min_qt)
+            sos.time_coverage_duration = f"P{duration.years}Y{duration.months}M{duration.days}DT{duration.hours}H{duration.minutes}M{duration.seconds}S"
+        sos.close()
 
     def upload_file(self):
         """Upload SoS file to S3 bucket."""
 
         sos_ds = Dataset(self.sos_file, 'r')
-        vers = sos_ds.version
+        vers = sos_ds.product_version
         sos_ds.close()
 
         s3 = boto3.client("s3")
         response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
         print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
+
+def set_variable_atts(variable, variable_dict):
+        """Set the variable attribute metdata."""
+        
+        for name, value in variable_dict.items():
+            setattr(variable, name, value)
+                
+def update_model(model_grp, metadata_json):
+    """Update model metadata."""
+    
+    for name, variable in model_grp.variables.items():
+        set_variable_atts(variable, metadata_json[name])
+        
+def update_historic_gauges(historicq_grp, metadata_json, continent):
+    """Update historic gauge data metadata."""
+    
+    # Locate agencies for continent
+    gauge_agencies = metadata_json["global_attributes_extra"]["continent_agency"][continent]
+    
+    # Update metadata for each gauge agency
+    for gauge_agency in gauge_agencies:
+        if gauge_agency == "GRDC": 
+            gauge_grp = historicq_grp["grdc"]
+        else:
+            gauge_grp = historicq_grp[gauge_agency]
+        for name, variable in gauge_grp.variables.items():
+            set_variable_atts(variable, metadata_json[gauge_agency][name])
