@@ -446,6 +446,73 @@ class Sos:
 
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
+
+        all_agencies = sos.Gage_Agency.split(';')
+
+        no_nrt_validation_gauges_in_reach = True
+
+        for current_agency_name in all_agencies:
+            is_there_a_nrt_val_gauge_in_the_reach = bool(len(np.where(sos[current_agency_name]['CAL'][np.where(sos[current_agency_name][f'{current_agency_name}_reach_id'][:] == reach_id)] == 0)[0]))
+            if is_there_a_nrt_val_gauge_in_the_reach == True:
+                no_nrt_validation_gauges_in_reach = False
+                
+        if no_nrt_validation_gauges_in_reach:
+            # check to see if more than one gauge was found
+            if len(gage_index[0]) > 1:
+                double_gauge = True 
+
+                # find the mean q for each gauge
+                gage_mean_q_list = [gage[f"{source}_mean_q"][i] for i in gage_index[0]]
+
+                # in order to decide what one will replace the grades data, we find what guage had the closest to the prediction
+                # this method of sorting could change
+                winner_index = closest( gage_mean_q_list, sos["model"]["mean_q"][sos_index][0])
+
+            else:
+                double_gauge = False
+
+            grades = sos["model"]
+            if self._isvalid_q(gage, gage_index, source):
+                if not double_gauge:
+                    grades["flow_duration_q"][sos_index] = gage[f"{source}_flow_duration_q"][gage_index]
+                    grades["max_q"][sos_index] = gage[f"{source}_max_q"][gage_index]
+                    grades["monthly_q"][sos_index] = gage[f"{source}_monthly_q"][gage_index]
+                    grades["mean_q"][sos_index] = gage[f"{source}_mean_q"][gage_index]
+                    grades["min_q"][sos_index] = gage[f"{source}_min_q"][gage_index]
+                    grades["two_year_return_q"][sos_index] = gage[f"{source}_two_year_return_q"][gage_index]
+                    self.overwritten_indexes[sos_index] = 1
+                    self.overwritten_source[sos_index] = source
+                else:
+                    grades["flow_duration_q"][sos_index] = gage[f"{source}_flow_duration_q"][gage_index][winner_index]
+                    grades["max_q"][sos_index] = gage[f"{source}_max_q"][gage_index][winner_index]
+                    grades["monthly_q"][sos_index] = gage[f"{source}_monthly_q"][gage_index][winner_index]
+                    grades["mean_q"][sos_index] = gage[f"{source}_mean_q"][gage_index][winner_index]
+                    grades["min_q"][sos_index] = gage[f"{source}_min_q"][gage_index][winner_index]
+                    grades["two_year_return_q"][sos_index] = gage[f"{source}_two_year_return_q"][gage_index][winner_index]
+                    self.overwritten_indexes[sos_index] = 1
+                    self.overwritten_source[sos_index] = source
+
+            else:
+                self.bad_prior[sos_index] = 1
+                self.bad_prior_source[sos_index] = source
+        
+    def _historic_overwrite_prior(self, reach_id, sos, gage, source):
+        """Overwrite prior in grades with historic prior found in gage.
+
+        Parameters
+        ----------
+        reach_id: int
+            unique reach identifier
+        sos: netCDF4._netCDF4.Dataset
+            sos NetCDF Dataset
+        gage: netCDF4._netCDF4.Group
+            gage NetCDF group
+        source: str
+            name of gage data product source
+        """
+
+        sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
+        gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
         
         # check to see if more than one gauge was found
         if len(gage_index[0]) > 1:
@@ -485,7 +552,8 @@ class Sos:
         else:
             self.bad_prior[sos_index] = 1
             self.bad_prior_source[sos_index] = source
-        
+
+
     def _isvalid_q(self, gage, gage_index, source):
         """Test if any q priors in gage data are less than or equal to 0.
         
