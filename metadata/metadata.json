@@ -1114,8 +1114,6 @@
         "USGS_id": {
             "long_name": "USGS_ID_number",
             "comment": "USGS internal identification number (matches USGS database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         },
         "USGS_reaches": {
@@ -1229,8 +1227,6 @@
         "WSC_id": {
             "long_name": "WSC_ID",
             "comment": "WSC internal identification code (matches WSC database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1330,8 +1326,6 @@
         "MLIT_id": {
             "long_name": "MLIT_ID_number",
             "comment": "MLIT internal identification code (matches MLIT database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1431,8 +1425,6 @@
         "DEFRA_id": {
             "long_name": "DEFRA_ID_number",
             "comment": "DEFRA internal identification code (matches DEFRA database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1530,8 +1522,6 @@
         "EAU_id": {
             "long_name": "EAU_ID",
             "comment": "EAU internal identification code (matches EAU database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1627,8 +1617,6 @@
         "ABOM_id": {
             "long_name": "ABOM_ID",
             "comment": "ABOM internal identification code (matches ABOM database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1724,8 +1712,6 @@
         "DGA_id": {
             "long_name": "DGA_ID",
             "comment": "DGA  internal identification code (matches ABOM database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     },
@@ -1821,8 +1807,6 @@
         "Hidroweb_id": {
             "long_name": "Hidroweb_ID",
             "comment": "Hidroweb  internal identification code (matches Hidroweb database)",
-            "valid_min": -998,
-            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         }
     }

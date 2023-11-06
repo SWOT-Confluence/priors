@@ -64,7 +64,8 @@ class Priors:
     """
 
     def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, 
-                 fake_current, metadata_json, historic_qt, add_geospatial):
+                 fake_current, metadata_json, historic_qt, add_geospatial, 
+                 podaac_update, podaac_bucket):
         """
         Parameters
         ----------
@@ -91,6 +92,8 @@ class Priors:
             "historic_qt": historic_qt[cont]
         }
         self.add_geospatial = add_geospatial
+        self.podaac_update = podaac_update
+        self.podaac_bucket = podaac_bucket
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -225,7 +228,7 @@ class Priors:
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
         sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
-                  self.priors_list)
+                  self.priors_list, self.podaac_update, self.podaac_bucket)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -321,6 +324,14 @@ def create_args():
                             "--addgeospatial",
                             action="store_true",
                             help="Indicate requirement to add geospatial data")
+    arg_parser.add_argument("-u",
+                            "--podaacupload",
+                            action="store_true",
+                            help="Indicate requirement to upload to PO.DAAC S3 Bucket")
+    arg_parser.add_argument("-b",
+                            "--podaacbucket",
+                            type=str,
+                            help="Name of PO.DAAC S3 bucket to upload to")
     return arg_parser
 
 def main():
@@ -349,7 +360,8 @@ def main():
     # Retrieve and update priors
     priors = Priors(cont, args.runtype, args.priors, 
                     INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts, 
-                    historicqt, args.addgeospatial)
+                    historicqt, args.addgeospatial, args.podaacupload,
+                    args.podaacbucket)
     priors.update()
 
 if __name__ == "__main__":
