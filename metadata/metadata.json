@@ -386,7 +386,7 @@
                 "comment": "GeoBAM Bankfull_width_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logWb": {
@@ -394,7 +394,7 @@
                 "comment": "GeoBAM Bankfull_width_max",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logDb": {
@@ -402,7 +402,7 @@
                 "comment": "GeoBAM Bankfull_depth_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logDb": {
@@ -410,7 +410,7 @@
                 "comment": "GeoBAM Bankfull_depth_max",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logr": {
@@ -432,21 +432,21 @@
                 "comment": "GeoBAM Median_area_mean",
                 "units": "m^2",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logn_hat": {
                 "long_name": "GeoBAM Mannings_n_mean",
                 "comment": "GeoBAM Mannings_n_mean",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "b_hat": {
                 "long_name": "GeoBAM AHG_b_mean",
                 "comment": "GeoBAM AHG_b_mean",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWb_hat": {
@@ -454,7 +454,7 @@
                 "comment": "GeoBAM Bankfull_width_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logDb_hat": {
@@ -462,14 +462,14 @@
                 "comment": "GeoBAM Bankfull_depth_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logr_hat": {
                 "long_name": "GeoBAM Dingman_shape_mean",
                 "comment": "GeoBAM Dingman_shape_mean",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logA0_sd": {
@@ -477,21 +477,21 @@
                 "comment": "GeoBAM Median_area_sd",
                 "units": "m^2",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logn_sd": {
                 "long_name": "GeoBAM Mannings_n_sd",
                 "comment": "GeoBAM Mannings_n_sd",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "b_sd": {
                 "long_name": "GeoBAM AHG_b_sd",
                 "comment": "GeoBAM AHG_b_sd",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWb_sd": {
@@ -499,7 +499,7 @@
                 "comment": "GeoBAM Bankfull_width_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logDb_sd": {
@@ -507,14 +507,14 @@
                 "comment": "GeoBAM Bankfull_depth_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logr_sd": {
                 "long_name": "GeoBAM Dingman_shape_sd",
                 "comment": "GeoBAM Dingman_shape_sd",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logWc": {
@@ -522,7 +522,7 @@
                 "comment": "GeoBAM AMHG_wc_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logWc": {
@@ -530,7 +530,7 @@
                 "comment": "GeoBAM AMHG_wc_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logQc": {
@@ -538,7 +538,7 @@
                 "comment": "GeoBAM AMHG_Qc_min",
                 "units": "m^3/s",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logQc": {
@@ -546,7 +546,7 @@
                 "comment": "GeoBAM AMHG_Qc_max",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWc_hat": {
@@ -554,7 +554,7 @@
                 "comment": "GeoBAM AMHG_wc_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQc_hat": {
@@ -562,7 +562,7 @@
                 "comment": "GeoBAM AMHG_Qc_mean",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQ_sd": {
@@ -570,7 +570,7 @@
                 "comment": "GeoBAM Discharge_sd",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWc_sd": {
@@ -578,7 +578,7 @@
                 "comment": "GeoBAM AMHG_wc_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQc_sd": {
@@ -586,7 +586,7 @@
                 "comment": "GeoBAM AMHG_qc_min",
                 "units": "m^3/s",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "Werr_sd": {
@@ -594,7 +594,7 @@
                 "comment": "GeoBAM Width_measurement_error",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "Serr_sd": {
@@ -690,7 +690,7 @@
                 "comment": "GeoBAM Bankfull_width_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logWb": {
@@ -698,7 +698,7 @@
                 "comment": "GeoBAM Bankfull_width_max",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logDb": {
@@ -706,7 +706,7 @@
                 "comment": "GeoBAM Bankfull_depth_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logDb": {
@@ -714,7 +714,7 @@
                 "comment": "GeoBAM Bankfull_depth_max",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logr": {
@@ -736,21 +736,21 @@
                 "comment": "GeoBAM Median_area_mean",
                 "units": "m^2",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logn_hat": {
                 "long_name": "GeoBAM Mannings_n_mean",
                 "comment": "GeoBAM Mannings_n_mean",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "b_hat": {
                 "long_name": "GeoBAM AHG_b_mean",
                 "comment": "GeoBAM AHG_b_mean",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWb_hat": {
@@ -758,7 +758,7 @@
                 "comment": "GeoBAM Bankfull_width_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logDb_hat": {
@@ -766,14 +766,14 @@
                 "comment": "GeoBAM Bankfull_depth_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logr_hat": {
                 "long_name": "GeoBAM Dingman_shape_mean",
                 "comment": "GeoBAM Dingman_shape_mean",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logA0_sd": {
@@ -781,21 +781,21 @@
                 "comment": "GeoBAM Median_area_sd",
                 "units": "m^2",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logn_sd": {
                 "long_name": "GeoBAM Mannings_n_sd",
                 "comment": "GeoBAM Mannings_n_sd",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "b_sd": {
                 "long_name": "GeoBAM AHG_b_sd",
                 "comment": "GeoBAM AHG_b_sd",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWb_sd": {
@@ -803,7 +803,7 @@
                 "comment": "GeoBAM Bankfull_width_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logDb_sd": {
@@ -811,14 +811,14 @@
                 "comment": "GeoBAM Bankfull_depth_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logr_sd": {
                 "long_name": "GeoBAM Dingman_shape_sd",
                 "comment": "GeoBAM Dingman_shape_sd",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logWc": {
@@ -826,7 +826,7 @@
                 "comment": "GeoBAM AMHG_wc_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logWc": {
@@ -834,7 +834,7 @@
                 "comment": "GeoBAM AMHG_wc_min",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "lowerbound_logQc": {
@@ -842,7 +842,7 @@
                 "comment": "GeoBAM AMHG_Qc_min",
                 "units": "m^3/s",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "upperbound_logQc": {
@@ -850,7 +850,7 @@
                 "comment": "GeoBAM AMHG_Qc_max",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWc_hat": {
@@ -858,7 +858,7 @@
                 "comment": "GeoBAM AMHG_wc_mean",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQc_hat": {
@@ -866,7 +866,7 @@
                 "comment": "GeoBAM AMHG_Qc_mean",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQ_sd": {
@@ -874,7 +874,7 @@
                 "comment": "GeoBAM Discharge_sd",
                 "units": "m^3/s",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logWc_sd": {
@@ -882,7 +882,7 @@
                 "comment": "GeoBAM AMHG_wc_sd",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "logQc_sd": {
@@ -890,7 +890,7 @@
                 "comment": "GeoBAM AMHG_qc_min",
                 "units": "m^3/s",
                 "valid_min": 0,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "Werr_sd": {
@@ -898,7 +898,7 @@
                 "comment": "GeoBAM Width_measurement_error",
                 "units": "m",
                 "valid_min": -1,
-                "valid_max": 7,
+                "valid_max": 10,
                 "coverage_content_type": "modelResult"
             },
             "Serr_sd": {
