@@ -446,16 +446,19 @@ class Sos:
 
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
+        try:
+            all_agencies = sos.Gage_Agency.split(';')
 
-        all_agencies = sos.Gage_Agency.split(';')
+            no_nrt_validation_gauges_in_reach = True
 
-        no_nrt_validation_gauges_in_reach = True
+            for current_agency_name in all_agencies:
+                is_there_a_nrt_val_gauge_in_the_reach = bool(len(np.where(sos[current_agency_name]['CAL'][np.where(sos[current_agency_name][f'{current_agency_name}_reach_id'][:] == reach_id)] == 0)[0]))
+                if is_there_a_nrt_val_gauge_in_the_reach == True:
+                    no_nrt_validation_gauges_in_reach = False
+        except Exception as e:
+            print(e)
+            no_nrt_validation_gauges_in_reach = True
 
-        for current_agency_name in all_agencies:
-            is_there_a_nrt_val_gauge_in_the_reach = bool(len(np.where(sos[current_agency_name]['CAL'][np.where(sos[current_agency_name][f'{current_agency_name}_reach_id'][:] == reach_id)] == 0)[0]))
-            if is_there_a_nrt_val_gauge_in_the_reach == True:
-                no_nrt_validation_gauges_in_reach = False
-                
         if no_nrt_validation_gauges_in_reach:
             # check to see if more than one gauge was found
             if len(gage_index[0]) > 1:
