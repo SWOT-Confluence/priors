@@ -249,7 +249,7 @@ class GBPriorsUpdate:
         self.set_variable_atts(grp["logQc_sd"], self.variable_atts[level]["logQc_sd"])
 
         print('---------------werr getting written to sos-----------------------')
-        print(np.nan_to_num(self.gb_dict[level]["Werr_sd"], copy=True, nan=self.FLOAT_FILL))
+        # print(np.nan_to_num(self.gb_dict[level]["Werr_sd"], copy=True, nan=self.FLOAT_FILL))
         sos['gbpriors'][level]["Werr_sd"][:] = np.nan_to_num(self.gb_dict[level]["Werr_sd"], copy=True, nan=self.FLOAT_FILL)
         self.set_variable_atts(grp["Werr_sd"], self.variable_atts[level]["Werr_sd"])
 

@@ -148,13 +148,13 @@ class Sos:
                                         ObjectAttributes=["ObjectSize"])
         
         # Return previous key if modification time is less than class constant
-        obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
-        if obj_age < self.MOD_TIME:
-            print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
-            return previous
-        else:
-            print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
-            return current
+        # obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
+        # if obj_age < self.MOD_TIME:
+        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
+        #     return previous
+        # else:
+        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
+        #     return current
         
 
     def create_new_version(self):
@@ -184,6 +184,7 @@ class Sos:
         
         # # Version and UUID
         self.version = str(int(sos.version) + 1)
+        print('updating to new version', self.version,'-----------------------------------------')
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
         sos.date_modified = today
@@ -650,6 +651,7 @@ class Sos:
 
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.product_version
+        print('puloading ', vers)
         sos_ds.close()
 
         s3 = boto3.client("s3")
