@@ -183,11 +183,14 @@ class Sos:
         for name, value in global_atts.items():
             setattr(sos, name, value)
             
+        # Fix inconsistencies in global attributes
+        fix_global_attributes(sos)
+            
         # Update attributes for current execution
         global_atts_extra = self.metadata_json["global_attributes_extra"]
         
         # # Version and UUID
-        self.version = str(int(sos.version) + 1)
+        self.version = str(int(sos.product_version) + 1)
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
         sos.date_modified = self.run_date.strftime('%Y-%m-%dT%H:%M:%S')
@@ -622,3 +625,29 @@ def update_historic_gauges(historicq_grp, metadata_json, continent):
             gauge_grp = historicq_grp[gauge_agency]
         for name, variable in gauge_grp.variables.items():
             set_variable_atts(variable, metadata_json[gauge_agency][name])
+
+def fix_global_attributes(sos):
+    """Fix global attributes to remove inconsistencies."""
+    
+    # Gage_Agency
+    if "Gage_Agency" in sos.__dict__:
+        value = sos.Gage_Agency
+        del sos.Gage_Agency
+        sos.gauge_agency = value
+        
+    # Name
+    if "Name" in sos.__dict__:
+        value = sos.Name
+        del sos.Name
+        sos.continent = value
+        
+    # Production date
+    if "production_date" in sos.__dict__:
+        value = sos.production_date
+        del sos.production_date
+        sos.date_created = datetime.strptime(value, '%d-%b-%Y %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
+        
+    if "version" in sos.__dict__:
+        value = sos.version
+        del sos.version
+        sos.product_version = value
