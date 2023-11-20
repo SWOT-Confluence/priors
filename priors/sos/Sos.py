@@ -190,12 +190,8 @@ class Sos:
         global_atts_extra = self.metadata_json["global_attributes_extra"]
         
         # # Version and UUID
-<<<<<<< HEAD
-        self.version = str(int(sos.version) + 1)
-        print('updating to new version', self.version,'-----------------------------------------')
-=======
         self.version = str(int(sos.product_version) + 1)
->>>>>>> d81b46149ca157ced236ac58b3f6585850b287e0
+        print('updating to new version', self.version,'-----------------------------------------') 
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
         sos.date_modified = self.run_date.strftime('%Y-%m-%dT%H:%M:%S')
