@@ -60,10 +60,12 @@ class Sos:
     """
 
     SUFFIX = "_sword_v15_SOS_priors.nc"
+    SWORD_VERSION = "v15"
     VERS_LENGTH = 4
     MOD_TIME = 18000    # seconds
 
-    def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list):
+    def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list,
+                 podaac_update, podaac_bucket):
         """
         Parameters
         ----------
@@ -86,6 +88,9 @@ class Sos:
         self.sos_file = None
         self.version = ""
         self.priors_list = priors_list
+        self.run_date = datetime.now()
+        self.podaac_update = podaac_update
+        self.podaac_bucket = podaac_bucket
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
@@ -178,20 +183,26 @@ class Sos:
         for name, value in global_atts.items():
             setattr(sos, name, value)
             
+        # Fix inconsistencies in global attributes
+        fix_global_attributes(sos)
+            
         # Update attributes for current execution
         global_atts_extra = self.metadata_json["global_attributes_extra"]
-        today = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         
         # # Version and UUID
+<<<<<<< HEAD
         self.version = str(int(sos.version) + 1)
         print('updating to new version', self.version,'-----------------------------------------')
+=======
+        self.version = str(int(sos.product_version) + 1)
+>>>>>>> d81b46149ca157ced236ac58b3f6585850b287e0
         padding = ['0'] * (self.VERS_LENGTH - len(self.version))
         sos.product_version = f"{''.join(padding)}{self.version}"
-        sos.date_modified = today
+        sos.date_modified = self.run_date.strftime('%Y-%m-%dT%H:%M:%S')
         sos.uuid = str(uuid.uuid4())
         
         # # History and source
-        sos.history = f"{today}: SoS version {''.join(padding)}{self.version} created by Confluence version {global_atts_extra['confluence_version']}"
+        sos.history = f"{self.run_date.strftime('%Y-%m-%dT%H:%M:%S')}: SoS version {''.join(padding)}{self.version} created by Confluence version {global_atts_extra['confluence_version']}"
         source = f"Gage data sources: {', '.join(global_atts_extra['continent_agency'][self.continent])}"
         if self.run_type == "constrained":
             source += f"; Model data source: GRADES"
@@ -647,8 +658,9 @@ class Sos:
         sos.close()
 
     def upload_file(self):
-        """Upload SoS file to S3 bucket."""
+        """Upload SoS file to S3 bucket(s)."""
 
+        # Upload to Confluence bucket
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.product_version
         print('puloading ', vers)
@@ -657,6 +669,12 @@ class Sos:
         s3 = boto3.client("s3")
         response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
         print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
+        
+        # Upload to PO.DAAC bucket
+        if self.podaac_update:
+            sos_filename = f"{self.continent}_sword_{self.SWORD_VERSION}_SOS_priors_{self.run_type}_{vers}_{self.run_date.strftime('%Y%m%dT%H%M%S')}.nc"
+            response = s3.upload_file(str(self.sos_file), self.podaac_bucket, sos_filename)
+            print(f"Uploaded: {self.podaac_bucket}/{sos_filename}")
 
 def set_variable_atts(variable, variable_dict):
         """Set the variable attribute metdata."""
@@ -684,3 +702,29 @@ def update_historic_gauges(historicq_grp, metadata_json, continent):
             gauge_grp = historicq_grp[gauge_agency]
         for name, variable in gauge_grp.variables.items():
             set_variable_atts(variable, metadata_json[gauge_agency][name])
+
+def fix_global_attributes(sos):
+    """Fix global attributes to remove inconsistencies."""
+    
+    # Gage_Agency
+    if "Gage_Agency" in sos.__dict__:
+        value = sos.Gage_Agency
+        del sos.Gage_Agency
+        sos.gauge_agency = value
+        
+    # Name
+    if "Name" in sos.__dict__:
+        value = sos.Name
+        del sos.Name
+        sos.continent = value
+        
+    # Production date
+    if "production_date" in sos.__dict__:
+        value = sos.production_date
+        del sos.production_date
+        sos.date_created = datetime.strptime(value, '%d-%b-%Y %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
+        
+    if "version" in sos.__dict__:
+        value = sos.version
+        del sos.version
+        sos.product_version = value
