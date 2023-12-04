@@ -65,7 +65,7 @@ class Priors:
 
     def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, 
                  fake_current, metadata_json, historic_qt, add_geospatial, 
-                 podaac_update, podaac_bucket):
+                 podaac_update, podaac_bucket, sos_bucket="confluence-sos"):
         """
         Parameters
         ----------
@@ -94,6 +94,7 @@ class Priors:
         self.add_geospatial = add_geospatial
         self.podaac_update = podaac_update
         self.podaac_bucket = podaac_bucket
+        self.sos_bucket = sos_bucket
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -228,7 +229,8 @@ class Priors:
         # Create SoS object to manage SoS operations
         print("Copy and create new version of the SoS.")
         sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
-                  self.priors_list, self.podaac_update, self.podaac_bucket)
+                  self.priors_list, self.podaac_update, self.podaac_bucket,
+                  self.sos_bucket)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -332,6 +334,11 @@ def create_args():
                             "--podaacbucket",
                             type=str,
                             help="Name of PO.DAAC S3 bucket to upload to")
+    arg_parser.add_argument("-s",
+                            "--sosbucket",
+                            type=str,
+                            default="confluence-sos",
+                            help="Name of SoS S3 bucket to upload to")
     return arg_parser
 
 def main():
@@ -361,7 +368,7 @@ def main():
     priors = Priors(cont, args.runtype, args.priors, 
                     INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts, 
                     historicqt, args.addgeospatial, args.podaacupload,
-                    args.podaacbucket)
+                    args.podaacbucket, args.sosbucket)
     priors.update()
 
 if __name__ == "__main__":

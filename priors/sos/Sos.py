@@ -65,7 +65,7 @@ class Sos:
     MOD_TIME = 18000    # seconds
 
     def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list,
-                 podaac_update, podaac_bucket):
+                 podaac_update, podaac_bucket, sos_bucket):
         """
         Parameters
         ----------
@@ -91,6 +91,7 @@ class Sos:
         self.run_date = datetime.now()
         self.podaac_update = podaac_update
         self.podaac_bucket = podaac_bucket
+        self.sos_bucket = sos_bucket
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
@@ -663,13 +664,24 @@ class Sos:
         sos_ds.close()
 
         s3 = boto3.client("s3")
-        response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
+        if self.sos_bucket == "confluence-sos":
+            response = s3.upload_file(str(self.sos_file), 
+                                    "confluence-sos", 
+                                    f"{self.run_type}/{vers}/{self.sos_file.name}")
+        else:
+            response = s3.upload_file(str(self.sos_file), 
+                                self.sos_bucket, 
+                                f"{self.run_type}/{vers}/{self.sos_file.name}",
+                                ExtraArgs={"ServerSideEncryption": "aws:kms"})
         print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
         
         # Upload to PO.DAAC bucket
         if self.podaac_update:
             sos_filename = f"{self.continent}_sword_{self.SWORD_VERSION}_SOS_priors_{self.run_type}_{vers}_{self.run_date.strftime('%Y%m%dT%H%M%S')}.nc"
-            response = s3.upload_file(str(self.sos_file), self.podaac_bucket, sos_filename)
+            response = s3.upload_file(str(self.sos_file), 
+                                      self.podaac_bucket, 
+                                      sos_filename,
+                                      ExtraArgs={"ServerSideEncryption": "AES256"})
             print(f"Uploaded: {self.podaac_bucket}/{sos_filename}")
 
 def set_variable_atts(variable, variable_dict):
