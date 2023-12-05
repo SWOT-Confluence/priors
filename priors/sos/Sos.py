@@ -97,7 +97,7 @@ class Sos:
         """Copy the latest version of the SoS file to local storage."""
         
         s3 = boto3.client("s3")
-        object_list = s3.list_objects(Bucket=self.sos_bucket, Prefix=self.run_type)
+        object_list = s3.list_objects_v2(Bucket=self.sos_bucket, Prefix=self.run_type)
         objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
 
         # Get sorted list of version keys

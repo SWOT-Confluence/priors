@@ -20,6 +20,8 @@ import datetime
 import json
 import os
 from pathlib import Path
+import sys
+import traceback
 
 # Local imports
 from priors.gbpriors.GBPriorsGenerate import GBPriorsGenerate
@@ -227,7 +229,7 @@ class Priors:
         """Generate and update priors based on arguments."""
 
         # Create SoS object to manage SoS operations
-        print("Copy and create new version of the SoS.")
+        print(f"Copy and create new version of the SoS from bucket: {self.sos_bucket}.")
         sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
                   self.priors_list, self.podaac_update, self.podaac_bucket,
                   self.sos_bucket)
@@ -235,6 +237,7 @@ class Priors:
             sos.copy_sos(self.fake_current)
         except Exception as e:
             print(e)
+            traceback.print_exception(*sys.exc_info())
             exit(1)
         # except botocore.exceptions.ClientError:
         #     print(botocore.exceptions.ClientError)
