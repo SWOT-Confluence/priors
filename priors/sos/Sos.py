@@ -97,7 +97,7 @@ class Sos:
         """Copy the latest version of the SoS file to local storage."""
         
         s3 = boto3.client("s3")
-        object_list = s3.list_objects(Bucket="confluence-sos", Prefix=self.run_type)
+        object_list = s3.list_objects(Bucket=self.sos_bucket, Prefix=self.run_type)
         objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
 
         # Get sorted list of version keys
@@ -120,7 +120,7 @@ class Sos:
         # Download current version of the SoS
         print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         try:
-            response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
         except botocore.exceptions.ClientError as error:
             print(f"ERROR: Could not download current version of the SoS.")
             print(error)
@@ -138,7 +138,7 @@ class Sos:
         # Get modication time
         try:
             print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
-            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
                                         Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
                                         ObjectAttributes=["ObjectSize"]) 
             previous = dirs[-2]
@@ -149,19 +149,9 @@ class Sos:
                 return current   # Return if first run
             else:
                 previous = dirs[-3]
-            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
                                         Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
-                                        ObjectAttributes=["ObjectSize"])
-        
-        # Return previous key if modification time is less than class constant
-        # obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
-        # if obj_age < self.MOD_TIME:
-        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
-        #     return previous
-        # else:
-        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
-        #     return current
-        
+                                        ObjectAttributes=["ObjectSize"])        
 
     def create_new_version(self):
         """Create new version of the SoS file.
