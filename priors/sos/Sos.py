@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from dateutil import relativedelta
 import json
 from pathlib import Path
+import sys
+import traceback
 import uuid
 
 # Third-party imports
@@ -301,7 +303,6 @@ class Sos:
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
 
-
         sos = Dataset(self.sos_file, 'a')
         
         self.bad_prior = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
@@ -446,7 +447,7 @@ class Sos:
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
         try:
-            all_agencies = sos.Gage_Agency.split(';')
+            all_agencies = sos.gauge_agency.split(';')
 
             no_nrt_validation_gauges_in_reach = True
 
@@ -456,6 +457,7 @@ class Sos:
                     no_nrt_validation_gauges_in_reach = False
         except Exception as e:
             print(e)
+            traceback.print_exception(*sys.exc_info())
             no_nrt_validation_gauges_in_reach = True
 
         if no_nrt_validation_gauges_in_reach:
@@ -650,7 +652,7 @@ class Sos:
         # Upload to Confluence bucket
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.product_version
-        print('puloading ', vers)
+        print('uploading ', vers)
         sos_ds.close()
 
         s3 = boto3.client("s3")

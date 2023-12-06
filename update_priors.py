@@ -282,7 +282,9 @@ class Priors:
             sos.overwrite_grades()
         
         # Update time coverage in sos file global attributes
+        print("Locating min and max time values.")
         min_qt, max_qt = self.locate_min_max()
+        print("Updating time coverage based on min and max values.")
         sos.update_time_coverage(min_qt, max_qt)
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
 
