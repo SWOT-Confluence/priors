@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from dateutil import relativedelta
 import json
 from pathlib import Path
+import sys
+import traceback
 import uuid
 
 # Third-party imports
@@ -65,7 +67,7 @@ class Sos:
     MOD_TIME = 18000    # seconds
 
     def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list,
-                 podaac_update, podaac_bucket):
+                 podaac_update, podaac_bucket, sos_bucket):
         """
         Parameters
         ----------
@@ -91,12 +93,13 @@ class Sos:
         self.run_date = datetime.now()
         self.podaac_update = podaac_update
         self.podaac_bucket = podaac_bucket
+        self.sos_bucket = sos_bucket
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
         
         s3 = boto3.client("s3")
-        object_list = s3.list_objects(Bucket="confluence-sos", Prefix=self.run_type)
+        object_list = s3.list_objects_v2(Bucket=self.sos_bucket, Prefix=self.run_type)
         objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
 
         # Get sorted list of version keys
@@ -119,7 +122,7 @@ class Sos:
         # Download current version of the SoS
         print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
         try:
-            response = s3.download_file(Bucket="confluence-sos", Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
         except botocore.exceptions.ClientError as error:
             print(f"ERROR: Could not download current version of the SoS.")
             print(error)
@@ -137,7 +140,7 @@ class Sos:
         # Get modication time
         try:
             print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
-            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
                                         Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
                                         ObjectAttributes=["ObjectSize"]) 
             previous = dirs[-2]
@@ -148,19 +151,9 @@ class Sos:
                 return current   # Return if first run
             else:
                 previous = dirs[-3]
-            obj = s3.get_object_attributes(Bucket="confluence-sos", 
+            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
                                         Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
-                                        ObjectAttributes=["ObjectSize"])
-        
-        # Return previous key if modification time is less than class constant
-        # obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
-        # if obj_age < self.MOD_TIME:
-        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
-        #     return previous
-        # else:
-        #     print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
-        #     return current
-        
+                                        ObjectAttributes=["ObjectSize"])        
 
     def create_new_version(self):
         """Create new version of the SoS file.
@@ -310,7 +303,6 @@ class Sos:
     def overwrite_grades(self):
         """Overwrite GRADES data with gaged (USGS or GRDC) data in the SoS."""
 
-
         sos = Dataset(self.sos_file, 'a')
         
         self.bad_prior = np.zeros(sos.dimensions["num_reaches"].size, dtype=np.int32)
@@ -455,7 +447,7 @@ class Sos:
         sos_index = np.where(reach_id == sos["reaches"]["reach_id"][:])
         gage_index = np.where(reach_id == gage[f"{source}_reach_id"][:])
         try:
-            all_agencies = sos.Gage_Agency.split(';')
+            all_agencies = sos.gauge_agency.split(';')
 
             no_nrt_validation_gauges_in_reach = True
 
@@ -465,6 +457,7 @@ class Sos:
                     no_nrt_validation_gauges_in_reach = False
         except Exception as e:
             print(e)
+            traceback.print_exception(*sys.exc_info())
             no_nrt_validation_gauges_in_reach = True
 
         if no_nrt_validation_gauges_in_reach:
@@ -659,17 +652,28 @@ class Sos:
         # Upload to Confluence bucket
         sos_ds = Dataset(self.sos_file, 'r')
         vers = sos_ds.product_version
-        print('puloading ', vers)
+        print('uploading ', vers)
         sos_ds.close()
 
         s3 = boto3.client("s3")
-        response = s3.upload_file(str(self.sos_file), "confluence-sos", f"{self.run_type}/{vers}/{self.sos_file.name}")
+        if self.sos_bucket == "confluence-sos":
+            response = s3.upload_file(str(self.sos_file), 
+                                    "confluence-sos", 
+                                    f"{self.run_type}/{vers}/{self.sos_file.name}")
+        else:
+            response = s3.upload_file(str(self.sos_file), 
+                                self.sos_bucket, 
+                                f"{self.run_type}/{vers}/{self.sos_file.name}",
+                                ExtraArgs={"ServerSideEncryption": "aws:kms"})
         print(f"Uploaded: {self.run_type}/{vers}/{self.sos_file.name}")
         
         # Upload to PO.DAAC bucket
         if self.podaac_update:
             sos_filename = f"{self.continent}_sword_{self.SWORD_VERSION}_SOS_priors_{self.run_type}_{vers}_{self.run_date.strftime('%Y%m%dT%H%M%S')}.nc"
-            response = s3.upload_file(str(self.sos_file), self.podaac_bucket, sos_filename)
+            response = s3.upload_file(str(self.sos_file), 
+                                      self.podaac_bucket, 
+                                      sos_filename,
+                                      ExtraArgs={"ServerSideEncryption": "AES256"})
             print(f"Uploaded: {self.podaac_bucket}/{sos_filename}")
 
 def set_variable_atts(variable, variable_dict):
