@@ -7,7 +7,7 @@ library(BBmisc)
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #aus
-devtools::install_github('buzacott/bomWater')
+
 library(bomWater)
 library(BBmisc)
 library(data.table)
@@ -17,20 +17,18 @@ library(rvest)
 ##Author: Ryan Riggs
 ##Date: 11/18/2021
 #braz
-library(data.table)
 #link = "https://www.snirh.gov.br/hidroweb/rest/api/documento/convencionais?tipo=3&documentos="
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #Canada
 library(tidyhydat)
- x=hy_version()
- if  (x$Date<Sys.Date()){
-   fp=hy_dir()
-   ffp=paste(fp,"/*",sep = "")
-   unlink(ffp, recursive = T, force = T)
-   print("hydat version older than today's date. Downloading hydat.")
-   download_hydat(dl_hydat_here = NULL, ask = FALSE)
- }
+hy_dir("/mnt/data")
+# hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
+# hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
+download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
+hy_src("/mnt/data/Hydat.sqlite3")
+
+
 
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
