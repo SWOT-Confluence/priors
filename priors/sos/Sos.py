@@ -64,7 +64,7 @@ class Sos:
     SUFFIX = "_sword_v15_SOS_priors.nc"
     SWORD_VERSION = "v15"
     VERS_LENGTH = 4
-    MOD_TIME = 18000    # seconds
+    MOD_TIME = 0    # seconds
 
     def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list,
                  podaac_update, podaac_bucket, sos_bucket):
@@ -153,7 +153,16 @@ class Sos:
                 previous = dirs[-3]
             obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
                                         Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
-                                        ObjectAttributes=["ObjectSize"])        
+                                        ObjectAttributes=["ObjectSize"])
+            
+        # Return previous key if modification time is less than class constant
+        obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
+        if obj_age < self.MOD_TIME:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
+            return previous
+        else:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
+            return current
 
     def create_new_version(self):
         """Create new version of the SoS file.
