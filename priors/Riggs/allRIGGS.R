@@ -1,5 +1,12 @@
 ##Author: Ryan Riggs
 ##Date: 11/29/2022
+##Altered By SCoss 11.6.23
+#quebec
+library(data.table)
+library(dplyr)
+library(BBmisc)
+
+
 ##French gauge downloads.
 library(jsonlite)
 library(data.table)
@@ -277,4 +284,23 @@ qdownload_f =function(site){
   }
   # print(df)
   return(df)
+}
+################################################################################
+##Discharge download functions. 
+################################################################################
+#quebec
+qdownload_q=function(f){
+  location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
+  website=paste0(location,f,'_Q.txt')
+  outpath=tempfile()
+  downloading = try(download.file(website, outpath))
+  if(is.error(downloading)){return(NA)}
+  data=fread(outpath, fill=TRUE)
+  removeInfo=grep('Date', data$V2)
+  data=data[(removeInfo+1):nrow(data),2:3]
+  colnames(data)=c('Date','Q')
+  data$date=as.character(as.Date(data$Date))
+  data$Q=as.numeric(data$Q)
+  data$Station=as.character(f)
+  return(data)
 }

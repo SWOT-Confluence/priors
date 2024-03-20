@@ -37,6 +37,7 @@ downloadQ_j = robjects.globalenv['qDownload_j']
 downloadQ_u = robjects.globalenv['qdownload_uk']
 downloadQ_ch = robjects.globalenv['qdownload_ch']
 downloadQ_f = robjects.globalenv['qdownload_f']
+downloadQ_q = robjects.globalenv['qdownload_q']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
@@ -430,6 +431,25 @@ class RiggsPull:
                 except:
                     FMr = []
                     return FMr
+         
+        if 'MEFCCWP' in agencyR:
+            print("Pulling Quebeck Gages")
+            print(site)
+            #note "value" here might be a quality filter
+            FMr= downloadQ_q(site)
+            if 'FMr' in locals():
+                if np.size(FMr[0]) == 1:
+                    print("nd")
+                    FMr=[]   
+                else:
+                        with localconverter(ro.default_converter + pandas2ri.converter):
+                            FMr = ro.conversion.rpy2py(FMr)                  
+                            FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+                  
+            else:
+                print("nd")
+                FMr=[]   
+            return FMr
                 
 
     async def gather_records(self, sites,agencyR):
