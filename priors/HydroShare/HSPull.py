@@ -150,7 +150,7 @@ class HSp:
                                                     except:
                                                         print('missing fill or incorect data fromat in' + RES_file.name )
                                         else:
-                                            print('wrong SWORD in 'RES_file.name)
+                                            print('wrong SWORD in ' +RES_file.name)
                                            
             
             
