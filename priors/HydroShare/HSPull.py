@@ -26,6 +26,7 @@ PW="9Jn3FJNJs!!KXDj"
 #RI='96f1928c95834539ba260ab65ea8db8e'
 RI='38feeef698ca484b907b7b3eb84ad05b'
 URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
+SWORDVERSION='16'#need a solution to this being hard coded
 
 DLpath='./resources'
 DLpathL='./List'      
@@ -93,7 +94,7 @@ class HSp:
             MeanDu=[]
             
             for resource in Collection: #this will bug id there is fewer than 2 resources 
-                if 'TEST' not in  resource[0][0:4]:
+                if '_TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
                     Tstr=resource[2]
                     res = hs.resource(Tstr)
                     
@@ -112,39 +113,44 @@ class HSp:
                         if RES_file.name[-13:-5] != 'template': 
                              if RES_file.name[-5:-1] != 'ipynb':
                                  if RES_file.name[0:6] != 'readme':
-                                 
+                                    if RES_file.name[-4:]=='.csv':                                
                         
-                                    RESlist= genfromtxt(csvpath+"/" +RES_file.name, delimiter=',',dtype ='unicode',skip_header=1)
-                                    c=1
-                                    for measurement in RESlist:               
-                                       if len(measurement[0])>0:
-                                            print(c)
-                                            c=c+1
-                                            Sf.append(RES_file.name)
-                                            Rid.append(measurement[0].astype(np.int64))
-                                            Nid.append(measurement[1].astype(np.int64))
-                                            x.append(measurement[2].astype(np.float32))
-                                            y.append(measurement[3].astype(np.float32))
-                                            date=measurement[4].strip()
-                                            date=date.strip("'")
-                                            d=dt.strptime( date, '%d-%m-%Y')
-                                            T.append(d.toordinal())
-                                            Q.append(measurement[5].astype(float))
-                                            Qu.append(measurement[6].astype(float))
-                                            WSE.append(measurement[7].astype(float))
-                                            WSEu.append(measurement[8].astype(float))
-                                            W.append(measurement[9].astype(float))
-                                            Wu.append(measurement[10].astype(float))
-                                            CXA.append(measurement[11].astype(float))
-                                            CXAu.append(measurement[12].astype(float))
-                                            MxV.append(measurement[13].astype(float))
-                                            MxVu.append(measurement[14].astype(float))
-                                            MeanV.append(measurement[15].astype(float))
-                                            MeanVu.append(measurement[16].astype(float))
-                                            MxD.append(measurement[17].astype(float))
-                                            MxDu.append(measurement[18].astype(float))
-                                            MeanD.append(measurement[19].astype(float))
-                                            MeanDu.append(measurement[20].astype(float))
+                                        RESlist= genfromtxt(csvpath+"/" +RES_file.name, delimiter=',',dtype ='unicode',skip_header=1)
+                                        if np.all(RESlist[:,2]==SWORDVERSION):
+                                            c=1
+                                            for measurement in RESlist:               
+                                                if len(measurement[0])>0:
+                                                    try:                                                    
+                                                        c=c+1
+                                                        Sf.append(RES_file.name)
+                                                        Rid.append(measurement[0].astype(np.int64))
+                                                        Nid.append(measurement[1].astype(np.int64))
+                                                        x.append(measurement[2].astype(np.float32))
+                                                        y.append(measurement[3].astype(np.float32))
+                                                        date=measurement[4].strip()
+                                                        date=date.strip("'")
+                                                        d=dt.strptime( date, '%d-%m-%Y')
+                                                        T.append(d.toordinal())
+                                                        Q.append(measurement[5].astype(float))
+                                                        Qu.append(measurement[6].astype(float))
+                                                        WSE.append(measurement[7].astype(float))
+                                                        WSEu.append(measurement[8].astype(float))
+                                                        W.append(measurement[9].astype(float))
+                                                        Wu.append(measurement[10].astype(float))
+                                                        CXA.append(measurement[11].astype(float))
+                                                        CXAu.append(measurement[12].astype(float))
+                                                        MxV.append(measurement[13].astype(float))
+                                                        MxVu.append(measurement[14].astype(float))
+                                                        MeanV.append(measurement[15].astype(float))
+                                                        MeanVu.append(measurement[16].astype(float))
+                                                        MxD.append(measurement[17].astype(float))
+                                                        MxDu.append(measurement[18].astype(float))
+                                                        MeanD.append(measurement[19].astype(float))
+                                                        MeanDu.append(measurement[20].astype(float))
+                                                    except:
+                                                        print('missing fill or incorect data fromat in' + RES_file.name )
+                                        else:
+                                            print('wrong SWORD in 'RES_file.name)
                                            
             
             
