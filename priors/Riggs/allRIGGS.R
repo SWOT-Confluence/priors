@@ -7,7 +7,7 @@ library(BBmisc)
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #aus
-devtools::install_github('buzacott/bomWater')
+
 library(bomWater)
 library(BBmisc)
 library(data.table)
