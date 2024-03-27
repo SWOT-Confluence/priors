@@ -21,8 +21,8 @@ from hsclient import HydroShare
 #from Clara
 #"https:/www.hydroshare.org/hsapi/resource/a0a51f97bd064896b91ac0e23926468e/__;!!KGKeukY!1wHawDYfAK-I7ewHZg4WfibYP8yRayvGclS54hkJz6IaPYI4PvRI4bMTxyDVGZlNGOPo3Mze3xfLzgsHWO8$"
 #authenticate
-UN="SteveCossSWOT"
-PW="9Jn3FJNJs!!KXDj"
+UN=#needme
+PW=#needme
 #RI='96f1928c95834539ba260ab65ea8db8e'
 RI='38feeef698ca484b907b7b3eb84ad05b'
 URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
