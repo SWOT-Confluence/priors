@@ -39,7 +39,7 @@ import numpy as np
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
-SWORD_VERSION = "v15"
+# SWORD_VERSION = "v15"
 
 class Priors:
     """Class that coordinates the priors to be generated and stores them in 
@@ -67,7 +67,7 @@ class Priors:
 
     def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, 
                  fake_current, metadata_json, historic_qt, add_geospatial, 
-                 podaac_update, podaac_bucket, sos_bucket="confluence-sos"):
+                 podaac_update, podaac_bucket, sword_version, sos_bucket="confluence-sos"):
         """
         Parameters
         ----------
@@ -97,6 +97,7 @@ class Priors:
         self.podaac_update = podaac_update
         self.podaac_bucket = podaac_bucket
         self.sos_bucket = sos_bucket
+        self.swordversion = sword_version
 
     def execute_gbpriors(self, sos_file):
         """Create and execute GBPriors operations.
@@ -232,7 +233,7 @@ class Priors:
         print(f"Copy and create new version of the SoS from bucket: {self.sos_bucket}.")
         sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
                   self.priors_list, self.podaac_update, self.podaac_bucket,
-                  self.sos_bucket)
+                  self.sos_bucket, self.swordversion)
         try:
             sos.copy_sos(self.fake_current)
         except Exception as e:
@@ -249,7 +250,7 @@ class Priors:
         
         # Retrieve geospatial coverage - pull if true flag
         if self.add_geospatial:
-            sos.store_geospatial_data(INPUT_DIR / "sword" / f"{self.cont}_sword_{SWORD_VERSION}.nc")
+            sos.store_geospatial_data(INPUT_DIR / "sword" / f"{self.cont}_sword_v{self.swordversion}.nc")
             print('Set geospatial coverage for reaches and nodes including maximum and minimum coverage.')
 
         # Determine run type and add requested gage priors
@@ -344,6 +345,10 @@ def create_args():
                             type=str,
                             default="confluence-sos",
                             help="Name of SoS S3 bucket to upload to")
+    arg_parser.add_argument("--swordversion",
+                            type=str,
+                            default="16",
+                            help="Version of sword to run on")
     return arg_parser
 
 def main():
@@ -370,10 +375,10 @@ def main():
         historicqt = json.load(jf)
 
     # Retrieve and update priors
-    priors = Priors(cont, args.runtype, args.priors, 
-                    INPUT_DIR, INPUT_DIR / "sos", args.level, variable_atts, 
-                    historicqt, args.addgeospatial, args.podaacupload,
-                    args.podaacbucket, args.sosbucket)
+    priors = Priors(cont = cont, run_type = args.runtype, priors_list = args.priors, 
+                    input_dir = INPUT_DIR, sos_dir = INPUT_DIR / "sos", fake_current = args.level, metadata_json = variable_atts, 
+                    historic_qt = historicqt, add_geospatial = args.addgeospatial, podaac_update = args.podaacupload,
+                    podaac_bucket = args.podaacbucket, sos_bucket = args.sosbucket, sword_version = args.swordversion)
     priors.update()
 
 if __name__ == "__main__":
