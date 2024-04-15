@@ -1,0 +1,3 @@
+0398a782bf48ebcfe8a2d13fc0bb90f4    data/resourcemap.xml
+a0c31d93254e846ba477274ebff30b20    data/resourcemetadata.xml
+f794bba7b54f3101beaa076f75004c5a    data/contents/SCoss_SWOT_SHCQ2.csv

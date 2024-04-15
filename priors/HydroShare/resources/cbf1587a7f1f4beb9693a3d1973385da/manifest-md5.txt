@@ -1,0 +1,4 @@
+9dac4f70ec1267495a750f50128d32ad    data/resourcemap.xml
+69660df64ff21e141a51a20fae3a847b    data/resourcemetadata.xml
+f794bba7b54f3101beaa076f75004c5a    data/contents/SCoss_SWOT_SHCQ1.csv
+d5229c408797bf0f92950f9115402bde    data/contents/SWOT_SHCQ_template_.csv
