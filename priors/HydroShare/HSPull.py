@@ -21,8 +21,8 @@ from hsclient import HydroShare
 #from Clara
 #"https:/www.hydroshare.org/hsapi/resource/a0a51f97bd064896b91ac0e23926468e/__;!!KGKeukY!1wHawDYfAK-I7ewHZg4WfibYP8yRayvGclS54hkJz6IaPYI4PvRI4bMTxyDVGZlNGOPo3Mze3xfLzgsHWO8$"
 #authenticate
-UN=#needme
-PW=#needme
+# UN=#needme
+# PW=#needme
 #RI='96f1928c95834539ba260ab65ea8db8e'
 RI='38feeef698ca484b907b7b3eb84ad05b'
 URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
@@ -40,8 +40,8 @@ class HSp:
             PW="9Jn3FJNJs!!KXDj"
             RI='38feeef698ca484b907b7b3eb84ad05b'
             URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
-            DLpath='./resources'
-            DLpathL='./List'      
+            DLpath='/mnt/data/gage/hydropull'
+            DLpathL='/mnt/data/gage/hydropull'      
 
             def remove_files(DLdir):
                 """Remove files found in directory.
@@ -60,13 +60,17 @@ class HSp:
             
             
             r=requests.get(URLst)
+
+            print('here are urls', URLst)
             
             
             r.headers.get('Content-Type')
             z = ZipFile(BytesIO(r.content))    
             file = z.extractall( DLpathL)
             csvpath=DLpathL+"/"+RI+"/data/contents/collection_list_"+RI+".csv"
-            Collection= genfromtxt(csvpath, delimiter=',', dtype='unicode',skip_header=1)
+            # Collection= genfromtxt(csvpath, delimiter=',', dtype='unicode',skip_header=1)
+            df = pd.read_csv(csvpath)
+            Collection = df.values.astype('U')
             #log in
             hs = HydroShare(UN,PW)
             #dl all resources
@@ -94,6 +98,8 @@ class HSp:
             MeanDu=[]
             
             for resource in Collection: #this will bug id there is fewer than 2 resources 
+                print('resource')
+                print(resource)
                 if '_TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
                     Tstr=resource[2]
                     res = hs.resource(Tstr)

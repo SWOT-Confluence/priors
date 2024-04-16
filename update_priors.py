@@ -32,6 +32,8 @@ from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
 from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
+from priors.HydroShare.HSPull import HSp
+from priors.HydroShare.HydroShareUpdate import HydroShareUpdate
 
 # Third-party imports
 import botocore
@@ -172,6 +174,15 @@ class Priors:
         for agency in set(list(Riggs_update.Riggs_dict["Agency"])):
             time_dict[agency] = Riggs_update.map_dict[agency]["Riggs_qt"]
         return time_dict
+
+    def execute_HydroShare(self, sos_file):
+        #this is set up to take inputs but doesn't need any
+        hp=HSp()
+        hp.pull()#this gets you a dict with all HS data
+        HydroShare_update = HydroShareUpdate(sos_file, Riggs_pull.riggs_dict, metadata_json = self.metadata_json)
+        HydroShare_update.read_sos()
+        HydroShare_update.map_data()
+        HydroShare_update.update_data()
         
     def locate_min_max(self):
         """Locate min and max time values."""
@@ -275,7 +286,11 @@ class Priors:
         if "gbpriors" in self.priors_list:
             print("Updating geoBAM priors.")
             self.time_dict["gbpriors"] = self.execute_gbpriors(sos_file)
-        
+
+        if "hydroshare" in self.priors_list:
+            print("Updating hydroshare.")
+            self.time_dict["HydroShare"] = self.execute_HydroShare(sos_file)
+
         # only overwrite if doing a constrained run
         if self.run_type == "constrained":
             # Overwrite GRADES with gage priors
