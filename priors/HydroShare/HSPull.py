@@ -40,8 +40,8 @@ class HSp:
             PW="9Jn3FJNJs!!KXDj"
             RI='38feeef698ca484b907b7b3eb84ad05b'
             URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
-            DLpath='/mnt/data/gage/hydropull'
-            DLpathL='/mnt/data/gage/hydropull'      
+            DLpath='/opt/hydroshare'
+            DLpathL='/opt/hydroshare'      
 
             def remove_files(DLdir):
                 """Remove files found in directory.
@@ -68,9 +68,9 @@ class HSp:
             z = ZipFile(BytesIO(r.content))    
             file = z.extractall( DLpathL)
             csvpath=DLpathL+"/"+RI+"/data/contents/collection_list_"+RI+".csv"
-            # Collection= genfromtxt(csvpath, delimiter=',', dtype='unicode',skip_header=1)
-            df = pd.read_csv(csvpath)
-            Collection = df.values.astype('U')
+            Collection= genfromtxt(csvpath, delimiter=',', dtype='unicode',skip_header=1, usecols=np.arange(0,5))
+            # df = pd.read_csv(csvpath)
+            # Collection = df.values.astype('U')
             #log in
             hs = HydroShare(UN,PW)
             #dl all resources
@@ -116,7 +116,7 @@ class HSp:
                         RES_files = [ entry for entry in entries if entry.name ]
                     
                     for RES_file in RES_files: 
-                        if RES_file.name[-13:-5] != 'template': 
+                        if  'template'not in RES_file.name: 
                              if RES_file.name[-5:-1] != 'ipynb':
                                  if RES_file.name[0:6] != 'readme':
                                     if RES_file.name[-4:]=='.csv':                                
@@ -127,37 +127,41 @@ class HSp:
                                             for measurement in RESlist:               
                                                 if len(measurement[0])>0:
                                                     try:                                                    
+                                                                                                    #print(c)
                                                         c=c+1
                                                         Sf.append(RES_file.name)
                                                         Rid.append(measurement[0].astype(np.int64))
                                                         Nid.append(measurement[1].astype(np.int64))
-                                                        x.append(measurement[2].astype(np.float32))
-                                                        y.append(measurement[3].astype(np.float32))
-                                                        date=measurement[4].strip()
+                                                        x.append(measurement[3].astype(np.float32))
+                                                        y.append(measurement[4].astype(np.float32))
+                                                        date=measurement[5].strip()
                                                         date=date.strip("'")
                                                         d=dt.strptime( date, '%d-%m-%Y')
                                                         T.append(d.toordinal())
-                                                        Q.append(measurement[5].astype(float))
-                                                        Qu.append(measurement[6].astype(float))
-                                                        WSE.append(measurement[7].astype(float))
-                                                        WSEu.append(measurement[8].astype(float))
-                                                        W.append(measurement[9].astype(float))
-                                                        Wu.append(measurement[10].astype(float))
-                                                        CXA.append(measurement[11].astype(float))
-                                                        CXAu.append(measurement[12].astype(float))
-                                                        MxV.append(measurement[13].astype(float))
-                                                        MxVu.append(measurement[14].astype(float))
-                                                        MeanV.append(measurement[15].astype(float))
-                                                        MeanVu.append(measurement[16].astype(float))
-                                                        MxD.append(measurement[17].astype(float))
-                                                        MxDu.append(measurement[18].astype(float))
-                                                        MeanD.append(measurement[19].astype(float))
-                                                        MeanDu.append(measurement[20].astype(float))
-                                                    except:
+                                                        Q.append(measurement[6].astype(float))
+                                                        Qu.append(measurement[7].astype(float))
+                                                        WSE.append(measurement[8].astype(float))
+                                                        WSEu.append(measurement[9].astype(float))
+                                                        W.append(measurement[10].astype(float))
+                                                        Wu.append(measurement[11].astype(float))
+                                                        CXA.append(measurement[12].astype(float))
+                                                        CXAu.append(measurement[13].astype(float))
+                                                        MxV.append(measurement[14].astype(float))
+                                                        MxVu.append(measurement[15].astype(float))
+                                                        MeanV.append(measurement[16].astype(float))
+                                                        MeanVu.append(measurement[17].astype(float))
+                                                        MxD.append(measurement[18].astype(float))
+                                                        MxDu.append(measurement[19].astype(float))
+                                                        MeanD.append(measurement[20].astype(float))
+                                                        MeanDu.append(measurement[21].astype(float))
+                                                    except Exception as e:
+                                                        print(e)
                                                         print('missing fill or incorect data fromat in' + RES_file.name )
+
+                                                        
                                         else:
                                             print('wrong SWORD in ' +RES_file.name)
-                                           
+                                            
             
             
             data_id=[]
@@ -302,7 +306,7 @@ class HSp:
             
             self.HydroShare_dict = {
                     "data": data_id,
-                    "reachId":  data_rid,            
+                    "reachId":  np.array(data_rid),            
                     "Qwrite": Qwrite,
                     "Twrite": Twrite,
                     "Qmean": Qmean,

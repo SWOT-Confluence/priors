@@ -179,7 +179,7 @@ class Priors:
         #this is set up to take inputs but doesn't need any
         hp=HSp()
         hp.pull()#this gets you a dict with all HS data
-        HydroShare_update = HydroShareUpdate(sos_file, Riggs_pull.riggs_dict, metadata_json = self.metadata_json)
+        HydroShare_update = HydroShareUpdate(sos_file, hp.HydroShare_dict, metadata_json = self.metadata_json)
         HydroShare_update.read_sos()
         HydroShare_update.map_data()
         HydroShare_update.update_data()

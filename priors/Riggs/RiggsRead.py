@@ -38,7 +38,7 @@ class RiggsRead:
         """Read Riggs data."""
                 # add more file maps as we test new continents
         target_file_map = {
-            'na':['Riggs_canada_.nc'],
+            'na':['Riggs_canada_.nc', 'Riggs_quebec_.nc'],
             'eu':['Riggs_uk_.nc', 'Riggs_france_.nc'],
             # 'eu':['Riggs_france_.nc'],
             # 'eu':['Riggs_uk_.nc'],
@@ -76,7 +76,7 @@ class RiggsRead:
             st = [''.join(x) for x in st]
 
             print('-----------------------------------')
-            print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
+            print(f'Found {len(current_group_agency_reach_ids)} for agency: {filenames[i]}')
             print('-----------------------------------')
 
 
@@ -145,7 +145,7 @@ class RiggsRead:
                 # print(st[-1], current_group_agency_reach_ids[-1])
                 # print(type(st[-1]), type(current_group_agency_reach_ids[-1]))
 
-            print(f'here is all of st {len(st)}, should be 269')
+            # print(f'here is all of st {len(st)}, should be 269')
 
             all_cal_strings = [str(int(i)) for i in cal]
             cal_cnt = 0
@@ -197,6 +197,11 @@ class RiggsRead:
                                 datariggs.append(str(int(st[j])))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                            if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(int(st[j])))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
                             if 'australia' in filenames[i]:
                                 agencyR.append('ABOM')
                                 datariggs.append(str(st[j]))
@@ -204,6 +209,12 @@ class RiggsRead:
                                 RIGGScal.append(int(cal[j]))
                             if 'Canada' in filenames[i] or "canada" in filenames[i]:
                                 agencyR.append('WSC')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'japan' in filenames[i]:
+                                #some unserialize gages in the list so need to check for NaN                   
+                                agencyR.append('MLIT')
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
@@ -269,6 +280,11 @@ class RiggsRead:
                         if 'france' in filenames[i]:
                                 agencyR.append('EAU')
                                 datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                        if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(int(st[j])))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
         # print('most of the below should not be 23303200391')
