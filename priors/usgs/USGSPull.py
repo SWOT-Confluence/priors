@@ -9,6 +9,7 @@ import pandas as pd
 from netCDF4 import Dataset, stringtochar
 from pathlib import Path
 import datetime as datetime
+from datetime import timedelta
 
 
 
@@ -117,7 +118,62 @@ class USGSPull:
             Site identifier
         """
 
-        return nwis.get_record(sites=site, service='dv', start= self.start_date, end= self.end_date)
+        #return nwis.get_record(sites=site, service='dv', start= self.start_date, end= self.end_date)
+        try:
+            Q=df['00060'].values[df['00060'].values>-99]/35.3147
+            T=df.index.values[df['00060'].values>-99]
+            F=df['00065_cd'].values[df['00060'].values>-99]
+        except:
+            try:
+                Q=df['00060_2'].values[df['00060_2'].values>-99]/35.3147
+                T=df.index.values[df['00060_2'].values>-99]
+                F=df['00065_cd'].values[df['00060_2'].values>-99]
+            except:
+                try:
+                    Q=df['00060_from primary sensor'].values[df['00060_from primary sensor'].values>-99]/35.3147
+                    T=df.index.values[df['00060_from primary sensor'].values>-99]
+                    F=df['00065_cd'].values[df['00060_from primary sensor'].values>-99]
+                except:
+                    try: 
+                        Q=df['00060_discharge from primary sensor'].values[df['00060_discharge from primary sensor'].values>-99]/35.3147
+                        T=df.index.values[df['00060_discharge from primary sensor'].values>-99]
+                        F=df['00065_cd'].values[df['00060_discharge from primary sensor'].values>-99]
+                    except:
+                        T=np.nan
+                        Q=np.nan
+                        F=np.nan
+
+        if len(F)>1:
+            newF=[]
+            for flag in F:
+
+                if flag=='Ice' or str(flag)=='nan':
+                    newF.append(False)
+                else:
+                    newF.append(True)
+
+            T=T[newF]
+            Q=Q[newF]
+
+        UTCord=[]
+        for tt in T:
+            ttt=datetime.strptime(tt[0:10],'%Y-%m-%d')  
+            utc=ttt+timedelta(hours=int(T[0][-6:-3]))
+            UTCord.append(utc.toordinal())
+    
+        uUTCord=np.unique(UTCord)
+        OUTt=[]
+        OUTq=[]
+        for T in uUTCord:
+            OUTt.append(T)
+            NOWd=np.where(uUTCord==T)[0][0]
+            OUTq.append(np.nanmean(Q[NOWd]))
+
+        dfnew=pd.DataFrame()
+        dfnew.index=OUTt
+        dfnew['00060_Mean']=OUTq        
+        return dfnew
+    
 
     async def gather_records(self, sites):
         """Creates and returns a list of dataframes for each NWIS record.
@@ -217,10 +273,10 @@ class USGSPull:
             if df_list[i].empty is False and '00060_Mean' in df_list[i] :
                 
                 # create boolean from quality flag       
-                Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
+                #Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                 # pull in Q
                 Q=df_list[i]['00060_Mean']
-                Q=Q[Mask]
+                #Q=Q[Mask]
                 if Q.empty is False:
                     Q=Q.to_numpy()
                     Q=Q*0.0283168#convertcfs to meters
@@ -234,7 +290,7 @@ class USGSPull:
 
                     T=df_list[i].index.values
                     T=pd.DatetimeIndex(T)
-                    T=T[Mask]
+                    T=T#[Mask]
                     moy=T.month
                     yyyy=T.year
                     moy=moy.to_numpy()      
