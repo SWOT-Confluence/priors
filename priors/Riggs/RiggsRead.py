@@ -45,7 +45,7 @@ class RiggsRead:
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
-            'af':['no_target']
+            'af':['Riggs_safrica_.nc']
         }
 
         filenames = target_file_map[self.cont]
