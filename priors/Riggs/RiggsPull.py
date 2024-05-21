@@ -40,6 +40,14 @@ downloadQ_f = robjects.globalenv['qdownload_f']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
+#saf specific
+gsd= robjects.globalenv['.get_start_date']
+ged= robjects.globalenv['.get_end_date']
+gcn=robjects.globalenv['.get_column_name']
+ceep=robjects.globalenv['construct_endpoin']
+dlsad=robjects.globalenv['download_sa_data']
+downloadQ_saf=robjects.globalenv['qdownload_Saf']
+
 # Local imports
 from .RiggsRead import RiggsRead
 
@@ -323,6 +331,24 @@ class RiggsPull:
             Site identifier
         """
         #Rcode pull entire record, will need to filter after DL within this function
+
+        if 'DWA' in agencyR:
+            #print("Pulling SAfrican gages")
+            try:
+                FMr= self.downloadQ_saf(site,'discharge',self.start_date, self.end_date)
+                try:
+                    with localconverter(ro.default_converter + pandas2ri.converter):
+                        FMr = ro.conversion.rpy2py(FMr)                       
+                        return FMr[FMr['Q'] >0]
+            
+                except AttributeError:
+                    FMr=[]
+                    return FMr
+            except:
+                FMr=[]
+                return FMr
+            
+        
         if 'EAU' in agencyR:
             # print("Pulling French gages")
             try:
