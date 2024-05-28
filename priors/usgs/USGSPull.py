@@ -283,14 +283,14 @@ class USGSPull:
 
                     # pull in the dataframe and format datetime
                     # would be more appropriate as a part of a function but moving it anywhere breaks the pulling functinality
-                    df_list[i] = df_list[i].reset_index()
-                    df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
-                    df_list[i] = df_list[i].set_index('datetime')
+                    # df_list[i] = df_list[i].reset_index()
+                    # df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
+                    # df_list[i] = df_list[i].set_index('datetime')
 
 
                     T=df_list[i].index.values
                     T=pd.DatetimeIndex(T)
-                    T=T#[Mask]
+                    #T=T#[Mask]
                     moy=T.month
                     yyyy=T.year
                     moy=moy.to_numpy()      
