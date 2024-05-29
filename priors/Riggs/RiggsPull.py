@@ -25,18 +25,14 @@ r=robjects.r
 # Defining the R script and loading the instance in Python
 
 r['source']("/app/priors/Riggs/allRIGGS.R")
-# Loading the function we have defined in R.
 downloadQ_b = robjects.globalenv['qdownload_b']
-# Loading the function we have defined in R.
 downloadQ_a = robjects.globalenv['qdownload_a']
-# Loading the function we have defined in R.
 downloadQ_c = robjects.globalenv['qDownload_c']
-# Loading the function we have defined in R.
 downloadQ_j = robjects.globalenv['qDownload_j']
-# Loading the function we have defined in R.
 downloadQ_u = robjects.globalenv['qdownload_uk']
 downloadQ_ch = robjects.globalenv['qdownload_ch']
 downloadQ_f = robjects.globalenv['qdownload_f']
+downloadQ_q = robjects.globalenv['qdownload_q']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
 
@@ -44,7 +40,7 @@ substrRight = robjects.globalenv['substrRight']
 gsd= robjects.globalenv['.get_start_date']
 ged= robjects.globalenv['.get_end_date']
 gcn=robjects.globalenv['.get_column_name']
-ceep=robjects.globalenv['construct_endpoin']
+ceep=robjects.globalenv['construct_endpoint']
 dlsad=robjects.globalenv['download_sa_data']
 downloadQ_saf=robjects.globalenv['qdownload_Saf']
 
@@ -333,21 +329,45 @@ class RiggsPull:
         #Rcode pull entire record, will need to filter after DL within this function
 
         if 'DWA' in agencyR:
-            #print("Pulling SAfrican gages")
+            print("Pulling SAfrican gages")
             try:
-                FMr= self.downloadQ_saf(site,'discharge',self.start_date, self.end_date)
+                FMr= downloadQ_saf(site,'discharge',self.start_date, self.end_date)
                 try:
                     with localconverter(ro.default_converter + pandas2ri.converter):
-                        FMr = ro.conversion.rpy2py(FMr)                       
+                        FMr = ro.conversion.rpy2py(FMr)
+                        FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+                        print('successfull pull', FMr)
+
                         return FMr[FMr['Q'] >0]
             
-                except AttributeError:
+                except Exception as e:           
+                    print('fail to pull')
+                    print(e)
                     FMr=[]
                     return FMr
-            except:
+            except Exception as e:
+                print('fail to pull')
+                print(e)
                 FMr=[]
                 return FMr
-            
+        if 'MEFCCWP' in agencyR:
+            print("Pulling Quebeck Gages")
+            print(site)
+            #note "value" here might be a quality filter
+            FMr= downloadQ_q(site)
+            if 'FMr' in locals():
+                if np.size(FMr[0]) == 1:
+                    print("nd")
+                    FMr=[]   
+                else:
+                        with localconverter(ro.default_converter + pandas2ri.converter):
+                            FMr = ro.conversion.rpy2py(FMr)                  
+                            FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+
+            else:
+                print("nd")
+                FMr=[]   
+            return FMr  
         
         if 'EAU' in agencyR:
             # print("Pulling French gages")
@@ -585,6 +605,7 @@ class RiggsPull:
         # print(' reaches here should be good, this is after second pull, first was good')
         # print(len(reachIDR), reachIDR)
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
+        print('df_list 1', df_list)
 
         # made it ot here dec 6
         # need to make merge historic gage data different for each agency, can use arg allready in place.
@@ -696,4 +717,5 @@ class RiggsPull:
             "FDQS": FDQS,
             "TwoYr": TwoYr
         }
-        # print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])
+        print('riggs dict out')
+        print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])

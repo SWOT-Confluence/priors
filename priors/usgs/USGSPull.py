@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 from netCDF4 import Dataset, stringtochar
 from pathlib import Path
-import datetime as datetime
+from datetime import date
+from datetime import datetime, timedelta
 
 
 
@@ -116,8 +117,91 @@ class USGSPull:
         site: str
             Site identifier
         """
+        df =  nwis.get_record(sites=site, service='iv', start= self.start_date, end= self.end_date)
+        # print('here is the df which should have columns')
+        # print(df.columns)
+        
+        try:
+            Q=df['00060'].values[df['00060'].values>-99]/35.3147
+            T=df.index.values[df['00060'].values>-99]
+            F=df['00065_cd'].values[df['00060'].values>-99]
+            print('successful pull...')
+        except Exception as e:
+            # print(e)
+            # print(1)
+            try:
+                Q=df['00060_2'].values[df['00060_2'].values>-99]/35.3147
+                T=df.index.values[df['00060_2'].values>-99]
+                F=df['00065_cd'].values[df['00060_2'].values>-99]
+                print('successful pull...')
+            except Exception as e:
+                # print(e)
+                # print(2)
+                try:
+                    Q=df['00060_from primary sensor'].values[df['00060_from primary sensor'].values>-99]/35.3147
+                    T=df.index.values[df['00060_from primary sensor'].values>-99]
+                    F=df['00065_cd'].values[df['00060_from primary sensor'].values>-99]
+                    print('successful pull...')
+                except Exception as e:
+                    # print(3)
+                    # print(e)
+                    try: 
+                        Q=df['00060_discharge from primary sensor'].values[df['00060_discharge from primary sensor'].values>-99]/35.3147
+                        T=df.index.values[df['00060_discharge from primary sensor'].values>-99]
+                        F=df['00065_cd'].values[df['00060_discharge from primary sensor'].values>-99]
+                        print('successful pull...')
+                    except Exception as e:
+                        # print('setting to nans')
+                        # print(e)
+                        T=np.nan
+                        Q=np.nan
+                        F=np.nan
+                        print('pull failed')
+        
+        if type(F) != float:
+            if len(F)>1:
+                newF=[]
+                for flag in F:
 
-        return nwis.get_record(sites=site, service='dv', start= self.start_date, end= self.end_date)
+                    if flag=='Ice' or str(flag)=='nan':
+                        newF.append(False)
+                    else:
+                        newF.append(True)
+
+                T=T[newF]
+                Q=Q[newF]
+        # dump variables for memory
+        F = 0
+        newF = 0
+
+        UTCord=[]
+        if type(T) != float:
+            for tt in T:
+                ttt=datetime.strptime(tt[0:10],'%Y-%m-%d')  
+                utc=ttt+timedelta(hours=int(T[0][-6:-3]))
+                UTCord.append(utc.toordinal())
+
+        uUTCord=np.unique(UTCord)
+        OUTt=[]
+        OUTq=[]
+        for T in uUTCord:
+            OUTt.append(T)
+            NOWd=np.where(uUTCord==T)[0][0]
+            OUTq.append(np.nanmean(Q[NOWd]))
+
+        # dump variables for memory
+        df = 0
+
+        dfnew=pd.DataFrame()
+        dfnew.index=OUTt
+        dfnew['00060_Mean']=OUTq    
+        print('Successfull pull...')    
+        return dfnew
+        # return nwis.get_record(sites=site, service='dv', start= self.start_date, end= self.end_date)
+    def split(self, list_a, chunk_size):
+
+        for i in range(0, len(list_a), chunk_size):
+            yield list_a[i:i + chunk_size]
 
     async def gather_records(self, sites):
         """Creates and returns a list of dataframes for each NWIS record.
@@ -127,9 +211,16 @@ class USGSPull:
         sites: dict
             Dictionary of USGS data needed to download a record
         """
-
-        records = await asyncio.gather(*(self.get_record(site) for site in sites))
-        return records
+        cnt = 0
+        
+        sites_split = self.split(sites, 120)
+        records_total = []
+        for a_few_sites in sites_split:
+            records = await asyncio.gather(*(self.get_record(site) for site in a_few_sites))
+            records_total.extend(records)
+            print('pulling chunk', cnt)
+            cnt += 1
+        return records_total
 
     def pull(self):
         """Pulls USGS data and flags and stores in usgs_dict."""
@@ -181,8 +272,6 @@ class USGSPull:
         for i in range(len(dataUSGS)):
                 if dataUSGS[i] in current_parsed_agency_ids:
                     cnt += 1
-        print('cnt---------------------------shoudl be 1413')
-        print(cnt)
         # raise ValueError
 
 
@@ -215,26 +304,27 @@ class USGSPull:
         # Extract data from NWIS dataframe records
         for i in range(len(dataUSGS)):
             if df_list[i].empty is False and '00060_Mean' in df_list[i] :
+                print(df_list[i])
                 
                 # create boolean from quality flag       
-                Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
+                # Mask=gage_read.flag(df_list[i]['00060_Mean_cd'],df_list[i]['00060_Mean'])
                 # pull in Q
                 Q=df_list[i]['00060_Mean']
-                Q=Q[Mask]
+                # Q=Q[Mask]
                 if Q.empty is False:
                     Q=Q.to_numpy()
                     Q=Q*0.0283168#convertcfs to meters
 
                     # pull in the dataframe and format datetime
                     # would be more appropriate as a part of a function but moving it anywhere breaks the pulling functinality
-                    df_list[i] = df_list[i].reset_index()
-                    df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
-                    df_list[i] = df_list[i].set_index('datetime')
+                    # df_list[i] = df_list[i].reset_index()
+                    # df_list[i]['datetime'] = pd.to_datetime(df_list[i]['datetime'],errors='coerce', format='%Y-%m-%d %H:%M:%S+00:00')
+                    # df_list[i] = df_list[i].set_index('datetime')
 
 
                     T=df_list[i].index.values
                     T=pd.DatetimeIndex(T)
-                    T=T[Mask]
+                    T=T#[Mask]
                     moy=T.month
                     yyyy=T.year
                     moy=moy.to_numpy()      

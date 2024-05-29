@@ -115,6 +115,7 @@ class RiggsUpdate:
             if indexes.size == 0:
                 self.map_dict[agency] = None
             else:
+                print('found agency data, writing it into the sos now...')
                 # Map Riggs data that matches SoS reach identifiers
                 # self.map_dict[agency]["days"] = np.array(range(1, len(self.Riggs_dict["Qwrite"][0]) + 1))
                 # self.map_dict[agency]["Riggs_reach_id"] = self.Riggs_dict["reachId"].astype(np.int64)[indexes]
@@ -164,7 +165,7 @@ class RiggsUpdate:
             for agency in agencies:
                 
                 print("AGENCY: ", agency)
-                variable_atts = self.variable_atts[agency]
+
                 
                 Riggs = sos[agency]
                 
@@ -172,43 +173,58 @@ class RiggsUpdate:
                 print('how many days',len(Riggs["num_days"][:]))
                 print('how many gauges found', len(self.map_dict[agency]["Riggs_reach_id"]))
                 print('how many are there', len(Riggs[f"{agency}_reach_id"][:]))
-                self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
+
+
+                
+                Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
+
+                
+                Riggs[f"{agency}_flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
+
+                
+                Riggs[f"{agency}_max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
+
+                
+                Riggs[f"{agency}_monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
+                
+                
+                Riggs[f"{agency}_mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
+
+                
+                Riggs[f"{agency}_min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
+
+                
+                Riggs[f"{agency}_two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
+
+                
+                Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
+
+                
+
+                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
+
+                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
+                
+                if agency in self.variable_atts.keys():
+                    variable_atts = self.variable_atts[agency]
+                    self.set_variable_atts(Riggs["num_days"], variable_atts["num_days"])
                 
                 # used f string for agency so it generalizes the sos creation for different agencies
                 
-                self.set_variable_atts(Riggs[f"{agency}_reaches"], variable_atts[f"{agency}_reaches"])
-                self.set_variable_atts(Riggs["CAL"], variable_atts["CAL"])
-                
-                Riggs[f"{agency}_reach_id"][:] = self.map_dict[agency]["Riggs_reach_id"]
-                self.set_variable_atts(Riggs[f"{agency}_reach_id"], variable_atts[f"{agency}_reach_id"])
-                
-                Riggs[f"{agency}_flow_duration_q"][:] = np.nan_to_num(self.map_dict[agency]["fdq"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_flow_duration_q"], variable_atts[f"{agency}_flow_duration_q"])
-                
-                Riggs[f"{agency}_max_q"][:] = np.nan_to_num(self.map_dict[agency]["max_q"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_max_q"], variable_atts[f"{agency}_max_q"])
-                
-                Riggs[f"{agency}_monthly_q"][:] = np.nan_to_num(self.map_dict[agency]["monthly_q"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_monthly_q"], variable_atts[f"{agency}_monthly_q"])
-                
-                Riggs[f"{agency}_mean_q"][:] = np.nan_to_num(self.map_dict[agency]["mean_q"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_mean_q"], variable_atts[f"{agency}_mean_q"])
-                
-                Riggs[f"{agency}_min_q"][:] = np.nan_to_num(self.map_dict[agency]["min_q"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_min_q"], variable_atts[f"{agency}_min_q"])
-                
-                Riggs[f"{agency}_two_year_return_q"][:] = np.nan_to_num(self.map_dict[agency]["tyr"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_two_year_return_q"], variable_atts[f"{agency}_two_year_return_q"])
-                
-                Riggs[f"{agency}_id"][:] = stringtochar(self.map_dict[agency]["Riggs_id"].astype("S100"))
-                self.set_variable_atts(Riggs[f"{agency}_id"], variable_atts[f"{agency}_id"])
-                
-                Riggs[f"{agency}_q"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_q"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_q"], variable_atts[f"{agency}_q"])
-                
-                Riggs[f"{agency}_qt"][:] = np.nan_to_num(self.map_dict[agency]["Riggs_qt"], copy=True, nan=self.FLOAT_FILL)
-                self.set_variable_atts(Riggs[f"{agency}_qt"], variable_atts[f"{agency}_qt"])
-                
+                    self.set_variable_atts(Riggs[f"{agency}_reaches"], variable_atts[f"{agency}_reaches"])
+                    self.set_variable_atts(Riggs[f"{agency}_max_q"], variable_atts[f"{agency}_max_q"])
+                    self.set_variable_atts(Riggs["CAL"], variable_atts["CAL"])
+                    self.set_variable_atts(Riggs[f"{agency}_reach_id"], variable_atts[f"{agency}_reach_id"])
+                    self.set_variable_atts(Riggs[f"{agency}_flow_duration_q"], variable_atts[f"{agency}_flow_duration_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_monthly_q"], variable_atts[f"{agency}_monthly_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_mean_q"], variable_atts[f"{agency}_mean_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_min_q"], variable_atts[f"{agency}_min_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_two_year_return_q"], variable_atts[f"{agency}_two_year_return_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_id"], variable_atts[f"{agency}_id"])
+                    self.set_variable_atts(Riggs[f"{agency}_q"], variable_atts[f"{agency}_q"])
+                    self.set_variable_atts(Riggs[f"{agency}_qt"], variable_atts[f"{agency}_qt"])
+                else:
+                    print('metadata not found for this agency:', agency)
             sos.close()
             
     def set_variable_atts(self, variable, variable_dict):

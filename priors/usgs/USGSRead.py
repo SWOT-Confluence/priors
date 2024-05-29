@@ -92,6 +92,7 @@ class USGSRead:
                     mock_dataUSGS.append(dataUSGS[i])
                     mock_reachID.append(reachID[i])
                     mock_USGScal.append(USGScal[i])
+            print('mock')
             print(mock_dataUSGS[0])
             return mock_dataUSGS, mock_reachID, mock_USGScal
 

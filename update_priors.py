@@ -263,10 +263,10 @@ class Priors:
 
         if "usgs" in self.priors_list and self.cont == "na":
             print("Updating USGS priors.")
-            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = '1980-1-1')
+            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = '2023-1-1')
 
         # adding na to this list for now to avoid canada integration
-        if 'riggs' in self.priors_list and self.cont not in ['af', 'as']:
+        if 'riggs' in self.priors_list and self.cont not in ['as']:
             # riggs modules are having problems with downloading just the delta
             # change start date to sos_last_run_time to continue development
             self.time_dict.update(self.execute_Riggs(sos_file, start_date = '1980-1-1'))

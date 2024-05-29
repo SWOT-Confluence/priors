@@ -38,10 +38,8 @@ class RiggsRead:
         """Read Riggs data."""
                 # add more file maps as we test new continents
         target_file_map = {
-            'na':['Riggs_canada_.nc'],
+            'na':['Riggs_canada_.nc', 'Riggs_quebec_.nc'],
             'eu':['Riggs_uk_.nc', 'Riggs_france_.nc'],
-            # 'eu':['Riggs_france_.nc'],
-            # 'eu':['Riggs_uk_.nc'],
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
@@ -75,9 +73,9 @@ class RiggsRead:
 
             st = [''.join(x) for x in st]
 
-            print('-----------------------------------')
-            print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
-            print('-----------------------------------')
+            # print('-----------------------------------')
+            # print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
+            # print('-----------------------------------')
 
 
 
@@ -145,7 +143,7 @@ class RiggsRead:
                 # print(st[-1], current_group_agency_reach_ids[-1])
                 # print(type(st[-1]), type(current_group_agency_reach_ids[-1]))
 
-            print(f'here is all of st {len(st)}, should be 269')
+            # print(f'here is all of st {len(st)}, should be 269')
 
             all_cal_strings = [str(int(i)) for i in cal]
             cal_cnt = 0
@@ -153,7 +151,7 @@ class RiggsRead:
                 if cal_string in ['0','1']:
                     cal_cnt += 1
 
-            print(f'there are {cal_cnt} ntr gauges for {filenames[i]}')
+            # print(f'there are {cal_cnt} ntr gauges for {filenames[i]}')
 
 
             
@@ -162,7 +160,7 @@ class RiggsRead:
                 if id in current_group_agency_reach_ids:
                     m_cnt+=1
 
-            print(f'there are {len(current_group_agency_reach_ids)} for {filenames[i]}. This is how many should be pulled. however there are only {m_cnt} matches!!')
+            # print(f'there are {len(current_group_agency_reach_ids)} for {filenames[i]}. This is how many should be pulled. however there are only {m_cnt} matches!!')
 
             id_cnt = 0
             cal_cnt = 0
@@ -172,7 +170,7 @@ class RiggsRead:
                     if str(int(cal[j])) in ['0','1']:
                         cal_cnt += 1
 
-            print('id_cnt', id_cnt, 'cal_cnt', cal_cnt)
+            # print('id_cnt', id_cnt, 'cal_cnt', cal_cnt)
 
 
 
@@ -231,6 +229,16 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                            if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'safrica' in filenames[i]:
+                                agencyR.append('DWA')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
 
                 else:
                         if 'brazil' in filenames[i]:
@@ -271,12 +279,22 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                        if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                        if 'safrica' in filenames[i]:
+                                agencyR.append('DWA')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
         # print('most of the below should not be 23303200391')
         # print(agencyR, reachIDR)
 
-        print(f'at the end or reading, there are {len(agencyR)} in the dict')
-        print(f'at the end or reading, there are {len(datariggs)} in the dict')
-        print(f'at the end or reading, there are {len(reachIDR)} in the dict')
-        print(f'at the end or reading, there are {len(RIGGScal)} in the dict')
+        # print(f'at the end or reading, there are {len(agencyR)} in the dict')
+        # print(f'at the end or reading, there are {len(datariggs)} in the dict')
+        # print(f'at the end or reading, there are {len(reachIDR)} in the dict')
+        # print(f'at the end or reading, there are {len(RIGGScal)} in the dict')
 
         return datariggs, reachIDR, agencyR, RIGGScal
