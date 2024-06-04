@@ -62,41 +62,7 @@ def days_convert(days):
     return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
 
 
-def create_sos_df(sos, date_list, index, agencyR):
-    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
-    riggs_q = sos[agencyR][f'{agencyR}_q']
 
-    df['datetime'] = date_list
-    df['00060_Mean'] = riggs_q[index]/0.0283168
-    df = df.set_index('datetime')
-
-    return df
-
-
-def combine_dfs(sos_df, gauge_df):
-    return sos_df.append(gauge_df)
-
-
-def merge_historic_gauge_data(sos, date_list, gauge_df_list, agencyR):
-    cnt = 0
-    for gauge_df in gauge_df_list:
-        if gauge_df.empty is False and '00060_Mean' in gauge_df:
-            try:
-                sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt, agencyR=agencyR)
-                merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
-                gauge_df_list[cnt] = merged_df
-                # print('merging', cnt, 'of', len(gauge_df_list))
-            
-            except:
-                print('merge failed')
-                print(gauge_df)
-                try:
-                    print(sos_df)
-                except:
-                    print('no sos df')
-        cnt +=1
-
-    return gauge_df_list
 
 
 
@@ -605,7 +571,6 @@ class RiggsPull:
         # print(' reaches here should be good, this is after second pull, first was good')
         # print(len(reachIDR), reachIDR)
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
-        print('df_list 1', df_list)
 
         # made it ot here dec 6
         # need to make merge historic gage data different for each agency, can use arg allready in place.
