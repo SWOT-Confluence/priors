@@ -396,9 +396,9 @@ class USGSPull:
         uUTCord=np.unique(UTCord)
         OUTt=[]
         OUTq=[]
-        for T in uUTCord:
-            OUTt.append(T)
-            NOWd=np.where(uUTCord==T)[0][0]
+        for Ta in uUTCord:
+            OUTt.append(Ta)
+            NOWd=np.where(UTCord==Ta)[0]
             OUTq.append(np.nanmean(Q[NOWd]))
 
         # dump variables for memor
