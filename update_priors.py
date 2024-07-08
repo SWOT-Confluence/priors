@@ -265,7 +265,8 @@ class Priors:
 
         if "usgs" in self.priors_list and self.cont == "na":
             print("Updating USGS priors.")
-            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = sos_last_run_time)
+            # self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = sos_last_run_time)
+            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = '2022-12-2')
 
         # adding na to this list for now to avoid canada integration
         if 'riggs' in self.priors_list and self.cont not in ['as']:
