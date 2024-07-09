@@ -71,6 +71,7 @@ FROM stage3 as stage4
 COPY metadata/ /app/metadata/
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
+RUN sudo mkdir /opt/hydroshare
 
 # Stage 6 - Execute algorithm
 FROM stage4 as stage5

@@ -4,13 +4,20 @@
 library(jsonlite)
 library(data.table)
 library(BBmisc)
+library(bomWater)
+library(dplyr)
+library(rvest)
+library(tidyhydat)
+library(RSelenium)
+library(rvest)
+
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #aus
 
+
 ##Altered By SCoss 11.6.23
 #quebec
-
 
 library(bomWater)
 library(BBmisc)
@@ -27,10 +34,15 @@ library(tibble)
 ##Author: Ryan Riggs
 ##Date: 11/18/2021
 #braz
+
 #link = "https://www.snirh.gov.br/hidroweb/rest/api/documento/convencionais?tipo=3&documentos="
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
+##Altered By SCoss 11.6.23
+#quebec
+
 #Canada
+
 library(tidyhydat)
 hy_dir("/mnt/data")
 # hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
@@ -123,14 +135,12 @@ qdownload_Saf <- function(site,
   # return(data)
 }
 
+
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #japan
 #path = "http://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=6&ID="
-library(RSelenium)
-library(rvest)
-library(data.table)
-library(BBmisc)
+
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #UK
@@ -279,7 +289,25 @@ qDownload_c = function(site){
 ##Discharge download functions. 
 #################################################################################
 #japan
-
+################################################################################
+##Discharge download functions. 
+################################################################################
+#quebec
+qdownload_q=function(f){
+  location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
+  website=paste0(location,f,'_Q.txt')
+  outpath=tempfile()
+  downloading = try(download.file(website, outpath))
+  if(is.error(downloading)){return(NA)}
+  data=fread(outpath, fill=TRUE)
+  removeInfo=grep('Date', data$V2)
+  data=data[(removeInfo+1):nrow(data),2:3]
+  colnames(data)=c('Date','Q')
+  data$date=as.character(as.Date(data$Date))
+  data$Q=as.numeric(data$Q)
+  data$Station=as.character(f)
+  return(data)
+}
 
 qDownload_j = function(i, start, end){
   path = "http://www1.river.go.jp/cgi-bin/DspWaterData.exe?KIND=6&ID="

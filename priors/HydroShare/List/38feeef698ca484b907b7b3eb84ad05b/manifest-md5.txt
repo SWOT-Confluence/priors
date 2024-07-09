@@ -1,0 +1,3 @@
+1e35e978b6b0ec85c1b7de737bbe48b6    data/resourcemap.xml
+f0ec64ae58276dfafa5837f579ff268c    data/resourcemetadata.xml
+d049abb162fc019f8922a199f115c26b    data/contents/collection_list_38feeef698ca484b907b7b3eb84ad05b.csv

@@ -376,6 +376,26 @@ class RiggsPull:
 
            
             return FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
+        
+        
+        if 'MEFCCWP' in agencyR:
+            print("Pulling Quebeck Gages")
+            print(site)
+            #note "value" here might be a quality filter
+            FMr= downloadQ_q(site)
+            if 'FMr' in locals():
+                if np.size(FMr[0]) == 1:
+                    print("nd")
+                    FMr=[]   
+                else:
+                        with localconverter(ro.default_converter + pandas2ri.converter):
+                            FMr = ro.conversion.rpy2py(FMr)                  
+                            FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+
+            else:
+                print("nd")
+                FMr=[]   
+            return FMr
 
 
         if 'ABOM' in agencyR:    
@@ -570,6 +590,7 @@ class RiggsPull:
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_parsed_agency_ids)
         # print(' reaches here should be good, this is after second pull, first was good')
         # print(len(reachIDR), reachIDR)
+        print('here is agencyR', agencyR)
         df_list = asyncio.run(self.gather_records(datariggs, agencyR))
 
         # made it ot here dec 6

@@ -75,7 +75,7 @@ class RiggsRead:
 
             # print('-----------------------------------')
             # print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
-            # print('-----------------------------------')
+
 
 
 
@@ -195,6 +195,11 @@ class RiggsRead:
                                 datariggs.append(str(int(st[j])))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                            if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(int(st[j])))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
                             if 'australia' in filenames[i]:
                                 agencyR.append('ABOM')
                                 datariggs.append(str(st[j]))
@@ -202,6 +207,12 @@ class RiggsRead:
                                 RIGGScal.append(int(cal[j]))
                             if 'Canada' in filenames[i] or "canada" in filenames[i]:
                                 agencyR.append('WSC')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'japan' in filenames[i]:
+                                #some unserialize gages in the list so need to check for NaN                   
+                                agencyR.append('MLIT')
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
@@ -281,6 +292,7 @@ class RiggsRead:
                                 RIGGScal.append(int(cal[j]))
                         if 'quebec' in filenames[i]:
                                 agencyR.append('MEFCCWP')
+                                datariggs.append(str(int(st[j])))
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
