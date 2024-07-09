@@ -306,6 +306,10 @@ class Priors:
         print("Updating time coverage based on min and max values.")
         sos.update_time_coverage(min_qt, max_qt)
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
+        
+        # update HWS
+        hws_obj = HWS_extract(swot_dir)
+        HWS_update(hws_obj.data, sos_file)
 
         # Upload priors results to S3 bucket
         print("Uploading new SoS priors version.")
