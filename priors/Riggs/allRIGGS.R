@@ -7,8 +7,10 @@ library(BBmisc)
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #aus
+
 ##Altered By SCoss 11.6.23
 #quebec
+
 
 library(bomWater)
 library(BBmisc)
@@ -25,20 +27,18 @@ library(tibble)
 ##Author: Ryan Riggs
 ##Date: 11/18/2021
 #braz
-library(data.table)
 #link = "https://www.snirh.gov.br/hidroweb/rest/api/documento/convencionais?tipo=3&documentos="
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
 #Canada
 library(tidyhydat)
- x=hy_version()
- if  (x$Date<Sys.Date()){
-   fp=hy_dir()
-   ffp=paste(fp,"/*",sep = "")
-   unlink(ffp, recursive = T, force = T)
-   print("hydat version older than today's date. Downloading hydat.")
-   download_hydat(dl_hydat_here = NULL, ask = FALSE)
- }
+hy_dir("/mnt/data")
+# hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
+# hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
+download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
+hy_src("/mnt/data/Hydat.sqlite3")
+
+
 
  .get_start_date <- function(start_date) {
   ## Format start date
