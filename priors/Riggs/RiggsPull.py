@@ -25,20 +25,24 @@ r=robjects.r
 # Defining the R script and loading the instance in Python
 
 r['source']("/app/priors/Riggs/allRIGGS.R")
-# Loading the function we have defined in R.
 downloadQ_b = robjects.globalenv['qdownload_b']
-# Loading the function we have defined in R.
 downloadQ_a = robjects.globalenv['qdownload_a']
-# Loading the function we have defined in R.
 downloadQ_c = robjects.globalenv['qDownload_c']
-# Loading the function we have defined in R.
 downloadQ_j = robjects.globalenv['qDownload_j']
-# Loading the function we have defined in R.
 downloadQ_u = robjects.globalenv['qdownload_uk']
 downloadQ_ch = robjects.globalenv['qdownload_ch']
 downloadQ_f = robjects.globalenv['qdownload_f']
+downloadQ_q = robjects.globalenv['qdownload_q']
 iserror = robjects.globalenv['is.error']
 substrRight = robjects.globalenv['substrRight']
+
+#saf specific
+gsd= robjects.globalenv['.get_start_date']
+ged= robjects.globalenv['.get_end_date']
+gcn=robjects.globalenv['.get_column_name']
+ceep=robjects.globalenv['construct_endpoint']
+dlsad=robjects.globalenv['download_sa_data']
+downloadQ_saf=robjects.globalenv['qdownload_Saf']
 
 # Local imports
 from .RiggsRead import RiggsRead
@@ -58,41 +62,7 @@ def days_convert(days):
     return new_date.strftime('%Y-%m-%d %H:%M:%S+00:00')
 
 
-def create_sos_df(sos, date_list, index, agencyR):
-    df = pd.DataFrame(columns = ['datetime', '00060_Mean'])
-    riggs_q = sos[agencyR][f'{agencyR}_q']
 
-    df['datetime'] = date_list
-    df['00060_Mean'] = riggs_q[index]/0.0283168
-    df = df.set_index('datetime')
-
-    return df
-
-
-def combine_dfs(sos_df, gauge_df):
-    return sos_df.append(gauge_df)
-
-
-def merge_historic_gauge_data(sos, date_list, gauge_df_list, agencyR):
-    cnt = 0
-    for gauge_df in gauge_df_list:
-        if gauge_df.empty is False and '00060_Mean' in gauge_df:
-            try:
-                sos_df = create_sos_df(sos = sos, date_list = date_list, index = cnt, agencyR=agencyR)
-                merged_df = combine_dfs(sos_df = sos_df, gauge_df = gauge_df)
-                gauge_df_list[cnt] = merged_df
-                # print('merging', cnt, 'of', len(gauge_df_list))
-            
-            except:
-                print('merge failed')
-                print(gauge_df)
-                try:
-                    print(sos_df)
-                except:
-                    print('no sos df')
-        cnt +=1
-
-    return gauge_df_list
 
 
 
@@ -323,6 +293,48 @@ class RiggsPull:
             Site identifier
         """
         #Rcode pull entire record, will need to filter after DL within this function
+
+        if 'DWA' in agencyR:
+            print("Pulling SAfrican gages")
+            try:
+                FMr= downloadQ_saf(site,'discharge',self.start_date, self.end_date)
+                try:
+                    with localconverter(ro.default_converter + pandas2ri.converter):
+                        FMr = ro.conversion.rpy2py(FMr)
+                        FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+                        print('successfull pull', FMr)
+
+                        return FMr[FMr['Q'] >0]
+            
+                except Exception as e:           
+                    print('fail to pull')
+                    print(e)
+                    FMr=[]
+                    return FMr
+            except Exception as e:
+                print('fail to pull')
+                print(e)
+                FMr=[]
+                return FMr
+        if 'MEFCCWP' in agencyR:
+            print("Pulling Quebeck Gages")
+            print(site)
+            #note "value" here might be a quality filter
+            FMr= downloadQ_q(site)
+            if 'FMr' in locals():
+                if np.size(FMr[0]) == 1:
+                    print("nd")
+                    FMr=[]   
+                else:
+                        with localconverter(ro.default_converter + pandas2ri.converter):
+                            FMr = ro.conversion.rpy2py(FMr)                  
+                            FMr['ConvertedDate']=pd.to_datetime(FMr.date)
+
+            else:
+                print("nd")
+                FMr=[]   
+            return FMr  
+        
         if 'EAU' in agencyR:
             # print("Pulling French gages")
             try:
@@ -670,4 +682,5 @@ class RiggsPull:
             "FDQS": FDQS,
             "TwoYr": TwoYr
         }
-        # print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])
+        print('riggs dict out')
+        print(self.riggs_dict['Agency'], self.riggs_dict['Qwrite'])

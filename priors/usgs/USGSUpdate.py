@@ -65,6 +65,7 @@ class USGSUpdate:
         usgs_ids = self.usgs_dict["reachId"]
         same_ids = np.intersect1d(self.sos_reaches, usgs_ids)
         indexes = np.where(np.isin(usgs_ids, same_ids))[0]
+        print('here are the indexes', indexes)
 
         if indexes.size == 0:
             self.map_dict = None
@@ -79,6 +80,7 @@ class USGSUpdate:
             self.map_dict["min_q"] = self.usgs_dict["Qmin"][indexes]
             self.map_dict["tyr"] = self.usgs_dict["TwoYr"][indexes]
             self.map_dict["usgs_id"] = np.array(self.usgs_dict["dataUSGS"])[indexes]
+            print('here is what is getting saved into the map dict', self.usgs_dict["Qwrite"][indexes,:])
             self.map_dict["usgs_q"] = self.usgs_dict["Qwrite"][indexes,:]
             self.map_dict["usgs_qt"] = self.usgs_dict["Twrite"][indexes,:]
     
@@ -101,6 +103,7 @@ class USGSUpdate:
         """
 
         if self.map_dict:
+            print('updating in usgs update...')
             sos = Dataset(self.sos_file, 'a')
             sos.production_date = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
 
@@ -111,6 +114,7 @@ class USGSUpdate:
             
             usgs["num_days"][:] = self.map_dict["days"]     
             self.set_variable_atts(usgs["num_days"], self.variable_atts["num_days"])
+            print('here are adys', self.map_dict["days"])
 
             # this variable is not in the SOS
             # usgs["num_usgs_reaches"][:] = range(1, self.map_dict["usgs_reach_id"].shape[0] + 1)
@@ -148,8 +152,16 @@ class USGSUpdate:
             
             usgs["USGS_id"][:] = stringtochar(self.map_dict["usgs_id"].astype("S100"))
             self.set_variable_atts(usgs["USGS_id"], self.variable_atts["USGS_id"])            
+            print('here is q that is going out', self.map_dict["usgs_q"])
             
+            # q_fix = []
+            # for i in self.map_dict["usgs_q"]:
+            #     if any(i):
+            #         q_fix.append(i)
+                    
             usgs["USGS_q"][:] = np.nan_to_num(self.map_dict["usgs_q"], copy=True, nan=self.FLOAT_FILL)
+            # usgs["USGS_q"][:] = np.nan_to_num(q_fix, copy=True, nan=self.FLOAT_FILL)
+
             self.set_variable_atts(usgs["USGS_q"], self.variable_atts["USGS_q"])
             
             usgs["USGS_qt"][:] = np.nan_to_num(self.map_dict["usgs_qt"], copy=True, nan=self.FLOAT_FILL)

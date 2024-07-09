@@ -42,7 +42,7 @@ class Sos:
         path to SoS file
     confluence_creds: dict
             Dictionary of s3 credentials 
-    SUFFIX: str
+    suffix: str
         ending name of the SoS
     VERS_LENGTH: int
         number of integers in SoS identifier
@@ -61,13 +61,16 @@ class Sos:
         Uploads new version to Confluence S3 bucket
     """
 
-    SUFFIX = "_sword_v15_SOS_priors.nc"
-    SWORD_VERSION = "v15"
+
+
     VERS_LENGTH = 4
-    MOD_TIME = 18000    # seconds
+    MOD_TIME = 0    # seconds
 
     def __init__(self, continent, run_type, sos_dir, metadata_json, priors_list,
-                 podaac_update, podaac_bucket, sos_bucket):
+                 podaac_update, podaac_bucket, sos_bucket, swordversion):
+
+
+
         """
         Parameters
         ----------
@@ -94,6 +97,10 @@ class Sos:
         self.podaac_update = podaac_update
         self.podaac_bucket = podaac_bucket
         self.sos_bucket = sos_bucket
+        SWORD_VERSION = f"v{swordversion}"
+        suffix = f"_sword_v{swordversion}_SOS_priors.nc"
+        self.swordversion = SWORD_VERSION
+        self.suffix = suffix
 
     def copy_sos(self, fake_current):
         """Copy the latest version of the SoS file to local storage."""
@@ -120,14 +127,14 @@ class Sos:
             current = fake_current
         
         # Download current version of the SoS
-        print(f"Locating: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        print(f"Locating: {self.run_type}/{current}/{self.continent}{self.suffix}")
         try:
-            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}", Filename=f"{self.sos_dir}/{self.continent}{self.SUFFIX}")
+            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}", Filename=f"{self.sos_dir}/{self.continent}{self.suffix}")
         except botocore.exceptions.ClientError as error:
             print(f"ERROR: Could not download current version of the SoS.")
             print(error)
             raise error
-        print(f"Downloaded: {self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+        print(f"Downloaded: {self.run_type}/{current}/{self.continent}{self.suffix}")
         
     def get_current_version(self, s3, dirs):
         """Return current version of SoS based on moidication time."""
@@ -139,21 +146,30 @@ class Sos:
         
         # Get modication time
         try:
-            print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}")
+            print(f"{self.run_type}/{current}/{self.continent}{self.suffix}")
             obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
-                                        Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
+                                        Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}",
                                         ObjectAttributes=["ObjectSize"]) 
             previous = dirs[-2]
         except botocore.exceptions.ClientError:
-            print(f"{self.run_type}/{current}/{self.continent}{self.SUFFIX} could not be found. Trying version: {dirs[-2]}.")
+            print(f"{self.run_type}/{current}/{self.continent}{self.suffix} could not be found. Trying version: {dirs[-2]}.")
             current = dirs[-2]
             if current == "0000":
                 return current   # Return if first run
             else:
                 previous = dirs[-3]
             obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
-                                        Key=f"{self.run_type}/{current}/{self.continent}{self.SUFFIX}",
-                                        ObjectAttributes=["ObjectSize"])        
+                                        Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}",
+                                        ObjectAttributes=["ObjectSize"])
+            
+        # Return previous key if modification time is less than class constant
+        obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
+        if obj_age < self.MOD_TIME:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
+            return previous
+        else:
+            print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
+            return current
 
     def create_new_version(self):
         """Create new version of the SoS file.
@@ -168,7 +184,7 @@ class Sos:
         global_atts = self.metadata_json["global_attributes"]
         
         # Create new SoS
-        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.SUFFIX}")
+        self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.suffix}")
         sos = Dataset(self.sos_file, 'a')
         self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
         
@@ -669,7 +685,7 @@ class Sos:
         
         # Upload to PO.DAAC bucket
         if self.podaac_update:
-            sos_filename = f"{self.continent}_sword_{self.SWORD_VERSION}_SOS_priors_{self.run_type}_{vers}_{self.run_date.strftime('%Y%m%dT%H%M%S')}.nc"
+            sos_filename = f"{self.continent}_sword_{self.swordversion}_SOS_priors_{self.run_type}_{vers}_{self.run_date.strftime('%Y%m%dT%H%M%S')}.nc"
             response = s3.upload_file(str(self.sos_file), 
                                       self.podaac_bucket, 
                                       sos_filename,
