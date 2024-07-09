@@ -217,6 +217,8 @@ class Priors:
             
             # All other gage agencies
             if not np.isnan(time).all():
+                # time = time[~np.isnan(time)]
+                time = time[time>0]
                 time_min = datetime.datetime.fromordinal(int(np.nanmin(time)))
                 time_max = datetime.datetime.fromordinal(int(np.nanmax(time)))
                 if time_min < min_qt or min_qt == datetime.datetime(1965,1,1,0,0,0):
@@ -274,10 +276,11 @@ class Priors:
 
         if "usgs" in self.priors_list and self.cont == "na":
             print("Updating USGS priors.")
-            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = '1980-1-1')
+            # self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = sos_last_run_time)
+            self.time_dict["usgs"] = self.execute_usgs(sos_file, start_date = '2022-12-2')
 
         # adding na to this list for now to avoid canada integration
-        if 'riggs' in self.priors_list and self.cont not in ['af', 'as']:
+        if 'riggs' in self.priors_list and self.cont not in ['as']:
             # riggs modules are having problems with downloading just the delta
             # change start date to sos_last_run_time to continue development
             self.time_dict.update(self.execute_Riggs(sos_file, start_date = '1980-1-1'))

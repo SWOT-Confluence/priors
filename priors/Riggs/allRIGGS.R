@@ -16,6 +16,20 @@ library(rvest)
 #aus
 
 
+##Altered By SCoss 11.6.23
+#quebec
+
+library(bomWater)
+library(BBmisc)
+library(data.table)
+library(dplyr)
+library(rvest)
+
+#Saf
+library(lubridate)
+library(httr)
+library(stringr)
+library(tibble)
 
 ##Author: Ryan Riggs
 ##Date: 11/18/2021
@@ -29,14 +43,98 @@ library(rvest)
 
 #Canada
 
- x=hy_version()
- if  (x$Date<Sys.Date()){
-   fp=hy_dir()
-   ffp=paste(fp,"/*",sep = "")
-   unlink(ffp, recursive = T, force = T)
-   print("hydat version older than today's date. Downloading hydat.")
-   download_hydat(dl_hydat_here = NULL, ask = FALSE)
- }
+library(tidyhydat)
+hy_dir("/mnt/data")
+# hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
+# hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
+download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
+hy_src("/mnt/data/Hydat.sqlite3")
+
+
+
+ .get_start_date <- function(start_date) {
+  ## Format start date
+  if (is.null(start_date)) {
+    start_date <- "1900-01-01"
+  }
+  return(start_date)
+}
+
+.get_end_date <- function(end_date) {
+  ## Format end date - if not specified then use current date
+  if (is.null(end_date))
+    end_date <- Sys.time() %>%
+      as.Date() %>%
+      format("%Y-%m-%d")
+  return(end_date)
+}
+
+.get_column_name <- function(variable) {
+  ## Get appropriate column name for return object
+  if (variable == "stage") {
+    colnm <- "H"
+  } else if (variable == "discharge") {
+    colnm <- "Q"
+  } else {
+    stop(sprintf("Variable %s is not available", variable))
+  }
+  return(colnm)
+}
+
+
+# South africa
+# FMr= self.downloadQ_saf(site,'discharge',self.start_date, self.end_date)
+qdownload_Saf <- function(site,
+                          variable = "discharge",
+                          start_date = NULL,
+                          end_date = NULL,
+                          sites = FALSE,
+                          ...) {
+  
+  print("starting saf pull......---------")
+  if (sites) {
+    print("returned sites...")
+    return(southAfrican_sites)
+  }
+  print("actually pulling....")
+  start_date <- .get_start_date(start_date)
+  end_date <- .get_end_date(end_date)
+  column_name <- .get_column_name(variable)
+  original_data <- try(download_sa_data(
+    site, variable, start_date, end_date, primary = FALSE
+  ),silent=TRUE)
+  # print("original data")
+  # print(original_data)
+  if(is.error(original_data)==TRUE|length(original_data)==0){stop('This gauge does not have a record associated with it and/or the agency website is down.')}
+  data <- original_data %>%
+    mutate(DATE = as.Date(.data$DATE, format = "%Y%m%d"))
+  if (variable == "stage") {
+    data <- data %>%
+      mutate(across(starts_with("COR_"), as.numeric)) %>%
+      rename(Date = "DATE") %>%
+      group_by(.data$Date) %>%
+      summarize(!!column_name := mean(.data$COR_LEVEL))
+  } else {
+    data <- data %>%
+      rename(Date = "DATE", !!column_name := "D_AVG_FR") %>%
+      dplyr::select(all_of(c("Date", column_name)))
+  }
+  print("test 2")
+  out <- new_tibble(
+    data,
+    original = original_data,
+    class = "rr_tbl"
+  )
+  out$date=as.character(as.Date(out$Date, format = "%Y%m%d"))
+  out$Q=as.numeric(data$Q)
+  print("Successfully pulled saf gague")
+  # print(out)
+  return(out)
+  # data$date=as.character(as.Date(data$DATE, format = "%Y%m%d"))
+  # #data$Q=as.numeric(data$D_AVG_FR)
+  # return(data)
+}
+
 
 ##Author: Ryan Riggs
 ##Date: 3/15/2022
@@ -93,7 +191,42 @@ is.error <- function(
 substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))
 }
-
+#Chile
+qdownload_ch = function(site){
+  Sys.sleep(.25)
+  outpath = tempfile()
+  website = paste0(original, site, ending)
+  file = try(html_session(website)%>%html_element('body')%>%html_text('url'))
+  if(is.error(file)){next}
+  page = gsub(".*https", "", file)
+  page = gsub("}}}", "", page)
+  page = paste0("https", page)
+  page = noquote(page)
+  page = gsub('"', '', page)
+  download.file(page, outpath)
+  sttn = fread(outpath)
+  sttn$Date = paste(sttn$agno, sttn$mes, sttn$dia, sep="-")
+  sttn$Date = as.Date(sttn$Date, format = "%Y-%m-%d")
+  sttn$valor = as.numeric(sttn$valor)
+  sttn$Q = sttn$valor
+  return(data.table(Date=sttn$Date[order(sttn$Date)], Q=sttn$Q[order(sttn$Date)]))
+}
+#qubec
+qdownload_q=function(f){
+  location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
+  website=paste0(location,f,'_Q.txt')
+  outpath=tempfile()
+  downloading = try(download.file(website, outpath))
+  if(is.error(downloading)){return(NA)}
+  data=fread(outpath, fill=TRUE)
+  removeInfo=grep('Date', data$V2)
+  data=data[(removeInfo+1):nrow(data),2:3]
+  colnames(data)=c('Date','Q')
+  data$date=as.character(as.Date(data$Date))
+  data$Q=as.numeric(data$Q)
+  data$Station=as.character(f)
+  return(data)
+}
 
 qdownload_b = function(site){
   link = "https://www.snirh.gov.br/hidroweb/rest/api/documento/convencionais?tipo=3&documentos="
@@ -298,4 +431,173 @@ qdownload_f =function(site){
   }
   # print(df)
   return(df)
+}
+##########################################################################################################
+##All the code below runs saf
+##########################################################################################################
+
+.get_start_date <- function(start_date) {
+  ## Format start date
+  if (is.null(start_date)) {
+    start_date <- "1900-01-01"
+  }
+  return(start_date)
+}
+
+.get_end_date <- function(end_date) {
+  ## Format end date - if not specified then use current date
+  if (is.null(end_date))
+    end_date <- Sys.time() %>%
+      as.Date() %>%
+      format("%Y-%m-%d")
+  return(end_date)
+}
+
+.get_column_name <- function(variable) {
+  ## Get appropriate column name for return object
+  if (variable == "stage") {
+    colnm <- "H"
+  } else if (variable == "discharge") {
+    colnm <- "Q"
+  } else {
+    stop(sprintf("Variable %s is not available", variable))
+  }
+  return(colnm)
+}
+
+# qdownload_Saf <- function(site,
+#                           variable = "discharge",
+#                           start_date = NULL,
+#                           end_date = NULL,
+#                           sites = FALSE,
+#                           ...) {
+  
+#   if (sites) {
+#     return(southAfrican_sites)
+#   }
+#   start_date <- .get_start_date(start_date)
+#   end_date <- .get_end_date(end_date)
+#   column_name <- .get_column_name(variable)
+#   original_data <- try(download_sa_data(
+#     site, variable, start_date, end_date, primary = FALSE
+#   ),silent=TRUE)
+#   if(is.error(original_data)==TRUE|length(original_data)==0){stop('This gauge does not have a record associated with it and/or the agency website is down.')}
+#   data <- original_data %>%
+#     mutate(DATE = as.Date(.data$DATE, format = "%Y%m%d"))
+#   if (variable == "stage") {
+#     data <- data %>%
+#       mutate(across(starts_with("COR_"), as.numeric)) %>%
+#       rename(Date = "DATE") %>%
+#       group_by(.data$Date) %>%
+#       summarize(!!column_name := mean(.data$COR_LEVEL))
+#   } else {
+#     data <- data %>%
+#       rename(Date = "DATE", !!column_name := "D_AVG_FR") %>%
+#       dplyr::select(all_of(c("Date", column_name)))
+#   }
+#   out <- new_tibble(
+#     data,
+#     original = original_data,
+#     class = "rr_tbl"
+#   )
+#   out$date=as.character(as.Date(out$Date, format = "%Y%m%d"))
+#   out$Q=as.numeric(data$Q)
+#   return(out)
+#   # data$date=as.character(as.Date(data$DATE, format = "%Y%m%d"))
+#   # #data$Q=as.numeric(data$D_AVG_FR)
+#   # return(data)
+# }
+
+construct_endpoint <- function(site, data_type, chunk_start_date, chunk_end_date) {
+  chunk_start_date <- format(chunk_start_date, "%Y-%m-%d")
+  chunk_end_date <- format(chunk_end_date, "%Y-%m-%d")
+  endpoint <- paste0(
+    "https://www.dws.gov.za/Hydrology/Verified/HyData.aspx?",
+    "Station=", site, "100.00",
+    "&DataType=", data_type,
+    "&StartDT=", chunk_start_date,
+    "&EndDT=", chunk_end_date,
+    "&SiteType=RIV"
+  )
+  return(endpoint)
+}
+
+download_sa_data <- function(site,
+                             variable,
+                             start_date,
+                             end_date,
+                             primary) {
+  ## Convert to date
+  start_date=as.Date(start_date)
+  end_date=as.Date(end_date)
+  
+  ## divide timeseries into months, because we can only
+  ## scrape data one month at a time.
+  ts <- seq(start_date, end_date, by = "1 day")
+  years <- year(ts) %>%
+    unique() %>%
+    sort()
+  n_years <- length(years)
+  if (primary || (variable == "stage")) {
+    ## We have to download stage data from primary data, which
+    ## can only be downloaded one year at a time
+    chunk_size <- 1 # Chunk size = num years
+    n_chunks <- n_years
+    data_type <- "Point"
+    header <- c(
+      "DATE", "TIME", "COR_LEVEL",
+      "COR_LEVEL_QUAL", "COR_FLOW", "COR_FLOW_QUAL"
+    )
+  } else {
+    chunk_size <- 20
+    n_chunks <- ceiling(n_years / chunk_size)
+    data_type <- "Daily"
+    header <- c("DATE", "D_AVG_FR", "QUAL")
+  }
+  ## Number of data columns
+  n_cols <- length(header)
+  data_list <- list()
+  for (i in 1:n_chunks) {
+    chunk_start_date <- start_date + years((i-1) * chunk_size)
+    endpoint <- construct_endpoint(site, data_type, chunk_start_date, end_date)
+    ## data <- session(endpoint) %>%
+    ##   html_element('body') %>%
+    ##   html_text('pre')
+    response <- GET(endpoint)
+    data <- content(response) %>%
+      html_element("body") %>%
+      # html_text("pre")
+      html_text(TRUE)
+    data <- str_split(data, '\n')
+    data <- unlist(data)
+    ## Find out whether there is any data for
+    ## the requested time period
+    header_row <- grep("^DATE", data)
+    if (length(header_row) == 0) {
+      next
+    } else {
+      header_row <- header_row[1]
+    }
+    data_rows <- grep("^[0-9]{8} ", data)
+    ## Convert to list
+    data <- as.list(data)
+    ## Get header
+    data <- data[data_rows]
+    data_sub <- lapply(data, function(x){
+      sub <- x %>% str_split(' +')
+      sub <- unlist(sub)
+      if (length(sub) > n_cols) {
+        sub <- sub[1:n_cols]
+      } else if (length(sub) < n_cols) {
+        sub <- c(sub[1], rep(NA, n_cols - 1))
+      }
+      sub
+    })
+    data <- do.call("rbind", data_sub)
+    colnames(data) <- header
+    data <- data %>% as_tibble()
+    data_list[[i]] <- data
+  }
+  original_data <- do.call("rbind", data_list)
+  return(original_data)
 }

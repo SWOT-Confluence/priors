@@ -38,9 +38,7 @@
     "global_attributes_extra": {
         "continent_agency": {
             "af": [
-                "GRDC",
-                "DWA",
-                "SWOT_SHAQ"
+                "GRDC"
             ],
             "as": [
                 "GRDC",
@@ -49,16 +47,12 @@
             "eu": [
                 "GRDC",
                 "DEFRA",
-                "EAU",
-                "SWOT_SHAQ"
+                "EAU"
             ],
             "na": [
                 "GRDC",
                 "USGS",
-                "WSC",
-                "MEFCCWP",
-                "SWOT_SHAQ"
-
+                "WSC"
             ],
             "oc": [
                 "GRDC",
@@ -67,8 +61,7 @@
             "sa": [
                 "GRDC",
                 "DGA",
-                "Hidroweb",
-                "SWOT_SHAQ"
+                "Hidroweb"
             ]
         },
         "confluence_version": "0.1.0",
@@ -84,11 +77,7 @@
             "WSC": "WSC: https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey.html",
             "ABOM": "ABOM: http://www.bom.gov.au/water/",
             "DGA": "DGA: https://explorador.cr2.cl/",
-            "Hidroweb": "Hidroweb: https://www.snirh.gov.br/hidroweb/apresentacao",
-            "DWA": "DWA: https://www.dws.gov.za/",
-            "MEFCCWP": "MEFCCWP: https://www.environnement.gouv.qc.ca/",
-            "SWOT_SHAQ": "SWOT_SHAQ: https://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/"
-
+            "Hidroweb": "Hidroweb: https://www.snirh.gov.br/hidroweb/apresentacao"
         }
     },
     "reaches": {
@@ -133,7 +122,7 @@
             "long_name": "SWORD reach identifier",
             "comment": "Taken from SWORD PDD: id of the reach each node is associated with. The format of the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost reach)",
             "valid_min": -998,
-            "valid_max": 999999999999999999,
+            "valid_max": 999999999999,
             "coverage_content_type": "referenceInformation"
         },
         "x": {
@@ -1043,306 +1032,9 @@
             "coverage_content_type": "referenceInformation"
         }
     },
-"MEFCCWP": {
-        "MEFCCWP_flow_duration_q": {
-            "long_name": "MEFCCWP_flow_Duration_curve_discharge",
-            "comment": "MEFCCWP discharge values from the flow duration curve for this reach",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_max_q": {
-            "long_name": "MEFCCWP_maximum_discharge",
-            "comment": "MEFCCWP highest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_monthly_q": {
-            "long_name": "MEFCCWP_mean_monthly_discharge",
-            "comment": "MEFCCWP monthly mean discharge time series in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_mean_q": {
-            "long_name": "MEFCCWP_mean_discharge",
-            "comment": "MEFCCWP mean discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_min_q": {
-            "long_name": "MEFCCWP_minimum_discharge",
-            "comment": "MEFCCWP lowest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_two_year_return_q": {
-            "long_name": "MEFCCWP_two_Year_Return",
-            "comment": "MEFCCWP two year return interval discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_q": {
-            "long_name": "MEFCCWP_discharge_time_series_daily",
-            "comment": "MEFCCWP discharge time series daily discharge values",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "MEFCCWP_qt": {
-            "long_name": "MEFCCWP_discharge_time",
-            "comment": "MEFCCWP discharge time series daily time values (days since Jan 1 Year 1)",
-            "units": "days since 0001-01-01",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "coordinate"
-        },
-        "CAL": {
-            "long_name": "MEFCCWP_calibration_flag",
-            "comment": "MEFCCWP 1=Calibration 0=validation",
-            "valid_min": 0,
-            "valid_max": 1,
-            "coverage_content_type": "referenceInformation"
-        },
-        "num_days": {
-            "long_name": "num_days",
-            "comment": "Number of days that daily values are indexed on",
-            "valid_min": -998,
-            "valid_max": 9999999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "MEFCCWP_reaches": {
-            "long_name": "MEFCCWP_reaches",
-            "comment": "Number of MEFCCWP reaches present in data",
-            "valid_min": 0,
-            "valid_max": 9999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "MEFCCWP_reach_id": {
-            "long_name": "MEFCCWP_reach_id",
-            "comment": "reach id within SWORD where the DWA gauge is located",
-            "valid_min": -998,
-            "valid_max": 99999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "MEFCCWP_id": {
-            "long_name": "MEFCCWP_ID_number",
-            "comment": "MEFCCWP internal identification code (matches MEFCCWP database)",
-            "coverage_content_type": "referenceInformation"
-        }
-    },
-    "SWOT_SHAQ": {
-        "MEFCCWP_flow_duration_q": {
-            "long_name": "SWOT_SHAQ_flow_Duration_curve_discharge",
-            "comment": "SWOT_SHAQ discharge values from the flow duration curve for this reach",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_max_q": {
-            "long_name": "SWOT_SHAQ_maximum_discharge",
-            "comment": "SWOT_SHAQ highest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_monthly_q": {
-            "long_name": "SWOT_SHAQ_mean_monthly_discharge",
-            "comment": "SWOT_SHAQ monthly mean discharge time series in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_mean_q": {
-            "long_name": "SWOT_SHAQ_mean_discharge",
-            "comment": "SWOT_SHAQ mean discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_min_q": {
-            "long_name": "SWOT_SHAQ_minimum_discharge",
-            "comment": "SWOT_SHAQ lowest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_two_year_return_q": {
-            "long_name": "SWOT_SHAQ_two_Year_Return",
-            "comment": "SWOT_SHAQ two year return interval discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_q": {
-            "long_name": "SWOT_SHAQ_discharge_time_series_daily",
-            "comment": "SWOT_SHAQ discharge time series daily discharge values",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "SWOT_SHAQ_qt": {
-            "long_name": "SWOT_SHAQ_discharge_time",
-            "comment": "SWOT_SHAQ discharge time series daily time values (days since Jan 1 Year 1)",
-            "units": "days since 0001-01-01",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "coordinate"
-        },
-        "CAL": {
-            "long_name": "SWOT_SHAQ_calibration_flag",
-            "comment": "SWOT_SHAQ 1=Calibration 0=validation",
-            "valid_min": 0,
-            "valid_max": 1,
-            "coverage_content_type": "referenceInformation"
-        },
-        "num_days": {
-            "long_name": "num_days",
-            "comment": "Number of days that daily values are indexed on",
-            "valid_min": -998,
-            "valid_max": 999999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "SWOT_SHAQ_reaches": {
-            "long_name": "SWOT_SHAQ_reaches",
-            "comment": "Number of DWA reaches present in data",
-            "valid_min": 0,
-            "valid_max": 9999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "SWOT_SHAQ_reach_id": {
-            "long_name": "SWOT_SHAQ_reach_id",
-            "comment": "reach id within SWORD where the DWA gauge is located",
-            "valid_min": -998,
-            "valid_max": 99999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "SWOT_SHAQ_id": {
-            "long_name": "SWOT_SHAQ_ID_number",
-            "comment": "SWOT_SHAQ internal identification code (matches DWA database)",
-            "coverage_content_type": "referenceInformation"
-        }
-    },
-    "DWA": {
-        "DWA_flow_duration_q": {
-            "long_name": "DWA_flow_Duration_curve_discharge",
-            "comment": "DWA discharge values from the flow duration curve for this reach",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_max_q": {
-            "long_name": "DWA_maximum_discharge",
-            "comment": "DWA highest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_monthly_q": {
-            "long_name": "DWA_mean_monthly_discharge",
-            "comment": "DWA monthly mean discharge time series in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_mean_q": {
-            "long_name": "DWA_mean_discharge",
-            "comment": "DWA mean discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_min_q": {
-            "long_name": "DWA_minimum_discharge",
-            "comment": "DWA lowest discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_two_year_return_q": {
-            "long_name": "DWA_two_Year_Return",
-            "comment": "DWA two year return interval discharge value in this cell",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_q": {
-            "long_name": "DWA_discharge_time_series_daily",
-            "comment": "DWA discharge time series daily discharge values",
-            "units": "m^3/s",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "physicalMeasurement"
-        },
-        "DWA_qt": {
-            "long_name": "DWA_discharge_time",
-            "comment": "DWA discharge time series daily time values (days since Jan 1 Year 1)",
-            "units": "days since 0001-01-01",
-            "valid_min": 0,
-            "valid_max": 1000000,
-            "coverage_content_type": "coordinate"
-        },
-        "CAL": {
-            "long_name": "DWA_calibration_flag",
-            "comment": "DWA 1=Calibration 0=validation",
-            "valid_min": 0,
-            "valid_max": 1,
-            "coverage_content_type": "referenceInformation"
-        },
-        "num_days": {
-            "long_name": "num_days",
-            "comment": "Number of days that daily values are indexed on",
-            "valid_min": -998,
-            "valid_max": 999999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "DWA_reaches": {
-            "long_name": "DWA_reaches",
-            "comment": "Number of DWA reaches present in data",
-            "valid_min": 0,
-            "valid_max": 9999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "DWA_reach_id": {
-            "long_name": "DWA_reach_id",
-            "comment": "reach id within SWORD where the DWA gauge is located",
-            "valid_min": -998,
-            "valid_max": 99999999999,
-            "coverage_content_type": "referenceInformation"
-        },
-        "DWA_id": {
-            "long_name": "DWA_ID_number",
-            "comment": "DWA internal identification code (matches DWA database)",
-            "coverage_content_type": "referenceInformation"
-        }
-    },
     "USGS": {
         "CAL": {
-            "long_name": "USGS_calibration_flag",
+            "long_name": "USGScalibration_clag",
             "comment": "USGS 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -1356,7 +1048,7 @@
             "coverage_content_type": "referenceInformation"
         },
         "USGS_flow_duration_q": {
-            "long_name": "USGS_flow_Duration_curve_discharge",
+            "long_name": "USGS flow_Duration_curve_discharge",
             "comment": "USGS discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1364,7 +1056,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "USGS_max_q": {
-            "long_name": "USGS_maximum_discharge",
+            "long_name": "USGS maximum_discharge",
             "comment": "USGS highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1372,7 +1064,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "USGS_monthly_q": {
-            "long_name": "USGS_mean_monthly_discharge",
+            "long_name": "USGSmean_monthly_discharge",
             "comment": "USGS monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1380,7 +1072,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "USGS_mean_q": {
-            "long_name": "USGS_mean_discharge",
+            "long_name": "USGSmean_discharge",
             "comment": "USGS mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1388,7 +1080,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "USGS_min_q": {
-            "long_name": "USGS_minimum_discharge",
+            "long_name": "USGS minimum_discharge",
             "comment": "USGS lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1396,7 +1088,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "USGS_two_year_return_q": {
-            "long_name": "USGS_two_Year_Return",
+            "long_name": "USGS two_Year_Return",
             "comment": "USGS two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1441,7 +1133,7 @@
     },
     "WSC": {
         "CAL": {
-            "long_name": "WSC_calibration_flag",
+            "long_name": "WSCcalibration_clag",
             "comment": "WSC 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -1455,7 +1147,7 @@
             "coverage_content_type": "referenceInformation"
         },
         "WSC_flow_duration_q": {
-            "long_name": "WSC_flow_Duration_curve_discharge",
+            "long_name": "WSC flow_Duration_curve_discharge",
             "comment": "WSC discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1463,7 +1155,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "WSC_max_q": {
-            "long_name": "WSC_maximum_discharge",
+            "long_name": "WSC maximum_discharge",
             "comment": "WSC highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1471,7 +1163,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "WSC_monthly_q": {
-            "long_name": "WSC_mean_monthly_discharge",
+            "long_name": "WSCmean_monthly_discharge",
             "comment": "WSC monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1479,7 +1171,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "WSC_mean_q": {
-            "long_name": "WSC_mean_discharge",
+            "long_name": "WSCmean_discharge",
             "comment": "WSC mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1487,7 +1179,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "WSC_min_q": {
-            "long_name": "WSC_minimum_discharge",
+            "long_name": "WSC minimum_discharge",
             "comment": "WSC lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1495,7 +1187,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "WSC_two_year_return_q": {
-            "long_name": "WSC_two_Year_Return",
+            "long_name": "WSC two_Year_Return",
             "comment": "WSC two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1540,7 +1232,7 @@
     },
     "MLIT": {
         "MLIT_flow_duration_q": {
-            "long_name": "MLIT_flow_Duration_curve_discharge",
+            "long_name": "MLIT flow_Duration_curve_discharge",
             "comment": "MLIT discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1548,7 +1240,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "MLIT_max_q": {
-            "long_name": "MLIT_maximum_discharge",
+            "long_name": "MLIT maximum_discharge",
             "comment": "MLIT highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1556,7 +1248,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "MLIT_monthly_q": {
-            "long_name": "MLIT_mean_monthly_discharge",
+            "long_name": "MLITmean_monthly_discharge",
             "comment": "MLIT monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1564,7 +1256,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "MLIT_mean_q": {
-            "long_name": "MLIT_mean_discharge",
+            "long_name": "MLITmean_discharge",
             "comment": "MLIT mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1572,7 +1264,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "MLIT_min_q": {
-            "long_name": "MLIT_minimum_discharge",
+            "long_name": "MLIT minimum_discharge",
             "comment": "MLIT lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1580,7 +1272,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "MLIT_two_year_return_q": {
-            "long_name": "MLIT_two_Year_Return",
+            "long_name": "MLIT two_Year_Return",
             "comment": "MLIT two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1604,7 +1296,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "MLIT_calibration_flag",
+            "long_name": "MLITcalibration_clag",
             "comment": "MLIT 1=Calibration 0=validation",
             "valid_min": -998,
             "valid_max": 999999999999,
@@ -1639,7 +1331,7 @@
     },
     "DEFRA": {
         "DEFRA_flow_duration_q": {
-            "long_name": "DEFRA_flow_Duration_curve_discharge",
+            "long_name": "DEFRA flow_Duration_curve_discharge",
             "comment": "DEFRA discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1647,7 +1339,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DEFRA_max_q": {
-            "long_name": "DEFRA_maximum_discharge",
+            "long_name": "DEFRA maximum_discharge",
             "comment": "DEFRA highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1655,7 +1347,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DEFRA_monthly_q": {
-            "long_name": "DEFRA_mean_monthly_discharge",
+            "long_name": "DEFRAmean_monthly_discharge",
             "comment": "DEFRA monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1663,7 +1355,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DEFRA_mean_q": {
-            "long_name": "DEFRA_mean_discharge",
+            "long_name": "DEFRAmean_discharge",
             "comment": "DEFRA mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1671,7 +1363,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DEFRA_min_q": {
-            "long_name": "DEFRA_minimum_discharge",
+            "long_name": "DEFRA minimum_discharge",
             "comment": "DEFRA lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1679,7 +1371,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DEFRA_two_year_return_q": {
-            "long_name": "DEFRA_two_Year_Return",
+            "long_name": "DEFRA two_Year_Return",
             "comment": "DEFRA two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1703,7 +1395,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "DEFRA_calibration_flag",
+            "long_name": "DEFRAcalibration_clag",
             "comment": "DEFRA 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -1738,7 +1430,7 @@
     },
     "EAU": {
         "EAU_flow_duration_q": {
-            "long_name": "EAU_flow_Duration_curve_discharge",
+            "long_name": "EAU flow_Duration_curve_discharge",
             "comment": "EAU discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1746,7 +1438,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "EAU_max_q": {
-            "long_name": "EAU_maximum_discharge",
+            "long_name": "EAU maximum_discharge",
             "comment": "EAU highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1754,7 +1446,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "EAU_monthly_q": {
-            "long_name": "EAU_mean_monthly_discharge",
+            "long_name": "EAUmean_monthly_discharge",
             "comment": "EAU monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1762,7 +1454,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "EAU_mean_q": {
-            "long_name": "EAU_mean_discharge",
+            "long_name": "EAUmean_discharge",
             "comment": "EAU mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1770,7 +1462,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "EAU_min_q": {
-            "long_name": "EAU_minimum_discharge",
+            "long_name": "EAU minimum_discharge",
             "comment": "EAU lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1778,7 +1470,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "EAU_two_year_return_q": {
-            "long_name": "EAU_two_Year_Return",
+            "long_name": "EAU two_Year_Return",
             "comment": "EAU two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1802,7 +1494,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "EAU_calibration_flag",
+            "long_name": "EAUcalibration_clag",
             "comment": "EAU 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -1843,7 +1535,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "ABOM_max_q": {
-            "long_name": "ABOM_maximum_discharge",
+            "long_name": "ABOM maximum_discharge",
             "comment": "ABOM highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1851,7 +1543,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "ABOM_monthly_q": {
-            "long_name": "ABOM_mean_monthly_discharge",
+            "long_name": "ABOMmean_monthly_discharge",
             "comment": "ABOM monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1859,7 +1551,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "ABOM_mean_q": {
-            "long_name": "ABOM_mean_discharge",
+            "long_name": "ABOMmean_discharge",
             "comment": "ABOM mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1867,7 +1559,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "ABOM_min_q": {
-            "long_name": "ABOM_minimum_discharge",
+            "long_name": "ABOM minimum_discharge",
             "comment": "ABOM lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1875,7 +1567,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "ABOM_two_year_return_q": {
-            "long_name": "ABOM_two_Year_Return",
+            "long_name": "ABOM two_Year_Return",
             "comment": "ABOM two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1897,7 +1589,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "ABOM_calibration_flag",
+            "long_name": "ABOMcalibration_clag",
             "comment": "ABOM 1=Calibration 2=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -1930,7 +1622,7 @@
     },
     "DGA": {
         "DGA_flow_duration_q": {
-            "long_name": "DGA_flow_Duration_curve_discharge",
+            "long_name": "DGA flow_Duration_curve_discharge",
             "comment": "DGA discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1938,7 +1630,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DGA_max_q": {
-            "long_name": "DGA_maximum_discharge",
+            "long_name": "DGA maximum_discharge",
             "comment": "DGA highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1946,7 +1638,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DGA_monthly_q": {
-            "long_name": "DGA_mean_monthly_discharge",
+            "long_name": "DGAmean_monthly_discharge",
             "comment": "DGA monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1954,7 +1646,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DGA_mean_q": {
-            "long_name": "DGA_mean_discharge",
+            "long_name": "DGAmean_discharge",
             "comment": "DGA mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1962,7 +1654,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DGA_min_q": {
-            "long_name": "DGA_minimum_discharge",
+            "long_name": "DGA minimum_discharge",
             "comment": "DGA lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1970,7 +1662,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "DGA_two_year_return_q": {
-            "long_name": "DGA_two_Year_Return",
+            "long_name": "DGA two_Year_Return",
             "comment": "DGA two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -1992,7 +1684,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "DGA_calibration_flag",
+            "long_name": "DGAcalibration_clag",
             "comment": "DGA 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,
@@ -2019,13 +1711,13 @@
         },
         "DGA_id": {
             "long_name": "DGA_ID",
-            "comment": "DGA  internal identification code (matches DGA database)",
+            "comment": "DGA  internal identification code (matches ABOM database)",
             "coverage_content_type": "referenceInformation"
         }
     },
     "Hidroweb": {
         "Hidroweb_flow_duration_q": {
-            "long_name": "Hidroweb_flow_Duration_curve_discharge",
+            "long_name": "Hidroweb flow_Duration_curve_discharge",
             "comment": "Hidroweb discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2033,7 +1725,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "Hidroweb_max_q": {
-            "long_name": "Hidroweb_maximum_discharge",
+            "long_name": "Hidroweb maximum_discharge",
             "comment": "Hidroweb highest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2041,7 +1733,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "Hidroweb_monthly_q": {
-            "long_name": "Hidroweb_mean_monthly_discharge",
+            "long_name": "Hidrowebmean_monthly_discharge",
             "comment": "Hidroweb monthly mean discharge time series in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2049,7 +1741,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "Hidroweb_mean_q": {
-            "long_name": "Hidroweb_mean_discharge",
+            "long_name": "Hidrowebmean_discharge",
             "comment": "Hidroweb mean discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2057,7 +1749,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "Hidroweb_min_q": {
-            "long_name": "Hidroweb_minimum_discharge",
+            "long_name": "Hidroweb minimum_discharge",
             "comment": "Hidroweb lowest discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2065,7 +1757,7 @@
             "coverage_content_type": "physicalMeasurement"
         },
         "Hidroweb_two_year_return_q": {
-            "long_name": "Hidroweb_two_Year_Return",
+            "long_name": "Hidroweb two_Year_Return",
             "comment": "Hidroweb two year return interval discharge value in this cell",
             "units": "m^3/s",
             "valid_min": -1000000,
@@ -2087,7 +1779,7 @@
             "coverage_content_type": "coordinate"
         },
         "CAL": {
-            "long_name": "Hidroweb_calibration_flag",
+            "long_name": "Hidrowebcalibration_clag",
             "comment": "Hidroweb 1=Calibration 0=validation",
             "valid_min": -1000000,
             "valid_max": 1000000,

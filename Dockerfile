@@ -46,9 +46,11 @@ RUN apt -y install \
 	&& /usr/bin/Rscript -e "install.packages('rjson', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
     && /usr/bin/Rscript -e "install.packages('R.utils', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('BBmisc', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
-	&& /usr/bin/Rscript -e "install.packages('tidyhydat', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
+	# && /usr/bin/Rscript -e "install.packages('tidyhydat', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
+	&& /usr/bin/Rscript -e "devtools::install_github('Travis-Simmons/tidyhydat')"\
 	&& /usr/bin/Rscript -e "install.packages('RSelenium', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
-	&& /usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+	&& /usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
+	&& /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater')"
 
 #Stage 3 - Python packages
 FROM stage1 as stage2
@@ -63,9 +65,9 @@ RUN /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRU
 
 # Stage 5 - Download tidyhydat database
 FROM stage3 as stage4
-RUN sudo mkdir -p /root/.local/share/tidyhydat/\
-	&& /usr/bin/Rscript -e 'library(tidyhydat)'\
-	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(ask=FALSE)'
+# RUN /usr/bin/Rscript -e 'library(tidyhydat)'\
+# 	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(dl_hydat_here = "/tmp", ask = FALSE )' \
+# 	&& /usr/bin/Rscript -e 'tidyhydat::hy_src("/tmp")'
 COPY metadata/ /app/metadata/
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py

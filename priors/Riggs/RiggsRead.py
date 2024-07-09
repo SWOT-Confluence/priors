@@ -40,12 +40,10 @@ class RiggsRead:
         target_file_map = {
             'na':['Riggs_canada_.nc', 'Riggs_quebec_.nc'],
             'eu':['Riggs_uk_.nc', 'Riggs_france_.nc'],
-            # 'eu':['Riggs_france_.nc'],
-            # 'eu':['Riggs_uk_.nc'],
             'as':['Riggs_japan_.nc'],
             'oc':['Riggs_australia_.nc'],
             'sa':['Riggs_brazil_.nc'],
-            'af':['no_target']
+            'af':['Riggs_safrica_.nc']
         }
 
         filenames = target_file_map[self.cont]
@@ -75,9 +73,9 @@ class RiggsRead:
 
             st = [''.join(x) for x in st]
 
-            print('-----------------------------------')
-            print(f'Found {len(current_group_agency_reach_ids)} for agency: {filenames[i]}')
-            print('-----------------------------------')
+            # print('-----------------------------------')
+            # print(f'Found {len(current_group_agency_reach_ids)} for agency: {i}')
+
 
 
 
@@ -153,7 +151,7 @@ class RiggsRead:
                 if cal_string in ['0','1']:
                     cal_cnt += 1
 
-            print(f'there are {cal_cnt} ntr gauges for {filenames[i]}')
+            # print(f'there are {cal_cnt} ntr gauges for {filenames[i]}')
 
 
             
@@ -162,7 +160,7 @@ class RiggsRead:
                 if id in current_group_agency_reach_ids:
                     m_cnt+=1
 
-            print(f'there are {len(current_group_agency_reach_ids)} for {filenames[i]}. This is how many should be pulled. however there are only {m_cnt} matches!!')
+            # print(f'there are {len(current_group_agency_reach_ids)} for {filenames[i]}. This is how many should be pulled. however there are only {m_cnt} matches!!')
 
             id_cnt = 0
             cal_cnt = 0
@@ -172,7 +170,7 @@ class RiggsRead:
                     if str(int(cal[j])) in ['0','1']:
                         cal_cnt += 1
 
-            print('id_cnt', id_cnt, 'cal_cnt', cal_cnt)
+            # print('id_cnt', id_cnt, 'cal_cnt', cal_cnt)
 
 
 
@@ -242,6 +240,16 @@ class RiggsRead:
                                 datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
+                            if 'quebec' in filenames[i]:
+                                agencyR.append('MEFCCWP')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                            if 'safrica' in filenames[i]:
+                                agencyR.append('DWA')
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
 
                 else:
                         if 'brazil' in filenames[i]:
@@ -285,14 +293,20 @@ class RiggsRead:
                         if 'quebec' in filenames[i]:
                                 agencyR.append('MEFCCWP')
                                 datariggs.append(str(int(st[j])))
+                                datariggs.append(str(st[j]))
+                                reachIDR.append(str(int(rid[j])))
+                                RIGGScal.append(int(cal[j]))
+                        if 'safrica' in filenames[i]:
+                                agencyR.append('DWA')
+                                datariggs.append(str(st[j]))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
         # print('most of the below should not be 23303200391')
         # print(agencyR, reachIDR)
 
-        print(f'at the end or reading, there are {len(agencyR)} in the dict')
-        print(f'at the end or reading, there are {len(datariggs)} in the dict')
-        print(f'at the end or reading, there are {len(reachIDR)} in the dict')
-        print(f'at the end or reading, there are {len(RIGGScal)} in the dict')
+        # print(f'at the end or reading, there are {len(agencyR)} in the dict')
+        # print(f'at the end or reading, there are {len(datariggs)} in the dict')
+        # print(f'at the end or reading, there are {len(reachIDR)} in the dict')
+        # print(f'at the end or reading, there are {len(RIGGScal)} in the dict')
 
         return datariggs, reachIDR, agencyR, RIGGScal
