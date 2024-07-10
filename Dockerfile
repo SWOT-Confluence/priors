@@ -32,12 +32,12 @@ RUN apt -y install \
 	&& . /etc/lsb-release \
 	&& wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc \
 	&& add-apt-repository -y "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" \
+	&& apt -y install --no-install-recommends r-base \
 	&& /usr/bin/Rscript /app/remove_packages.R \
 	&& /usr/bin/Rscript -e 'Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1); install.packages("V8")' \
     && /usr/bin/Rscript -e "install.packages('dplyr', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
     && /usr/bin/Rscript -e "install.packages('reshape2', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
     && /usr/bin/Rscript -e "install.packages('settings', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
-    && /usr/bin/Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('RNetCDF', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('foreach', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('doParallel', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
@@ -47,10 +47,9 @@ RUN apt -y install \
     && /usr/bin/Rscript -e "install.packages('R.utils', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	&& /usr/bin/Rscript -e "install.packages('BBmisc', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
 	# && /usr/bin/Rscript -e "install.packages('tidyhydat', dependencies=TRUE, repos='http://cran.rstudio.com/')" \
-	&& /usr/bin/Rscript -e "devtools::install_github('Travis-Simmons/tidyhydat')"\
 	&& /usr/bin/Rscript -e "install.packages('RSelenium', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
-	&& /usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"\
-	&& /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater')"
+	&& /usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+	# && /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater')"
 
 #Stage 3 - Python packages
 FROM stage1 as stage2
@@ -60,21 +59,26 @@ RUN /app/env/bin/pip install -r /app/requirements.txt
 
 # Stage 4 - Copy priors code
 FROM stage2 as stage3
-RUN /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)' \
-	&& /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater', force = TRUE)"
+
+RUN /usr/bin/Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')" \ 
+	&& /usr/bin/Rscript -e 'devtools::install_github("nikki-t/geoBAMr", force = TRUE)' \
+	&& /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater', force = TRUE)" \
+	&& /usr/bin/Rscript -e "devtools::install_github('Travis-Simmons/tidyhydat')"
 
 # Stage 5 - Download tidyhydat database
 FROM stage3 as stage4
-# RUN /usr/bin/Rscript -e 'library(tidyhydat)'\
-# 	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(dl_hydat_here = "/tmp", ask = FALSE )' \
-# 	&& /usr/bin/Rscript -e 'tidyhydat::hy_src("/tmp")'
 COPY metadata/ /app/metadata/
 COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
+
+FROM stage4 as stage5
 RUN sudo mkdir /opt/hydroshare
+RUN /usr/bin/Rscript -e 'library(tidyhydat)'\
+	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(dl_hydat_here = "/opt/hydroshare", ask = FALSE )' \
+
 
 # Stage 6 - Execute algorithm
-FROM stage4 as stage5
+FROM stage5 as stage6
 LABEL version="1.0" \
 	description="Containerized priors module." \
 	"confluence.contact"="ntebaldi@umass.edu" \

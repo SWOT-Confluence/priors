@@ -44,11 +44,11 @@ library(tibble)
 #Canada
 
 library(tidyhydat)
-hy_dir("/mnt/data")
+hy_dir("/opt/hydroshare")
 # hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
 # hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
-download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
-hy_src("/mnt/data/Hydat.sqlite3")
+# download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
+hy_src("/opt/hydroshare/Hydat.sqlite3")
 
 
 
