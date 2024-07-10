@@ -34,8 +34,8 @@ from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
 from priors.HydroShare.HSPull import HSp
 from priors.HydroShare.HydroShareUpdate import HydroShareUpdate
-from priors.height_width_fits.HWF_extract import HWF_extraqct
-from priors.height_width_fits.HWF_update import HWF_update
+# from priors.height_width_fits.HWF_extract import HWF_extraqct
+# from priors.height_width_fits.HWF_update import HWF_update
 
 # Third-party imports
 import botocore
