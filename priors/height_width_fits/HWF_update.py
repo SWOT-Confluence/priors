@@ -2,7 +2,7 @@
 import np
 import glob
 
-class HWS_update:
+class HWF_update:
 
     # FlOAT_FILL = -999999999999
     # INT_FILL = -999

@@ -34,6 +34,8 @@ from priors.Riggs.RiggsUpdate import RiggsUpdate
 from priors.Riggs.RiggsPull import RiggsPull
 from priors.HydroShare.HSPull import HSp
 from priors.HydroShare.HydroShareUpdate import HydroShareUpdate
+from priors.height_width_fits.HWF_extract import HWF_extraqct
+from priors.height_width_fits.HWF_update import HWF_update
 
 # Third-party imports
 import botocore
@@ -308,8 +310,8 @@ class Priors:
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
         
         # update HWS
-        hws_obj = HWS_extract(swot_dir)
-        HWS_update(hws_obj.data, sos_file)
+        # hwf_obj = HWF_extract(swot_dir)
+        # HWF_update(hwf_obj.data, sos_file)
 
         # Upload priors results to S3 bucket
         print("Uploading new SoS priors version.")

@@ -1,7 +1,7 @@
-import np
+import numpy as np
 import glob
 
-class HWS_extract:
+class HWF_extract:
 
     # FlOAT_FILL = -999999999999
     # INT_FILL = -999
