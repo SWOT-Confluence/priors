@@ -195,11 +195,6 @@ class RiggsRead:
                                 datariggs.append(str(int(st[j])))
                                 reachIDR.append(str(int(rid[j])))
                                 RIGGScal.append(int(cal[j]))
-                            if 'quebec' in filenames[i]:
-                                agencyR.append('MEFCCWP')
-                                datariggs.append(str(int(st[j])))
-                                reachIDR.append(str(int(rid[j])))
-                                RIGGScal.append(int(cal[j]))
                             if 'australia' in filenames[i]:
                                 agencyR.append('ABOM')
                                 datariggs.append(str(st[j]))

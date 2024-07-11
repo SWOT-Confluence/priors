@@ -19,12 +19,6 @@ library(rvest)
 ##Altered By SCoss 11.6.23
 #quebec
 
-library(bomWater)
-library(BBmisc)
-library(data.table)
-library(dplyr)
-library(rvest)
-
 #Saf
 library(lubridate)
 library(httr)
@@ -44,11 +38,25 @@ library(tibble)
 #Canada
 
 library(tidyhydat)
-hy_dir("/opt/hydroshare")
+
 # hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
 # hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
-# download_hydat(dl_hydat_here = "/mnt/data", ask = FALSE )
-hy_src("/opt/hydroshare/Hydat.sqlite3")
+# download_hydat(dl_hydat_here = "/opt/hydroshare/Hydat.sqlite3", ask = FALSE )
+print("pulling hydat")
+download_hydat(ask = FALSE )
+hy_dir()
+hy_src()
+print("finished pulling hydat")
+can = try(hy_daily_flows("02OA004"))
+if(is.error(can)){
+  # return(NA)
+  print("hydat failed...")
+}else{
+  can$Q = can$Value
+  can$date =  as.character(can$Date)
+  print(can)
+  print("hydat worked")
+}
 
 
 
