@@ -15,7 +15,7 @@ resource "aws_batch_job_definition" "generate_batch_jd_priors" {
       }
     },
     "resourceRequirements": [
-      {"type": "MEMORY", "value": "8192"},
+      {"type": "MEMORY", "value": "16384"},
       {"type": "VCPU", "value": "4"}
     ],
     "mountPoints": [
