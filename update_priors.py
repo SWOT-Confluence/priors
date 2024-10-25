@@ -43,7 +43,6 @@ import numpy as np
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
-# SWORD_VERSION = "v15"
 
 class Priors:
     """Class that coordinates the priors to be generated and stores them in 
@@ -70,7 +69,7 @@ class Priors:
     """
 
     def __init__(self, cont, run_type, priors_list, input_dir, sos_dir, 
-                 fake_current, metadata_json, historic_qt, add_geospatial, 
+                 sos_version, metadata_json, historic_qt, add_geospatial, 
                  podaac_update, podaac_bucket, sword_version, sos_bucket="confluence-sos"):
         """
         Parameters
@@ -92,7 +91,7 @@ class Priors:
         self.priors_list = priors_list
         self.input_dir = input_dir
         self.sos_dir = sos_dir
-        self.fake_current = fake_current
+        self.sos_version = sos_version
         self.metadata_json = metadata_json
         self.time_dict = {
             "historic_qt": historic_qt[cont]
@@ -250,19 +249,16 @@ class Priors:
                   self.priors_list, self.podaac_update, self.podaac_bucket,
                   self.sos_bucket, self.swordversion)
         try:
-            sos.copy_sos(self.fake_current)
+            sos.download_previous_sos(self.sos_version)
         except Exception as e:
             print(e)
             traceback.print_exception(*sys.exc_info())
             exit(1)
-        # except botocore.exceptions.ClientError:
-        #     print(botocore.exceptions.ClientError)
-        #     print("Exiting program.")
-        #     exit(1)
+
         sos.create_new_version()
         sos_file = sos.sos_file
         sos_last_run_time = sos.last_run_time
-        
+
         # Retrieve geospatial coverage - pull if true flag
         if self.add_geospatial:
             sos.store_geospatial_data(INPUT_DIR / "sword" / f"{self.cont}_sword_v{self.swordversion}.nc")
@@ -301,14 +297,14 @@ class Priors:
             # Overwrite GRADES with gage priors
             print("Overwriting GRADES data with gaged priors.")
             sos.overwrite_grades()
-        
+
         # Update time coverage in sos file global attributes
         print("Locating min and max time values.")
         min_qt, max_qt = self.locate_min_max()
         print("Updating time coverage based on min and max values.")
         sos.update_time_coverage(min_qt, max_qt)
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
-        
+
         # update HWS
         # hwf_obj = HWF_extract(swot_dir)
         # HWF_update(hwf_obj.data, sos_file)
@@ -337,11 +333,11 @@ def create_args():
                             nargs="+",
                             default=[],
                             help="List: usgs, grdc, riggs, gbpriors")
-    arg_parser.add_argument("-l",
-                            "--level",
+    arg_parser.add_argument("-o",
+                            "--sosversion",
                             type=str,
-                            default='foo',
-                            help="Forces priors to pull a certain level sos ex: 0000")
+                            default='0001',
+                            help="Priors version to create SoS for")
     arg_parser.add_argument("-m",
                             "--metadatajson",
                             type=Path,
@@ -381,9 +377,8 @@ def main():
     # Store command line arguments
     arg_parser = create_args()
     args = arg_parser.parse_args()
-    print(f"Index: {args.index}")
-    print(f"Run type: {args.runtype}")
-    if len(args.priors) > 0: print(f"Priors: {', '.join(args.priors)}")
+    for arg in vars(args):
+        print(f"{arg}: {getattr(args, arg)}")
 
     # Get continent to run on
     i = int(args.index) if args.index != -235 else int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX"))
@@ -400,7 +395,7 @@ def main():
 
     # Retrieve and update priors
     priors = Priors(cont = cont, run_type = args.runtype, priors_list = args.priors, 
-                    input_dir = INPUT_DIR, sos_dir = INPUT_DIR / "sos", fake_current = args.level, metadata_json = variable_atts, 
+                    input_dir = INPUT_DIR, sos_dir = INPUT_DIR / "sos", sos_version = args.sosversion, metadata_json = variable_atts, 
                     historic_qt = historicqt, add_geospatial = args.addgeospatial, podaac_update = args.podaacupload,
                     podaac_bucket = args.podaacbucket, sos_bucket = args.sosbucket, sword_version = args.swordversion)
     priors.update()
