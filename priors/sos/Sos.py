@@ -102,77 +102,25 @@ class Sos:
         self.swordversion = SWORD_VERSION
         self.suffix = suffix
 
-    def copy_sos(self, fake_current):
-        """Copy the latest version of the SoS file to local storage."""
-        
-        s3 = boto3.client("s3")
-        object_list = s3.list_objects_v2(Bucket=self.sos_bucket, Prefix=self.run_type)
-        objects = [obj["Key"].split('/')[1] for obj in object_list["Contents"]]       
+    def download_previous_sos(self, sos_version):
+        """Download the previous version of the SoS file to local storage."""
 
-        # Get sorted list of version keys
-        dirs = list(set(objects))
-        dirs.sort()
-        print(f"Directories located for SoS: [{', '.join(dirs)}]")
-        
-        # Determine current version based on modification time
-        if fake_current == 'foo':
-            try:
-                current = self.get_current_version(s3, dirs)
-            except botocore.exceptions.ClientError as error:
-                print(f"ERROR: Could not locate current version of the SoS.")
-                print(error)
-                raise error
-
-        else:
-            current = fake_current
-        
-        # Download current version of the SoS
-        print(f"Locating: {self.run_type}/{current}/{self.continent}{self.suffix}")
+        # Download pervious version of the SoS
+        previous_version = str(int(sos_version) - 1)
+        padding = ['0'] * (self.VERS_LENGTH - len(previous_version))
+        previous_version = f"{''.join(padding)}{previous_version}"
+        print(f"Locating: {self.run_type}/{previous_version}/{self.continent}{self.suffix}")
         try:
-            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}", Filename=f"{self.sos_dir}/{self.continent}{self.suffix}")
+            s3 = boto3.client("s3")
+            response = s3.download_file(Bucket=self.sos_bucket, Key=f"{self.run_type}/{previous_version}/{self.continent}{self.suffix}", Filename=f"{self.sos_dir}/{self.continent}{self.suffix}")
         except botocore.exceptions.ClientError as error:
             print(f"ERROR: Could not download current version of the SoS.")
             print(error)
             raise error
-        print(f"Downloaded: {self.run_type}/{current}/{self.continent}{self.suffix}")
-        
-    def get_current_version(self, s3, dirs):
-        """Return current version of SoS based on moidication time."""
-        
-        current = dirs[-1]
-        
-        # Return if first run
-        if current == "0000": return current
-        
-        # Get modication time
-        try:
-            print(f"{self.run_type}/{current}/{self.continent}{self.suffix}")
-            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
-                                        Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}",
-                                        ObjectAttributes=["ObjectSize"]) 
-            previous = dirs[-2]
-        except botocore.exceptions.ClientError:
-            print(f"{self.run_type}/{current}/{self.continent}{self.suffix} could not be found. Trying version: {dirs[-2]}.")
-            current = dirs[-2]
-            if current == "0000":
-                return current   # Return if first run
-            else:
-                previous = dirs[-3]
-            obj = s3.get_object_attributes(Bucket=self.sos_bucket, 
-                                        Key=f"{self.run_type}/{current}/{self.continent}{self.suffix}",
-                                        ObjectAttributes=["ObjectSize"])
-            
-        # Return previous key if modification time is less than class constant
-        obj_age = (datetime.now(timezone.utc) - obj["LastModified"]).total_seconds()
-        if obj_age < self.MOD_TIME:
-            print(f"Version {current} was last modified {obj_age} seconds ago. Returning previous version: {previous}.")
-            return previous
-        else:
-            print(f"Version {current} was last modified {obj_age} seconds ago. Returning this version.")
-            return current
+        print(f"Downloaded: {self.run_type}/{previous_version}/{self.continent}{self.suffix}")
 
     def create_new_version(self):
-        """Create new version of the SoS file.
+        """Create new version of the SoS file from the previous version.
         
         Returns
         -------
