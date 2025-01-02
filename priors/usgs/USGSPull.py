@@ -368,7 +368,7 @@ class USGSPull:
                 newF=[]
                 for flag in F:
 
-                    if flag=='Ice' or str(flag)=='nan':
+                    if str(flag)=='nan' or 'Ice' in flag:
                         newF.append(False)
                     else:
                         newF.append(True)
