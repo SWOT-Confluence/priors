@@ -1,0 +1,2121 @@
+{
+    "global_attributes": {
+        "title": "SWOT discharge prior information and processing outputs",
+        "summary": "All the necessary prior information to produce SWOT discharge; including gauges, hydrologic model output, and geomorphic attributes from the geoBAM prior generation method.",
+        "keywords": "GCMD:Rivers/Streams, GCMD:Discharge/Flow, SWOT, GCMD:Stream Gauges, model input, n, A0, r, slope",
+        "keywords_vocabulary": "NASA Global Change Master Directory (GCMD) Science Keywords",
+        "doi": "10.5067/SWOT-SOS-V1",
+        "id": "SWOT_L4_DAWG_SOS_DISCHARGE",
+        "naming_authority": "gov.nasa",
+        "standard_name_vocabulary": "CF Standard Name Table v72",
+        "featureType": "timeseries",
+        "platform": "SWOT",
+        "platform_vocabulary": "GCMD platform keywords",
+        "instrument": "KaRIn",
+        "instrument_vocabulary": "GCMD instrument keywords",
+        "processing_level": "L4",
+        "conventions": "CF-1.8, ACDD-1.3",
+        "acknowledgement": "NASA AIST Program Grant Number 80NSSC22K1487, NASA SWOT Science Team Grant Numbers: 80NSSC20K1143, 80NSSC20K1141, 80NSSC20K1340 and CNES SWOT TOSCA fund for the SWOT DAHM project. Additional support from PO.DAAC and the SWOT mission.",
+        "creator_name": "SWOT Discharge Algorithm Working Group (DAWG)",
+        "creator_email": "coss.31@osu.edu",
+        "creator_type": "group",
+        "creator_url": "https://github.com/SWOT-Confluence",
+        "creator_institution": "SWOT Science Team",
+        "institution": "NASA Jet Propulsion Laboratory (JPL) Physical Oceanography Distributed Active Archive Center (PO.DAAC)/University of Massachusetts Amherst (UMass)/Ohio State University",
+        "project": "Surface Water And Ocean Topography Discharge Algorithms Working Group (SWOT DAWG)",
+        "program": "NASA SWOT Mission",
+        "publisher_name": "JPL PO.DAAC",
+        "publisher_email": "podaac@podaac.jpl.nasa",
+        "publisher_url": "http://podaac.jpl.nasa.gov/",
+        "publisher_type": "Institution",
+        "publisher_institution": "JPL PO.DAAC",
+        "metadata_link": "https://dx.doi.org/10.5067/SWOT-SOS-V1",
+        "geospatial_lat_units": "degree",
+        "geospatial_lon_units": "degree",
+        "time_coverage_resolution": "24:00:00",
+        "license": "Issued under Creative Commons CC BY 4.0: https://creativecommons.org/licenses/by/4.0/"
+    },
+    "global_attributes_extra": {
+        "continent_agency": {
+            "af": [
+                "GRDC",
+                "DWA",
+                "SWOT_SHAQ"
+            ],
+            "as": [
+                "GRDC",
+                "MLIT"
+            ],
+            "eu": [
+                "GRDC",
+                "DEFRA",
+                "EAU",
+                "SWOT_SHAQ"
+            ],
+            "na": [
+                "GRDC",
+                "USGS",
+                "WSC",
+                "MEFCCWP",
+                "SWOT_SHAQ"
+
+            ],
+            "oc": [
+                "GRDC",
+                "ABOM"
+            ],
+            "sa": [
+                "GRDC",
+                "DGA",
+                "Hidroweb",
+                "SWOT_SHAQ"
+            ]
+        },
+        "confluence_version": "0.1.0",
+        "references": {
+            "constrained": "GRADES: https://www.reachhydro.org/home/records/grades",
+            "unconstrained": "WBMsed: https://doi.org/10.1016/j.gloplacha.2014.01.011",
+            "gbpriors": "GeoBAM: https://doi.org/10.1029/2020WR027949",
+            "GRDC": "GRDC: https://www.bafg.de/GRDC/EN/Home/homepage_node.html",
+            "MLIT": "MLIT: https://www.mlit.go.jp/en/",
+            "DEFRA": "Defra: https://environment.data.gov.uk/",
+            "EAU": "EAU: https://hubeau.eaufrance.fr/page/a-propos",
+            "USGS": "USGS: https://www.usgs.gov/",
+            "WSC": "WSC: https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey.html",
+            "ABOM": "ABOM: http://www.bom.gov.au/water/",
+            "DGA": "DGA: https://explorador.cr2.cl/",
+            "Hidroweb": "Hidroweb: https://www.snirh.gov.br/hidroweb/apresentacao",
+            "DWA": "DWA: https://www.dws.gov.za/",
+            "MEFCCWP": "MEFCCWP: https://www.environnement.gouv.qc.ca/",
+            "SWOT_SHAQ": "SWOT_SHAQ: https://www.hydroshare.org/resource/38feeef698ca484b907b7b3eb84ad05b/"
+
+        }
+    },
+    "reaches": {
+        "reach_id": {
+            "long_name": "SWORD reach identifier",
+            "comment": "Taken from SWORD PDD:  id of each reach. The format of none the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream, T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost reach)",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "x": {
+            "long_name": "longitude",
+            "comment": "longitude of the reach center decimal ranging from 180\u00b0E to 180\u00b0W",
+            "units": "degrees_east",
+            "valid_min": -180,
+            "valid_max": 180,
+            "coverage_content_type": "coordinate"
+        },
+        "y": {
+            "long_name": "latitude",
+            "comment": "latitude of the reach center decimal ranging from 90\u00b0S to 90\u00b0N",
+            "units": "degrees_north",
+            "valid_min": -90,
+            "valid_max": 90,
+            "coverage_content_type": "coordinate"
+        },
+        "river_name": {
+            "long_name": "river names",
+            "comment": "all river names associated with a reach. If there are multiple names for a reach they are listed in alphabetical order and separated by a semicolon.",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "nodes": {
+        "node_id": {
+            "long_name": "SWORD node identifier",
+            "comment": "Taken from SWORD PDD:  id of each node. The format of the id is as follows: CBBBBBRRRRNNNT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin code up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), N = Node id (assigned sequentially within a reach starting at the downstream end working upstream), T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost node)",
+            "valid_min": -998,
+            "valid_max": 999999999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "reach_id": {
+            "long_name": "SWORD reach identifier",
+            "comment": "Taken from SWORD PDD: id of the reach each node is associated with. The format of the id is as follows: CBBBBBRRRRT where C = Continent (the first number of the Pfafstetter basin code), B = Remaining Pfafstetter basin codes up to level 6, R = Reach id (assigned sequentially within a level 6 basin starting at the downstream end working upstream), T = Type (1 \u2013 river, 3 \u2013 lake on river, 4 \u2013 dam or waterfall, 5 \u2013 unreliable topology, 6 \u2013 ghost reach)",
+            "valid_min": -998,
+            "valid_max": 999999999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "x": {
+            "long_name": "longitude",
+            "comment": "longitude of each node ranging from 180\u00b0E to 180\u00b0W",
+            "units": "degrees_east",
+            "valid_min": -180,
+            "valid_max": 180,
+            "coverage_content_type": "coordinate"
+        },
+        "y": {
+            "long_name": "latitude",
+            "comment": "latitude of each node ranging from 90\u00b0S to 90\u00b0N",
+            "units": "degrees_north",
+            "valid_min": -90,
+            "valid_max": 90,
+            "coverage_content_type": "coordinate"
+        },
+        "river_name": {
+            "long_name": "river names",
+            "comment": "all river names associated with a node. If there are multiple names for a node they are listed in alphabetical order and separated by a semicolon.",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "model_constrained": {
+        "num_months": {
+            "long_name": "Number of months",
+            "comment": "Number of months that monthly values are indexed on",
+            "valid_min": 1,
+            "valid_max": 12,
+            "coverage_content_type": "referenceInformation"
+        },
+        "probability": {
+            "long_name": "GRADES Flow_Duration_curve_probability",
+            "comment": "GRADES probability values from the flow duration curve for this cell",
+            "units": "percent",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "qualityInformation"
+        },
+        "flow_duration_q": {
+            "long_name": "GRADES flow_Duration_curve_discharge",
+            "comment": "GRADES discharge values from the flow duration curve for this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "max_q": {
+            "long_name": "GRADES maximum_discharge",
+            "comment": "GRADES highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "monthly_q": {
+            "long_name": "GRADES mean_monthly_discharge",
+            "comment": "GRADES monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "mean_q": {
+            "long_name": "GRADES mean_discharge",
+            "comment": "GRADES mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "min_q": {
+            "long_name": "GRADES minimum_discharge",
+            "comment": "GRADES lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "two_year_return_q": {
+            "long_name": "GRADES two_Year_Return",
+            "comment": "GRADES two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "area_estimate_flag": {
+            "long_name": "GRADES Area_Estimation_Flag",
+            "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "flag_values": "0 1",
+            "flag_meanings": "match no_match",
+            "coverage_content_type": "qualityInformation"
+        },
+        "comid": {
+            "long_name": "COMID",
+            "comment": "ID in the MERIT Hydro system",
+            "coverage_content_type": "referenceInformation"
+        },
+        "overwritten_indexes": {
+            "long_name": "overwritten priors indexes",
+            "comment": "Indexes of GRADES priors that were overwritten by priors module.",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "flag_values": "0 1",
+            "flag_meanings": "not_overwritten overwritten",
+            "coverage_content_type": "qualityInformation"
+        },
+        "overwritten_source": {
+            "long_name": "overwritten priors sources",
+            "comment": "Source of gauge data that overwrote GRADES priors.",
+            "coverage_content_type": "referenceInformation"
+        },
+        "bad_priors": {
+            "long_name": "invalid gauge prior indexes",
+            "comment": "Indexes of invalid gauge priors that were not overwritten.",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "flag_values": "0 1",
+            "flag_meanings": "not_overwritten overwritten",
+            "coverage_content_type": "qualityInformation"
+        },
+        "bad_prior_source": {
+            "long_name": "invalid gauge prior sources",
+            "comment": "Source of invalid gauge priors.",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "model_unconstrained": {
+        "num_months": {
+            "long_name": "Number of months",
+            "comment": "Number of months that monthly values are indexed on",
+            "valid_min": 1,
+            "valid_max": 12,
+            "coverage_content_type": "referenceInformation"
+        },
+        "probability": {
+            "long_name": "WBM Flow_Duration_curve_probability",
+            "comment": "WBM probability values from the flow duration curve for this cell",
+            "units": "percent",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "qualityInformation"
+        },
+        "flow_duration_q": {
+            "long_name": "WBM flow_Duration_curve_discharge",
+            "comment": "WBM discharge values from the flow duration curve for this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "max_q": {
+            "long_name": "WBM maximum_discharge",
+            "comment": "WBM highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "monthly_q": {
+            "long_name": "WBM mean_monthly_discharge",
+            "comment": "WBM monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "mean_q": {
+            "long_name": "WBM mean_discharge",
+            "comment": "WBM mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "min_q": {
+            "long_name": "WBM minimum_discharge",
+            "comment": "WBM lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "two_year_return_q": {
+            "long_name": "WBM two_Year_Return",
+            "comment": "WBM two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "modelResult"
+        },
+        "area_estimate_flag": {
+            "long_name": "WBM Area_Estimation_Flag",
+            "comment": "This cell was not a good match. Data has been scaled by difference in flow accumulation area.",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "flag_values": "0 1",
+            "flag_meanings": "match no_match",
+            "coverage_content_type": "qualityInformation"
+        }
+    },
+    "gbpriors": {
+        "reach": {
+            "river_type": {
+                "long_name": "Brinkerhoff_class_number",
+                "comment": "river class from Brinkerhoff et al 2019",
+                "valid_min": 1,
+                "valid_max": 17,
+                "coverage_content_type": "referenceInformation"
+            },
+            "lowerbound_A0": {
+                "long_name": "GeoBAM Median_area_min",
+                "comment": "GeoBAM Median_area_min",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_A0": {
+                "long_name": "GeoBAM Median_area_max",
+                "comment": "GeoBAM Median_area_max",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logn": {
+                "long_name": "GeoBAM Mannings_n_min",
+                "comment": "natural log of minimum n",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logn": {
+                "long_name": "GeoBAM Mannings_n_max",
+                "comment": "natural log of maximum n",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_b": {
+                "long_name": "GeoBAM AHG_b_min",
+                "comment": "GeoBAM AHG_b_min",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_b": {
+                "long_name": "GeoBAM AHG_b_max",
+                "comment": "GeoBAM AHG_b_max",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_min",
+                "comment": "GeoBAM Bankfull_width_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_max",
+                "comment": "GeoBAM Bankfull_width_max",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_min",
+                "comment": "GeoBAM Bankfull_depth_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_max",
+                "comment": "GeoBAM Bankfull_depth_max",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_min",
+                "comment": "GeoBAM Dingman_shape_min",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_max",
+                "comment": "GeoBAM Dingman_shape_max",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logA0_hat": {
+                "long_name": "GeoBAM Median_area_mean",
+                "comment": "GeoBAM Median_area_mean",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logn_hat": {
+                "long_name": "GeoBAM Mannings_n_mean",
+                "comment": "GeoBAM Mannings_n_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "b_hat": {
+                "long_name": "GeoBAM AHG_b_mean",
+                "comment": "GeoBAM AHG_b_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWb_hat": {
+                "long_name": "GeoBAM Bankfull_width_mean",
+                "comment": "GeoBAM Bankfull_width_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logDb_hat": {
+                "long_name": "GeoBAM Bankfull_depth_mean",
+                "comment": "GeoBAM Bankfull_depth_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logr_hat": {
+                "long_name": "GeoBAM Dingman_shape_mean",
+                "comment": "GeoBAM Dingman_shape_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logA0_sd": {
+                "long_name": "GeoBAM Median_area_sd",
+                "comment": "GeoBAM Median_area_sd",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logn_sd": {
+                "long_name": "GeoBAM Mannings_n_sd",
+                "comment": "GeoBAM Mannings_n_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "b_sd": {
+                "long_name": "GeoBAM AHG_b_sd",
+                "comment": "GeoBAM AHG_b_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWb_sd": {
+                "long_name": "GeoBAM Bankfull_width_sd",
+                "comment": "GeoBAM Bankfull_width_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logDb_sd": {
+                "long_name": "GeoBAM Bankfull_depth_sd",
+                "comment": "GeoBAM Bankfull_depth_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logr_sd": {
+                "long_name": "GeoBAM Dingman_shape_sd",
+                "comment": "GeoBAM Dingman_shape_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_min",
+                "comment": "GeoBAM AMHG_Qc_min",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_max",
+                "comment": "GeoBAM AMHG_Qc_max",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWc_hat": {
+                "long_name": "GeoBAM AMHG_wc_mean",
+                "comment": "GeoBAM AMHG_wc_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQc_hat": {
+                "long_name": "GeoBAM AMHG_Qc_mean",
+                "comment": "GeoBAM AMHG_Qc_mean",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQ_sd": {
+                "long_name": "GeoBAM Discharge_sd",
+                "comment": "GeoBAM Discharge_sd",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWc_sd": {
+                "long_name": "GeoBAM AMHG_wc_sd",
+                "comment": "GeoBAM AMHG_wc_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQc_sd": {
+                "long_name": "GeoBAM AMHG_qc_min",
+                "comment": "GeoBAM AMHG_qc_min",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "Werr_sd": {
+                "long_name": "GeoBAM Width_measurement_error",
+                "comment": "GeoBAM Width_measurement_error",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "Serr_sd": {
+                "long_name": "GeoBAM Slope_measurement_error",
+                "comment": "GeoBAM Slope_measurement_error",
+                "units": "m/m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "dAerr_sd": {
+                "long_name": "GeoBAM d_Area_measurement_error",
+                "comment": "GeoBAM d_Area_measurement_error",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "sigma_man": {
+                "long_name": "GeoBAM Manning_structural_error",
+                "comment": "GeoBAM Manning_structural_error",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "sigma_amhg": {
+                "long_name": "GeoBAM AMHG_structural_error",
+                "comment": "GeoBAM AMHG_structural_error",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "overwritten_indexes": {
+                "long_name": "GeoBAM overwritten_prior_indexes",
+                "comment": "Indexes of geoBAM priors that were overwritten",
+                "coverage_content_type": "qualityInformation"
+            }
+        },
+        "node": {
+            "river_type": {
+                "long_name": "Brinkerhoff_class_number",
+                "comment": "Brinkerhoff_class_number",
+                "valid_min": 1,
+                "valid_max": 17,
+                "coverage_content_type": "referenceInformation"
+            },
+            "lowerbound_A0": {
+                "long_name": "GeoBAM Median_area_min",
+                "comment": "GeoBAM Median_area_min",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_A0": {
+                "long_name": "GeoBAM Median_area_max",
+                "comment": "GeoBAM Median_area_max",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logn": {
+                "long_name": "GeoBAM Mannings_n_min",
+                "comment": "natural log of minimum n",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logn": {
+                "long_name": "GeoBAM Mannings_n_max",
+                "comment": "natural log of maximum n",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_b": {
+                "long_name": "GeoBAM AHG_b_min",
+                "comment": "GeoBAM AHG_b_min",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_b": {
+                "long_name": "GeoBAM AHG_b_max",
+                "comment": "GeoBAM AHG_b_max",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_min",
+                "comment": "GeoBAM Bankfull_width_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logWb": {
+                "long_name": "GeoBAM Bankfull_width_max",
+                "comment": "GeoBAM Bankfull_width_max",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_min",
+                "comment": "GeoBAM Bankfull_depth_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logDb": {
+                "long_name": "GeoBAM Bankfull_depth_max",
+                "comment": "GeoBAM Bankfull_depth_max",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_min",
+                "comment": "GeoBAM Dingman_shape_min",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logr": {
+                "long_name": "GeoBAM Dingman_shape_max",
+                "comment": "GeoBAM Dingman_shape_max",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logA0_hat": {
+                "long_name": "GeoBAM Median_area_mean",
+                "comment": "GeoBAM Median_area_mean",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logn_hat": {
+                "long_name": "GeoBAM Mannings_n_mean",
+                "comment": "GeoBAM Mannings_n_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "b_hat": {
+                "long_name": "GeoBAM AHG_b_mean",
+                "comment": "GeoBAM AHG_b_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWb_hat": {
+                "long_name": "GeoBAM Bankfull_width_mean",
+                "comment": "GeoBAM Bankfull_width_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logDb_hat": {
+                "long_name": "GeoBAM Bankfull_depth_mean",
+                "comment": "GeoBAM Bankfull_depth_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logr_hat": {
+                "long_name": "GeoBAM Dingman_shape_mean",
+                "comment": "GeoBAM Dingman_shape_mean",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logA0_sd": {
+                "long_name": "GeoBAM Median_area_sd",
+                "comment": "GeoBAM Median_area_sd",
+                "units": "m^2",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logn_sd": {
+                "long_name": "GeoBAM Mannings_n_sd",
+                "comment": "GeoBAM Mannings_n_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "b_sd": {
+                "long_name": "GeoBAM AHG_b_sd",
+                "comment": "GeoBAM AHG_b_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWb_sd": {
+                "long_name": "GeoBAM Bankfull_width_sd",
+                "comment": "GeoBAM Bankfull_width_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logDb_sd": {
+                "long_name": "GeoBAM Bankfull_depth_sd",
+                "comment": "GeoBAM Bankfull_depth_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logr_sd": {
+                "long_name": "GeoBAM Dingman_shape_sd",
+                "comment": "GeoBAM Dingman_shape_sd",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logWc": {
+                "long_name": "GeoBAM AMHG_wc_min",
+                "comment": "GeoBAM AMHG_wc_min",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "lowerbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_min",
+                "comment": "GeoBAM AMHG_Qc_min",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "upperbound_logQc": {
+                "long_name": "GeoBAM AMHG_Qc_max",
+                "comment": "GeoBAM AMHG_Qc_max",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWc_hat": {
+                "long_name": "GeoBAM AMHG_wc_mean",
+                "comment": "GeoBAM AMHG_wc_mean",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQc_hat": {
+                "long_name": "GeoBAM AMHG_Qc_mean",
+                "comment": "GeoBAM AMHG_Qc_mean",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQ_sd": {
+                "long_name": "GeoBAM Discharge_sd",
+                "comment": "GeoBAM Discharge_sd",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logWc_sd": {
+                "long_name": "GeoBAM AMHG_wc_sd",
+                "comment": "GeoBAM AMHG_wc_sd",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "logQc_sd": {
+                "long_name": "GeoBAM AMHG_qc_min",
+                "comment": "GeoBAM AMHG_qc_min",
+                "units": "m^3/s",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "Werr_sd": {
+                "long_name": "GeoBAM Width_measurement_error",
+                "comment": "GeoBAM Width_measurement_error",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "Serr_sd": {
+                "long_name": "GeoBAM Slope_measurement_error",
+                "comment": "GeoBAM Slope_measurement_error",
+                "units": "m/m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "dAerr_sd": {
+                "long_name": "GeoBAM d_Area_measurement_error",
+                "comment": "GeoBAM d_Area_measurement_error",
+                "units": "m",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "sigma_man": {
+                "long_name": "GeoBAM Manning_structural_error",
+                "comment": "GeoBAM Manning_structural_error",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "sigma_amhg": {
+                "long_name": "GeoBAM AMHG_structural_error",
+                "comment": "GeoBAM AMHG_structural_error",
+                "valid_min": -1000000,
+                "valid_max": 1000000,
+                "coverage_content_type": "modelResult"
+            },
+            "overwritten_indexes": {
+                "long_name": "GeoBAM overwritten_prior_indexes",
+                "comment": "Indexes of geoBAM priors that were overwritten",
+                "coverage_content_type": "qualityInformation"
+            }
+        }
+    },
+    "GRDC": {
+        "num_days": {
+            "long_name": "number_of_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "grdc_flow_duration_q": {
+            "long_name": "GRDC flow_Duration_curve_discharge",
+            "comment": "GRDC discharge values from the flow duration curve for this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_max_q": {
+            "long_name": "GRDC maximum_discharge",
+            "comment": "GRDC highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_monthly_q": {
+            "long_name": "GRDC mean_monthly_discharge",
+            "comment": "GRDC monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_mean_q": {
+            "long_name": "GRDC mean_discharge",
+            "comment": "GRDC mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_min_q": {
+            "long_name": "GRDC minimum_discharge",
+            "comment": "GRDC lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_two_year_return_q": {
+            "long_name": "GRDC two_Year_Return",
+            "comment": "GRDC two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_q": {
+            "long_name": "grdc_discharge_time_series_daily",
+            "comment": "GRDC discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "grdc_qt": {
+            "long_name": "grdc_discharge_time",
+            "comment": "GRDC discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "num_grdc_reaches": {
+            "long_name": "grdc_reaches_index",
+            "comment": "Number of GRDC reaches present in data",
+            "valid_min": 1,
+            "valid_max": 2000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "grdc_reach_id": {
+            "long_name": "grdc_reach_id",
+            "comment": "reach id within SWORD where the GRDC gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "grdc_id": {
+            "long_name": "GRDC_ID_number",
+            "comment": "GRDC internal identification number (matches GRDC database)",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+"MEFCCWP": {
+        "MEFCCWP_flow_duration_q": {
+            "long_name": "MEFCCWP_flow_Duration_curve_discharge",
+            "comment": "MEFCCWP discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_max_q": {
+            "long_name": "MEFCCWP_maximum_discharge",
+            "comment": "MEFCCWP highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_monthly_q": {
+            "long_name": "MEFCCWP_mean_monthly_discharge",
+            "comment": "MEFCCWP monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_mean_q": {
+            "long_name": "MEFCCWP_mean_discharge",
+            "comment": "MEFCCWP mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_min_q": {
+            "long_name": "MEFCCWP_minimum_discharge",
+            "comment": "MEFCCWP lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_two_year_return_q": {
+            "long_name": "MEFCCWP_two_Year_Return",
+            "comment": "MEFCCWP two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_q": {
+            "long_name": "MEFCCWP_discharge_time_series_daily",
+            "comment": "MEFCCWP discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MEFCCWP_qt": {
+            "long_name": "MEFCCWP_discharge_time",
+            "comment": "MEFCCWP discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "MEFCCWP_calibration_flag",
+            "comment": "MEFCCWP 1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 9999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MEFCCWP_reaches": {
+            "long_name": "MEFCCWP_reaches",
+            "comment": "Number of MEFCCWP reaches present in data",
+            "valid_min": 0,
+            "valid_max": 9999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MEFCCWP_reach_id": {
+            "long_name": "MEFCCWP_reach_id",
+            "comment": "reach id within SWORD where the DWA gauge is located",
+            "valid_min": -998,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MEFCCWP_id": {
+            "long_name": "MEFCCWP_ID_number",
+            "comment": "MEFCCWP internal identification code (matches MEFCCWP database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "SWOT_SHAQ": {
+        "MEFCCWP_flow_duration_q": {
+            "long_name": "SWOT_SHAQ_flow_Duration_curve_discharge",
+            "comment": "SWOT_SHAQ discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_max_q": {
+            "long_name": "SWOT_SHAQ_maximum_discharge",
+            "comment": "SWOT_SHAQ highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_monthly_q": {
+            "long_name": "SWOT_SHAQ_mean_monthly_discharge",
+            "comment": "SWOT_SHAQ monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_mean_q": {
+            "long_name": "SWOT_SHAQ_mean_discharge",
+            "comment": "SWOT_SHAQ mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_min_q": {
+            "long_name": "SWOT_SHAQ_minimum_discharge",
+            "comment": "SWOT_SHAQ lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_two_year_return_q": {
+            "long_name": "SWOT_SHAQ_two_Year_Return",
+            "comment": "SWOT_SHAQ two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_q": {
+            "long_name": "SWOT_SHAQ_discharge_time_series_daily",
+            "comment": "SWOT_SHAQ discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "SWOT_SHAQ_qt": {
+            "long_name": "SWOT_SHAQ_discharge_time",
+            "comment": "SWOT_SHAQ discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "SWOT_SHAQ_calibration_flag",
+            "comment": "SWOT_SHAQ 1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "SWOT_SHAQ_reaches": {
+            "long_name": "SWOT_SHAQ_reaches",
+            "comment": "Number of DWA reaches present in data",
+            "valid_min": 0,
+            "valid_max": 9999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "SWOT_SHAQ_reach_id": {
+            "long_name": "SWOT_SHAQ_reach_id",
+            "comment": "reach id within SWORD where the DWA gauge is located",
+            "valid_min": -998,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "SWOT_SHAQ_id": {
+            "long_name": "SWOT_SHAQ_ID_number",
+            "comment": "SWOT_SHAQ internal identification code (matches DWA database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "DWA": {
+        "DWA_flow_duration_q": {
+            "long_name": "DWA_flow_Duration_curve_discharge",
+            "comment": "DWA discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_max_q": {
+            "long_name": "DWA_maximum_discharge",
+            "comment": "DWA highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_monthly_q": {
+            "long_name": "DWA_mean_monthly_discharge",
+            "comment": "DWA monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_mean_q": {
+            "long_name": "DWA_mean_discharge",
+            "comment": "DWA mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_min_q": {
+            "long_name": "DWA_minimum_discharge",
+            "comment": "DWA lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_two_year_return_q": {
+            "long_name": "DWA_two_Year_Return",
+            "comment": "DWA two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_q": {
+            "long_name": "DWA_discharge_time_series_daily",
+            "comment": "DWA discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DWA_qt": {
+            "long_name": "DWA_discharge_time",
+            "comment": "DWA discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": 0,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "DWA_calibration_flag",
+            "comment": "DWA 1=Calibration 0=validation",
+            "valid_min": 0,
+            "valid_max": 1,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DWA_reaches": {
+            "long_name": "DWA_reaches",
+            "comment": "Number of DWA reaches present in data",
+            "valid_min": 0,
+            "valid_max": 9999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DWA_reach_id": {
+            "long_name": "DWA_reach_id",
+            "comment": "reach id within SWORD where the DWA gauge is located",
+            "valid_min": -998,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DWA_id": {
+            "long_name": "DWA_ID_number",
+            "comment": "DWA internal identification code (matches DWA database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "USGS": {
+        "CAL": {
+            "long_name": "USGS_calibration_flag",
+            "comment": "USGS 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "number_of_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "USGS_flow_duration_q": {
+            "long_name": "USGS_flow_Duration_curve_discharge",
+            "comment": "USGS discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_max_q": {
+            "long_name": "USGS_maximum_discharge",
+            "comment": "USGS highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_monthly_q": {
+            "long_name": "USGS_mean_monthly_discharge",
+            "comment": "USGS monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_mean_q": {
+            "long_name": "USGS_mean_discharge",
+            "comment": "USGS mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_min_q": {
+            "long_name": "USGS_minimum_discharge",
+            "comment": "USGS lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_two_year_return_q": {
+            "long_name": "USGS_two_Year_Return",
+            "comment": "USGS two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_q": {
+            "long_name": "USGS_discharge_time_series_daily",
+            "comment": "USGS discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "USGS_qt": {
+            "long_name": "USGS_discharge_time",
+            "comment": "USGS discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "USGS_id": {
+            "long_name": "USGS_ID_number",
+            "comment": "USGS internal identification number (matches USGS database)",
+            "coverage_content_type": "referenceInformation"
+        },
+        "USGS_reaches": {
+            "long_name": "USGS_reaches_index",
+            "comment": "Number of USGS reaches present in data",
+            "valid_min": 1,
+            "valid_max": 2000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "USGS_reach_id": {
+            "long_name": "USGS_reach_id",
+            "comment": "reach id within SWORD where the USS gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "WSC": {
+        "CAL": {
+            "long_name": "WSC_calibration_flag",
+            "comment": "WSC 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "WSC_flow_duration_q": {
+            "long_name": "WSC_flow_Duration_curve_discharge",
+            "comment": "WSC discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_max_q": {
+            "long_name": "WSC_maximum_discharge",
+            "comment": "WSC highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_monthly_q": {
+            "long_name": "WSC_mean_monthly_discharge",
+            "comment": "WSC monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_mean_q": {
+            "long_name": "WSC_mean_discharge",
+            "comment": "WSC mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_min_q": {
+            "long_name": "WSC_minimum_discharge",
+            "comment": "WSC lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_two_year_return_q": {
+            "long_name": "WSC_two_Year_Return",
+            "comment": "WSC two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_q": {
+            "long_name": "WSC_discharge_time_series_daily",
+            "comment": "WSC discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "WSC_qt": {
+            "long_name": "WSC_discharge_time",
+            "comment": "WSC discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "coordinate"
+        },
+        "WSC_reaches": {
+            "long_name": "WSC_reaches",
+            "comment": "Number of WSC reaches present in data",
+            "valid_min": -1000000,
+            "valid_max": 999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "WSC_reach_id": {
+            "long_name": "WSC_reach_id",
+            "comment": "reach id within SWORD where the WSC gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "WSC_id": {
+            "long_name": "WSC_ID",
+            "comment": "WSC internal identification code (matches WSC database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "MLIT": {
+        "MLIT_flow_duration_q": {
+            "long_name": "MLIT_flow_Duration_curve_discharge",
+            "comment": "MLIT discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_max_q": {
+            "long_name": "MLIT_maximum_discharge",
+            "comment": "MLIT highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_monthly_q": {
+            "long_name": "MLIT_mean_monthly_discharge",
+            "comment": "MLIT monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_mean_q": {
+            "long_name": "MLIT_mean_discharge",
+            "comment": "MLIT mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_min_q": {
+            "long_name": "MLIT_minimum_discharge",
+            "comment": "MLIT lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_two_year_return_q": {
+            "long_name": "MLIT_two_Year_Return",
+            "comment": "MLIT two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_q": {
+            "long_name": "MLIT_discharge_time_series_daily",
+            "comment": "MLIT discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "MLIT_qt": {
+            "long_name": "MLIT_discharge_time",
+            "comment": "MLIT discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "MLIT_calibration_flag",
+            "comment": "MLIT 1=Calibration 0=validation",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MLIT_reaches": {
+            "long_name": "MLIT_reaches",
+            "comment": "Number of MLIT reaches present in data",
+            "valid_min": -1000000,
+            "valid_max": 9999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MLIT_reach_id": {
+            "long_name": "MLIT_reach_id",
+            "comment": "reach id within SWORD where the MLIT gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "MLIT_id": {
+            "long_name": "MLIT_ID_number",
+            "comment": "MLIT internal identification code (matches MLIT database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "DEFRA": {
+        "DEFRA_flow_duration_q": {
+            "long_name": "DEFRA_flow_Duration_curve_discharge",
+            "comment": "DEFRA discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_max_q": {
+            "long_name": "DEFRA_maximum_discharge",
+            "comment": "DEFRA highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_monthly_q": {
+            "long_name": "DEFRA_mean_monthly_discharge",
+            "comment": "DEFRA monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_mean_q": {
+            "long_name": "DEFRA_mean_discharge",
+            "comment": "DEFRA mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_min_q": {
+            "long_name": "DEFRA_minimum_discharge",
+            "comment": "DEFRA lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_two_year_return_q": {
+            "long_name": "DEFRA_two_Year_Return",
+            "comment": "DEFRA two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_q": {
+            "long_name": "DEFRA_discharge_time_series_daily",
+            "comment": "DEFRA discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DEFRA_qt": {
+            "long_name": "DEFRA_discharge_time",
+            "comment": "DEFRA discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "DEFRA_calibration_flag",
+            "comment": "DEFRA 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DEFRA_reaches": {
+            "long_name": "DEFRA_reaches",
+            "comment": "Number of DEFRA reaches present in data",
+            "valid_min": -1000000,
+            "valid_max": 9999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DEFRA_reach_id": {
+            "long_name": "DEFRA_reach_id",
+            "comment": "reach id within SWORD where the DEFRA gauge is located",
+            "valid_min": -998,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DEFRA_id": {
+            "long_name": "DEFRA_ID_number",
+            "comment": "DEFRA internal identification code (matches DEFRA database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "EAU": {
+        "EAU_flow_duration_q": {
+            "long_name": "EAU_flow_Duration_curve_discharge",
+            "comment": "EAU discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_max_q": {
+            "long_name": "EAU_maximum_discharge",
+            "comment": "EAU highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_monthly_q": {
+            "long_name": "EAU_mean_monthly_discharge",
+            "comment": "EAU monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_mean_q": {
+            "long_name": "EAU_mean_discharge",
+            "comment": "EAU mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_min_q": {
+            "long_name": "EAU_minimum_discharge",
+            "comment": "EAU lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_two_year_return_q": {
+            "long_name": "EAU_two_Year_Return",
+            "comment": "EAU two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_q": {
+            "long_name": "EAU_discharge_time_series_daily",
+            "comment": "EAU discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "EAU_qt": {
+            "long_name": "EAU_discharge_time",
+            "comment": "EAU discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "EAU_calibration_flag",
+            "comment": "EAU 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "EAU_reaches": {
+            "long_name": "EAU_reaches",
+            "comment": "Number of EAU reaches present in data",
+            "coverage_content_type": "referenceInformation"
+        },
+        "EAU_reach_id": {
+            "long_name": "EAU_reach_id",
+            "comment": "reach id within SWORD where the EAU gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "EAU_id": {
+            "long_name": "EAU_ID",
+            "comment": "EAU internal identification code (matches EAU database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "ABOM": {
+        "ABOM_flow_duration_q": {
+            "long_name": "ABOM flow_Duration_curve_discharge",
+            "comment": "ABOM discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_max_q": {
+            "long_name": "ABOM_maximum_discharge",
+            "comment": "ABOM highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_monthly_q": {
+            "long_name": "ABOM_mean_monthly_discharge",
+            "comment": "ABOM monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_mean_q": {
+            "long_name": "ABOM_mean_discharge",
+            "comment": "ABOM mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_min_q": {
+            "long_name": "ABOM_minimum_discharge",
+            "comment": "ABOM lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_two_year_return_q": {
+            "long_name": "ABOM_two_Year_Return",
+            "comment": "ABOM two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_q": {
+            "long_name": "ABOM_discharge_time_series_daily",
+            "comment": "ABOM discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "ABOM_qt": {
+            "long_name": "ABOM_discharge_time",
+            "comment": "ABOM discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "ABOM_calibration_flag",
+            "comment": "ABOM 1=Calibration 2=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "ABOM_reaches": {
+            "long_name": "ABOM_reaches",
+            "comment": "Number of ABOM reaches present in data",
+            "coverage_content_type": "referenceInformation"
+        },
+        "ABOM_reach_id": {
+            "long_name": "ABOM_reach_id",
+            "comment": "reach id within SWORD where the  ABOM gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "ABOM_id": {
+            "long_name": "ABOM_ID",
+            "comment": "ABOM internal identification code (matches ABOM database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "DGA": {
+        "DGA_flow_duration_q": {
+            "long_name": "DGA_flow_Duration_curve_discharge",
+            "comment": "DGA discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_max_q": {
+            "long_name": "DGA_maximum_discharge",
+            "comment": "DGA highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_monthly_q": {
+            "long_name": "DGA_mean_monthly_discharge",
+            "comment": "DGA monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_mean_q": {
+            "long_name": "DGA_mean_discharge",
+            "comment": "DGA mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_min_q": {
+            "long_name": "DGA_minimum_discharge",
+            "comment": "DGA lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_two_year_return_q": {
+            "long_name": "DGA_two_Year_Return",
+            "comment": "DGA two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_q": {
+            "long_name": "DGA_discharge_time_series_daily",
+            "comment": "DGA discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "DGA_qt": {
+            "long_name": "DGA_discharge_time",
+            "comment": "DGA discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "DGA_calibration_flag",
+            "comment": "DGA 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DGA_reaches": {
+            "long_name": "DGA_reaches",
+            "comment": "Number of DGA reaches present in data",
+            "coverage_content_type": "referenceInformation"
+        },
+        "DGA_reach_id": {
+            "long_name": "DGA_reach_id",
+            "comment": "reach id within SWORD where the  DGA gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "DGA_id": {
+            "long_name": "DGA_ID",
+            "comment": "DGA  internal identification code (matches DGA database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    },
+    "Hidroweb": {
+        "Hidroweb_flow_duration_q": {
+            "long_name": "Hidroweb_flow_Duration_curve_discharge",
+            "comment": "Hidroweb discharge values from the flow duration curve for this reach",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_max_q": {
+            "long_name": "Hidroweb_maximum_discharge",
+            "comment": "Hidroweb highest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_monthly_q": {
+            "long_name": "Hidroweb_mean_monthly_discharge",
+            "comment": "Hidroweb monthly mean discharge time series in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_mean_q": {
+            "long_name": "Hidroweb_mean_discharge",
+            "comment": "Hidroweb mean discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_min_q": {
+            "long_name": "Hidroweb_minimum_discharge",
+            "comment": "Hidroweb lowest discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_two_year_return_q": {
+            "long_name": "Hidroweb_two_Year_Return",
+            "comment": "Hidroweb two year return interval discharge value in this cell",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_q": {
+            "long_name": "Hidroweb_discharge_time_series_daily",
+            "comment": "Hidroweb discharge time series daily discharge values",
+            "units": "m^3/s",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "physicalMeasurement"
+        },
+        "Hidroweb_qt": {
+            "long_name": "Hidroweb_discharge_time",
+            "comment": "Hidroweb discharge time series daily time values (days since Jan 1 Year 1)",
+            "units": "days since 0001-01-01",
+            "coverage_content_type": "coordinate"
+        },
+        "CAL": {
+            "long_name": "Hidroweb_calibration_flag",
+            "comment": "Hidroweb 1=Calibration 0=validation",
+            "valid_min": -1000000,
+            "valid_max": 1000000,
+            "coverage_content_type": "referenceInformation"
+        },
+        "num_days": {
+            "long_name": "num_days",
+            "comment": "Number of days that daily values are indexed on",
+            "valid_min": -998,
+            "valid_max": 999999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "Hidroweb_reaches": {
+            "long_name": "Hidroweb_reaches",
+            "comment": "Number of Hidroweb reaches present in data",
+            "coverage_content_type": "referenceInformation"
+        },
+        "Hidroweb_reach_id": {
+            "long_name": "Hidroweb_reach_id",
+            "comment": "reach id within SWORD where the Hidroweb gauge is located",
+            "valid_min": -1000000,
+            "valid_max": 99999999999,
+            "coverage_content_type": "referenceInformation"
+        },
+        "Hidroweb_id": {
+            "long_name": "Hidroweb_ID",
+            "comment": "Hidroweb  internal identification code (matches Hidroweb database)",
+            "coverage_content_type": "referenceInformation"
+        }
+    }
+}

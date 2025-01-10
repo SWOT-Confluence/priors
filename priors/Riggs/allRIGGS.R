@@ -7,7 +7,7 @@ library(BBmisc)
 library(bomWater)
 library(dplyr)
 library(rvest)
-library(tidyhydat)
+# library(tidyhydat)
 library(RSelenium)
 library(rvest)
 
@@ -37,26 +37,26 @@ library(tibble)
 
 #Canada
 
-library(tidyhydat)
+# library(tidyhydat)
 
 # hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
 # hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
 # download_hydat(dl_hydat_here = "/opt/hydroshare/Hydat.sqlite3", ask = FALSE )
-print("pulling hydat")
-download_hydat(ask = FALSE )
-hy_dir()
-hy_src()
-print("finished pulling hydat")
-can = try(hy_daily_flows("02OA004"))
-if(is.error(can)){
-  # return(NA)
-  print("hydat failed...")
-}else{
-  can$Q = can$Value
-  can$date =  as.character(can$Date)
-  print(can)
-  print("hydat worked")
-}
+# print("pulling hydat")
+# download_hydat(ask = FALSE )
+# hy_dir()
+# hy_src()
+# print("finished pulling hydat")f
+# can = try(hy_daily_flows("02OA004"))
+# if(is.error(can)){
+#   # return(NA)
+#   print("hydat failed...")
+# }else{
+#   can$Q = can$Value
+#   can$date =  as.character(can$Date)
+#   print(can)
+#   print("hydat worked")
+# }
 
 
 

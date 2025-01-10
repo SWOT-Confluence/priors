@@ -253,7 +253,8 @@ class Priors:
         except Exception as e:
             print(e)
             traceback.print_exception(*sys.exc_info())
-            exit(1)
+            # exit(1)
+            print('trying without previous sos download...')
 
         sos.create_new_version()
         sos_file = sos.sos_file
@@ -311,7 +312,8 @@ class Priors:
 
         # Upload priors results to S3 bucket
         print("Uploading new SoS priors version.")
-        sos.upload_file()
+        # add arg here
+        # sos.upload_file()
 
 def create_args():
     """Create and return argparser with arguments."""
