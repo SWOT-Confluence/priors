@@ -182,46 +182,50 @@ class RiggsPull:
                         print('could not find new data from url pull')
                         return FMr
         else:
-            #check the location anyway Hydat has issues...
-            STid=site
-            sd='1980-01-01'
-            now=dt.now()
-            ed=now.strftime("%Y-%m-%d")
-            URLst=S1+STid+S2+sd+S3+ed+S4
-            UL.request.urlretrieve(URLst,STid+".csv")
-            CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
-            dates=[]
-            q=[]
-            #pull Q and days
-            if np.size(CSVd)>0:
-                for d in range(0,len(CSVd)):
-                    ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
-                    dates.append(ddd.toordinal())
-                    q.append(CSVd[d][3])
-                q=np.array(q)
-                Udates=np.unique(dates)
-                #make average daily q
-                Uq=[]
-                for u in  Udates:
-                    uidx=np.where(dates==u)
-                    Uq.append(np.mean(q[uidx].astype(np.float32)))
-                
-                #append new and old               
-                
+            try:
+                #check the location anyway Hydat has issues...
+                STid=site
+                sd='1980-01-01'
+                now=dt.now()
+                ed=now.strftime("%Y-%m-%d")
+                URLst=S1+STid+S2+sd+S3+ed+S4
+                UL.request.urlretrieve(URLst,STid+".csv")
+                CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
+                dates=[]
+                q=[]
+                #pull Q and days
+                if np.size(CSVd)>0:
+                    for d in range(0,len(CSVd)):
+                        ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
+                        dates.append(ddd.toordinal())
+                        q.append(CSVd[d][3])
+                    q=np.array(q)
+                    Udates=np.unique(dates)
+                    #make average daily q
+                    Uq=[]
+                    for u in  Udates:
+                        uidx=np.where(dates==u)
+                        Uq.append(np.mean(q[uidx].astype(np.float32)))
+                    
+                    #append new and old               
+                    
 
-                NEWfmr=pd.DataFrame()
-                NEWfmr['STATION_NUMBER']=NEWst
-                NEWfmr['Q']=Uq
-                NEWfmr['date']=Udates.astype(int)
-                strd=NEWfmr['date'].apply(dt.fromordinal)
-                NEWfmr['date']=strd
-                NEWfmr['ConvertedDate']=NEWfmr['date']
-                FMr=NEWfmr
-                # print('Found data through URL pull')
-                # print(FMr)
-                # print('top date:', NEWfmr['ConvertedDate'].max())
-                return FMr
-            else:
+                    NEWfmr=pd.DataFrame()
+                    NEWfmr['STATION_NUMBER']=NEWst
+                    NEWfmr['Q']=Uq
+                    NEWfmr['date']=Udates.astype(int)
+                    strd=NEWfmr['date'].apply(dt.fromordinal)
+                    NEWfmr['date']=strd
+                    NEWfmr['ConvertedDate']=NEWfmr['date']
+                    FMr=NEWfmr
+                    # print('Found data through URL pull')
+                    # print(FMr)
+                    # print('top date:', NEWfmr['ConvertedDate'].max())
+                    return FMr
+                else:
+                    print('could not find new data from url pull')
+                    return FMr
+            except:
                 print('could not find new data from url pull')
                 return FMr
     
