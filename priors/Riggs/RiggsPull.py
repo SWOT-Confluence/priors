@@ -123,64 +123,68 @@ class RiggsPull:
         NEWst=[]       
     
         if ~np.isnan(np.nanmax(ID['ConvertedDate'])):
-                    ORD=ID['ConvertedDate'].apply(pd.Timestamp.toordinal)
-                    ID['ConvertedDate']=ORD
-                    STid=site
-                    sd = ID['ConvertedDate'][-1]
-                    sd=sd+1
-                    sd=dt.fromordinal(sd)
-                    sd=sd.strftime("%Y-%m-%d")
-                    now=dt.now()
-                    ed=now.strftime("%Y-%m-%d")
-                    URLst=S1+STid+S2+sd+S3+ed+S4
-                    UL.request.urlretrieve(URLst,STid+".csv")
-                    CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
-                    dates=[]
-                    q=[]
-                    #pull Q and days
-                    if np.size(CSVd)>0:
-                        for d in range(0,len(CSVd)):
-                            ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
-                            dates.append(ddd.toordinal())
-                            q.append(CSVd[d][3])
-                        q=np.array(q)
-                        Udates=np.unique(dates)
-                        #make average daily q
-                        Uq=[]
-                        for u in  Udates:
-                            uidx=np.where(dates==u)
-                            Uq.append(np.mean(q[uidx].astype(np.float32)))
-                        #generate new daily series with fill for all missing dates
-                        tsd=[]
-                        tsq=[]
-                        DAYs=list(range(int(np.nanmax(ID['ConvertedDate'])+1),np.max(Udates)))
-                        k=0
-                        for d in range(len(DAYs)):
-                            if DAYs[d] in Udates:
-                                tsd.append(DAYs[d])
-                                tsq.append(Uq[k])
-                                k=k+1
-                        #append new and old
-                        tNEWt=np.append(ID['ConvertedDate'],np.array(tsd))
-                        NEWt.append(tNEWt)
-                        tNEWq=np.append(ID['Q'],np.array(tsq))
-                        NEWq.append(tNEWq)
-                        NEWst=np.repeat(STid,len(NEWt[0]))
-                        NEWfmr=pd.DataFrame()
-                        NEWfmr['STATION_NUMBER']=NEWst
-                        NEWfmr['Q']=NEWq[0]
-                        NEWfmr['date']=NEWt[0].astype(int)
-                        strd=NEWfmr['date'].apply(dt.fromordinal)
-                        NEWfmr['date']=strd
-                        NEWfmr['ConvertedDate']=NEWfmr['date']
-                        FMr=NEWfmr
-                        # print('Found data through URL pull')
-                        # print(FMr)
-                        # print('top date:', NEWfmr['ConvertedDate'].max())
-                        return FMr
-                    else:
-                        print('could not find new data from url pull')
-                        return FMr
+            try:
+                ORD=ID['ConvertedDate'].apply(pd.Timestamp.toordinal)
+                ID['ConvertedDate']=ORD
+                STid=site
+                sd = ID['ConvertedDate'][-1]
+                sd=sd+1
+                sd=dt.fromordinal(sd)
+                sd=sd.strftime("%Y-%m-%d")
+                now=dt.now()
+                ed=now.strftime("%Y-%m-%d")
+                URLst=S1+STid+S2+sd+S3+ed+S4
+                UL.request.urlretrieve(URLst,STid+".csv")
+                CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
+                dates=[]
+                q=[]
+                #pull Q and days
+                if np.size(CSVd)>0:
+                    for d in range(0,len(CSVd)):
+                        ddd = dt.strptime(CSVd[d][1][0:10], '%Y-%m-%d').date()
+                        dates.append(ddd.toordinal())
+                        q.append(CSVd[d][3])
+                    q=np.array(q)
+                    Udates=np.unique(dates)
+                    #make average daily q
+                    Uq=[]
+                    for u in  Udates:
+                        uidx=np.where(dates==u)
+                        Uq.append(np.mean(q[uidx].astype(np.float32)))
+                    #generate new daily series with fill for all missing dates
+                    tsd=[]
+                    tsq=[]
+                    DAYs=list(range(int(np.nanmax(ID['ConvertedDate'])+1),np.max(Udates)))
+                    k=0
+                    for d in range(len(DAYs)):
+                        if DAYs[d] in Udates:
+                            tsd.append(DAYs[d])
+                            tsq.append(Uq[k])
+                            k=k+1
+                    #append new and old
+                    tNEWt=np.append(ID['ConvertedDate'],np.array(tsd))
+                    NEWt.append(tNEWt)
+                    tNEWq=np.append(ID['Q'],np.array(tsq))
+                    NEWq.append(tNEWq)
+                    NEWst=np.repeat(STid,len(NEWt[0]))
+                    NEWfmr=pd.DataFrame()
+                    NEWfmr['STATION_NUMBER']=NEWst
+                    NEWfmr['Q']=NEWq[0]
+                    NEWfmr['date']=NEWt[0].astype(int)
+                    strd=NEWfmr['date'].apply(dt.fromordinal)
+                    NEWfmr['date']=strd
+                    NEWfmr['ConvertedDate']=NEWfmr['date']
+                    FMr=NEWfmr
+                    # print('Found data through URL pull')
+                    # print(FMr)
+                    # print('top date:', NEWfmr['ConvertedDate'].max())
+                    return FMr
+                else:
+                    print('could not find new data from url pull')
+                    return FMr
+            except:
+                print('could not find new data from url pull')
+                return FMr
         else:
             try:
                 #check the location anyway Hydat has issues...
