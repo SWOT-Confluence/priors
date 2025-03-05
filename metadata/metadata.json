@@ -1143,7 +1143,7 @@
         }
     },
     "SWOT_SHAQ": {
-        "MEFCCWP_flow_duration_q": {
+        "SWOT_SHAQ_flow_duration_q": {
             "long_name": "SWOT_SHAQ_flow_Duration_curve_discharge",
             "comment": "SWOT_SHAQ discharge values from the flow duration curve for this reach",
             "units": "m^3/s",
