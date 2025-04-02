@@ -72,7 +72,7 @@ COPY priors/ /app/priors/
 COPY update_priors.py /app/update_priors.py
 
 # FROM stage4 as stage5
-# RUN sudo mkdir /opt/hydroshare
+RUN sudo mkdir /opt/hydroshare
 # RUN /usr/bin/Rscript -e 'library(tidyhydat)'\
 # 	&& /usr/bin/Rscript -e 'tidyhydat::download_hydat(dl_hydat_here = "/opt/hydroshare", ask = FALSE )' \
 
