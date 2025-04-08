@@ -51,10 +51,13 @@ RUN apt -y install \
 	&& /usr/bin/Rscript -e "install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 	# && /usr/bin/Rscript -e "devtools::install_github('buzacott/bomWater')"
 
-#Stage 3 - Python packages
+#Stage 3 - Python and Python packages
 FROM stage1 as stage2
+RUN add-apt-repository -y ppa:deadsnakes/ppa \
+	&& apt update \
+	&& apt install -y python3.12 python3.12-dev python3.12-venv
 COPY requirements.txt /app/requirements.txt
-RUN /usr/bin/python3 -m venv /app/env
+RUN /usr/bin/python3.12 -m venv /app/env
 RUN /app/env/bin/pip install -r /app/requirements.txt
 
 # Stage 4 - Copy priors code
