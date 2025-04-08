@@ -124,9 +124,45 @@ class HSp:
                                         RESlist= genfromtxt(csvpath+"/" +RES_file.name, delimiter=',',dtype ='unicode',skip_header=1)
                                         if np.all(RESlist[:,2]==SWORDVERSION):
                                             c=1
-                                            for measurement in RESlist:               
+                                            for measurement in RESlist:
+                                                HadException=False               
                                                 if len(measurement[0])>0:
-                                                    try:                                                    
+                                                    try:                                                        
+                                                        test=RES_file.name
+                                                        test=measurement[0].astype(np.int64)
+                                                        test=measurement[1].astype(np.int64)
+                                                        test=measurement[3].astype(np.float32)
+                                                        test=measurement[4].astype(np.float32)
+                                                        date=measurement[5].strip()
+                                                        date=date.strip("'")
+                                                        d=dt.strptime( date, '%d-%m-%Y')
+                                                        test=d.toordinal()
+                                                        test=measurement[6].astype(float)
+                                                        test=measurement[7].astype(float)
+                                                        test=measurement[8].astype(float)
+                                                        test=measurement[9].astype(float)
+                                                        test=measurement[10].astype(float)
+                                                        test=measurement[11].astype(float)
+                                                        test=measurement[12].astype(float)
+                                                        test=measurement[13].astype(float)
+                                                        test=measurement[14].astype(float)
+                                                        test=measurement[15].astype(float)
+                                                        test=measurement[16].astype(float)
+                                                        test=measurement[17].astype(float)
+                                                        test=measurement[18].astype(float)
+                                                        test=measurement[19].astype(float)
+                                                        test=measurement[20].astype(float)
+                                                        test=measurement[21].astype(float)
+
+                                                    except Exception as e:
+                                                        HadException=True
+                                                        print(e)
+                                                        print('missing fill or incorect data fromat in' + RES_file.name )
+
+                                                    if HadException:
+                                                        #prevents partial saving of a measurement that causes array size misalignment
+                                                        print('index skipped')
+                                                    else:                                                    
                                                                                                     #print(c)
                                                         c=c+1
                                                         Sf.append(RES_file.name)
@@ -154,9 +190,7 @@ class HSp:
                                                         MxDu.append(measurement[19].astype(float))
                                                         MeanD.append(measurement[20].astype(float))
                                                         MeanDu.append(measurement[21].astype(float))
-                                                    except Exception as e:
-                                                        print(e)
-                                                        print('missing fill or incorect data fromat in' + RES_file.name )
+                                                    
 
                                                         
                                         else:
