@@ -117,6 +117,8 @@ class HydroShareUpdate:
                 self.map_dict[agency] = None
             else:
                 SHAQfill= -999999
+                SHAQfillstr= "NO_DATA"
+
                 #make fill
                 self.map_dict[agency]["days"] = np.array(range(1, len(self.HydroShare_dict["Qwrite"][0]) + 1))
                 self.map_dict[agency]["HydroShare_reach_id"] = np.array(sos_ids)                       
@@ -126,7 +128,7 @@ class HydroShareUpdate:
                 self.map_dict[agency]["mean_q"] = np.full((len(sos_ids),),SHAQfill)
                 self.map_dict[agency]["min_q"] = np.full((len(sos_ids),),SHAQfill)
                 self.map_dict[agency]["tyr"] = np.full((len(sos_ids),),SHAQfill)
-                self.map_dict[agency]["riggs_id"] = np.full((len(sos_ids),),SHAQfill)
+                self.map_dict[agency]["riggs_id"] = np.full((len(sos_ids),),SHAQfillstr)
                 self.map_dict[agency]["riggs_q"] = np.full((len(sos_ids),len(np.array(self.HydroShare_dict["Qwrite"])[indexes[0],:])),SHAQfill)
                 self.map_dict[agency]["riggs_qt"] = np.full((len(sos_ids),len(np.array(self.HydroShare_dict["Twrite"])[indexes[0],:])),SHAQfill)
                 self.map_dict[agency]["CAL"] = np.full((len(sos_ids),),SHAQfill)
