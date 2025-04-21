@@ -271,6 +271,7 @@ class HSp:
             TwoYr=np.full(len(data_rid),EMPTY)
             Twrite=np.full((len(data_rid),len(ALLt)),EMPTY)
             Qwrite=np.full((len(data_rid),len(ALLt)),EMPTY)
+            CALwrite=np.full((len(data_rid),len(ALLt)),1)            
             Mt=list(range(1,13))
             P=list(range(1,99,5))
             
@@ -351,7 +352,8 @@ class HSp:
                     "P": P,
                     "FDQS": FDQS,
                     "TwoYr": TwoYr,
-                    "Agency":['HydroSharePull']*len(data_id)
+                    "Agency":['HydroSharePull']*len(data_id),
+                    "CAL":CALwrite
                 }
             
            
