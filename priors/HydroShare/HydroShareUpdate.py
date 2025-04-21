@@ -118,32 +118,32 @@ class HydroShareUpdate:
             else:
                 SHAQfill= -999999
                 #make fill
-                self.map_dict[agency]["days"] = np.array(range(1, len(self.riggs_dict["Qwrite"][0]) + 1))
-                self.map_dict[agency]["HydroShare__reach_id"] = np.array(sos_ids)                       
-                self.map_dict[agency]["fdq"] = np.full((len(sos_ids),len(np.array(self.riggs_dict["FDQS"])[indexes[0],:])),SHAQfill)
+                self.map_dict[agency]["days"] = np.array(range(1, len(self.HydroShare_dict["Qwrite"][0]) + 1))
+                self.map_dict[agency]["HydroShare_reach_id"] = np.array(sos_ids)                       
+                self.map_dict[agency]["fdq"] = np.full((len(sos_ids),len(np.array(self.HydroShare_dict["FDQS"])[indexes[0],:])),SHAQfill)
                 self.map_dict[agency]["max_q"] =np.full((len(sos_ids),),SHAQfill)
-                self.map_dict[agency]["monthly_q"] =np.full((len(sos_ids),len(np.array(self.riggs_dict["MONQ"])[indexes[0],:])),SHAQfill)
+                self.map_dict[agency]["monthly_q"] =np.full((len(sos_ids),len(np.array(self.HydroShare_dict["MONQ"])[indexes[0],:])),SHAQfill)
                 self.map_dict[agency]["mean_q"] = np.full((len(sos_ids),),SHAQfill)
                 self.map_dict[agency]["min_q"] = np.full((len(sos_ids),),SHAQfill)
                 self.map_dict[agency]["tyr"] = np.full((len(sos_ids),),SHAQfill)
                 self.map_dict[agency]["riggs_id"] = np.full((len(sos_ids),),SHAQfill)
-                self.map_dict[agency]["riggs_q"] = np.full((len(sos_ids),len(np.array(self.riggs_dict["Qwrite"])[indexes[0],:])),SHAQfill)
-                self.map_dict[agency]["riggs_qt"] = np.full((len(sos_ids),len(np.array(self.riggs_dict["Twrite"])[indexes[0],:])),SHAQfill)
+                self.map_dict[agency]["riggs_q"] = np.full((len(sos_ids),len(np.array(self.HydroShare_dict["Qwrite"])[indexes[0],:])),SHAQfill)
+                self.map_dict[agency]["riggs_qt"] = np.full((len(sos_ids),len(np.array(self.HydroShare_dict["Twrite"])[indexes[0],:])),SHAQfill)
                 self.map_dict[agency]["CAL"] = np.full((len(sos_ids),),SHAQfill)
                 #put data into full sos index locations
                 FULLsosindex=np.where(np.isin(sos_ids, same_ids.astype(np.int64)))[0]
 
-                self.map_dict[agency]["HydroShare_reach_id"][FULLsosindex] = np.array(self.riggs_dict["reachId"]).astype(np.int64)[indexes]
-                self.map_dict[agency]["fdq"][FULLsosindex] = np.array(self.riggs_dict["FDQS"])[indexes,:]
-                self.map_dict[agency]["max_q"][FULLsosindex] =np.array(self.riggs_dict["Qmax"])[indexes]
-                self.map_dict[agency]["monthly_q"][FULLsosindex] = np.array(self.riggs_dict["MONQ"])[indexes,:]
-                self.map_dict[agency]["mean_q"][FULLsosindex] = np.array(self.riggs_dict["Qmean"])[indexes]
-                self.map_dict[agency]["min_q"][FULLsosindex] = np.array(self.riggs_dict["Qmin"])[indexes]
-                self.map_dict[agency]["tyr"][FULLsosindex] = np.array(self.riggs_dict["TwoYr"])[indexes]
-                self.map_dict[agency]["riggs_id"][FULLsosindex] = np.array(self.riggs_dict["data"])[indexes]
-                self.map_dict[agency]["riggs_q"][FULLsosindex] = np.array(self.riggs_dict["Qwrite"])[indexes,:]
-                self.map_dict[agency]["riggs_qt"][FULLsosindex] = np.array(self.riggs_dict["Twrite"])[indexes,:]
-                self.map_dict[agency]["CAL"][FULLsosindex] = np.array(self.riggs_dict["CAL"])[indexes]
+                self.map_dict[agency]["HydroShare_reach_id"][FULLsosindex] = np.array(self.HydroShare_dict["reachId"]).astype(np.int64)[indexes]
+                self.map_dict[agency]["fdq"][FULLsosindex] = np.array(self.HydroShare_dict["FDQS"])[indexes,:]
+                self.map_dict[agency]["max_q"][FULLsosindex] =np.array(self.HydroShare_dict["Qmax"])[indexes]
+                self.map_dict[agency]["monthly_q"][FULLsosindex] = np.array(self.HydroShare_dict["MONQ"])[indexes,:]
+                self.map_dict[agency]["mean_q"][FULLsosindex] = np.array(self.HydroShare_dict["Qmean"])[indexes]
+                self.map_dict[agency]["min_q"][FULLsosindex] = np.array(self.HydroShare_dict["Qmin"])[indexes]
+                self.map_dict[agency]["tyr"][FULLsosindex] = np.array(self.HydroShare_dict["TwoYr"])[indexes]
+                self.map_dict[agency]["riggs_id"][FULLsosindex] = np.array(self.HydroShare_dict["data"])[indexes]
+                self.map_dict[agency]["riggs_q"][FULLsosindex] = np.array(self.HydroShare_dict["Qwrite"])[indexes,:]
+                self.map_dict[agency]["riggs_qt"][FULLsosindex] = np.array(self.HydroShare_dict["Twrite"])[indexes,:]
+                self.map_dict[agency]["CAL"][FULLsosindex] = np.array(self.HydroShare_dict["CAL"])[indexes]
 
 
                 
