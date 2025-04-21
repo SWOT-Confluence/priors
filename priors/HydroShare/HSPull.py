@@ -286,7 +286,7 @@ class HSp:
                 TwoYr=np.full(len(data_rid),EMPTY)
                 Twrite=np.full((len(data_rid),len(ALLt)),EMPTY)
                 Qwrite=np.full((len(data_rid),len(ALLt)),EMPTY)               
-                CALwrite=np.full((len(data_rid),len(ALLt)),1)
+                CALwrite=np.full((len(data_rid)),1)
                 Mt=list(range(1,13))
                 P=list(range(1,99,5))
                 
