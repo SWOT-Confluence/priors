@@ -285,7 +285,8 @@ class HSp:
                 FDQS=np.full((len(data_rid),20),EMPTY)
                 TwoYr=np.full(len(data_rid),EMPTY)
                 Twrite=np.full((len(data_rid),len(ALLt)),EMPTY)
-                Qwrite=np.full((len(data_rid),len(ALLt)),EMPTY)
+                Qwrite=np.full((len(data_rid),len(ALLt)),EMPTY)               
+                CALwrite=np.full((len(data_rid),len(ALLt)),1)
                 Mt=list(range(1,13))
                 P=list(range(1,99,5))
                 
@@ -366,7 +367,9 @@ class HSp:
                         "P": P,
                         "FDQS": FDQS,
                         "TwoYr": TwoYr,
-                        "Agency":['SWOT_SHAQ']*len(data_id)
+                        "Agency":['SWOT_SHAQ']*len(data_id),
+                        "CAL": CALwrite
+                    
                     }
             except:
                 self.HydroShare_dict = {
@@ -382,6 +385,7 @@ class HSp:
                         "P": np.nan,
                         "FDQS": np.nan,
                         "TwoYr": np.nan,
-                        "Agency":np.nan
+                        "Agency":np.nan,
+                        "CAL":np.nan
                 }    
            
