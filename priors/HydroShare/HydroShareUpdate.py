@@ -116,8 +116,8 @@ class HydroShareUpdate:
             if indexes.size == 0:
                 self.map_dict[agency] = None
             else:
-                SHAQfill= -999999
-                SHAQfillstr= "NO_DATA"
+                SHAQfill= -999999999999
+                SHAQfillstr= "-999999999999"
 
                 #make fill
                 self.map_dict[agency]["days"] = np.array(range(1, len(self.HydroShare_dict["Qwrite"][0]) + 1))
