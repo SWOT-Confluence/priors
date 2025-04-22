@@ -184,6 +184,9 @@ class Priors:
         HydroShare_update.read_sos()
         HydroShare_update.map_data()
         HydroShare_update.update_data()
+
+        # Retrieve time data
+        return HydroShare_update.map_dict["SWOT_SHAQ"]["HydroShare_qt"]
         
     def locate_min_max(self):
         """Locate min and max time values."""
@@ -332,7 +335,7 @@ def create_args():
                             type=str,
                             nargs="+",
                             default=[],
-                            help="List: usgs, grdc, riggs, gbpriors")
+                            help="List: usgs, grdc, riggs, gbpriors, hydroshare")
     arg_parser.add_argument("-o",
                             "--sosversion",
                             type=str,
