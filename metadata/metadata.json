@@ -954,7 +954,7 @@
             "long_name": "number_of_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "grdc_flow_duration_q": {
@@ -1119,7 +1119,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 9999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "MEFCCWP_reaches": {
@@ -1218,7 +1218,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "SWOT_SHAQ_reaches": {
@@ -1317,7 +1317,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "DWA_reaches": {
@@ -1352,7 +1352,7 @@
             "long_name": "number_of_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "USGS_flow_duration_q": {
@@ -1451,7 +1451,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "WSC_flow_duration_q": {
@@ -1614,7 +1614,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "MLIT_reaches": {
@@ -1713,7 +1713,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "DEFRA_reaches": {
@@ -1812,7 +1812,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "EAU_reaches": {
@@ -1907,7 +1907,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "ABOM_reaches": {
@@ -2002,7 +2002,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "DGA_reaches": {
@@ -2097,7 +2097,7 @@
             "long_name": "num_days",
             "comment": "Number of days that daily values are indexed on",
             "valid_min": -998,
-            "valid_max": 999999999999,
+            "valid_max": 2147483647,
             "coverage_content_type": "referenceInformation"
         },
         "Hidroweb_reaches": {

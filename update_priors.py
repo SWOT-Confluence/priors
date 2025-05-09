@@ -332,7 +332,7 @@ def create_args():
                             type=str,
                             nargs="+",
                             default=[],
-                            help="List: usgs, grdc, riggs, gbpriors")
+                            help="List: usgs, grdc, riggs, gbpriors, hydroshare")
     arg_parser.add_argument("-o",
                             "--sosversion",
                             type=str,
