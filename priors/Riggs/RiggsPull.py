@@ -1,5 +1,6 @@
 # Standard imports
 from datetime import date
+import os
 
 # Third-party imports
 import asyncio
@@ -113,6 +114,7 @@ class RiggsPull:
         self.sos_file = sos_file
         
     def canURLpull(self,site,FMr):
+        print('pulling canada...')
         ID=FMr
         S1= "https://wateroffice.ec.gc.ca/services/real_time_data/csv/inline?stations[]="
         S2="&parameters[]=47&start_date="         
@@ -234,8 +236,11 @@ class RiggsPull:
                     now=dt.now()
                     ed=now.strftime("%Y-%m-%d")
                     URLst=S1+STid+S2+sd+S3+ed+S4
-                    UL.request.urlretrieve(URLst,STid+".csv")
-                    CSVd= genfromtxt(STid+".csv", delimiter=',', dtype='unicode',skip_header=1)
+                    print('downloading file to ',os.path.join('/opt/hydroshare/',STid+".csv") )
+                    UL.request.urlretrieve(URLst,os.path.join('/opt/hydroshare/',STid+".csv"))
+                    CSVd= genfromtxt(os.path.join('/opt/hydroshare/',STid+".csv"), delimiter=',', dtype='unicode',skip_header=1)
+                    print('removing file...', STid+".csv")
+                    os.remove(os.path.join('/opt/hydroshare/',STid+".csv"))
                     dates=[]
                     q=[]
                     #pull Q and days
@@ -417,18 +422,20 @@ class RiggsPull:
         if 'WSC' in agencyR: 
             #note "value" here might be a quality filter
             FMr=downloadQ_c(site)
+            print(FMr,'wsc test')
             if 'FMr' in locals():
                 if np.size(FMr[0]) == 1:
-                    print("nd")
+                    print("nd wsc")
                     FMr=[]   
                 else:
                         with localconverter(ro.default_converter + pandas2ri.converter):
                             FMr = ro.conversion.rpy2py(FMr)                  
                             FMr['ConvertedDate']=pd.to_datetime(FMr.date)
                             FMr=self.canURLpull(site,FMr)
+                            print('wsc is good')
                   
             else:
-                print("nd")
+                print("nd wsc")
                 FMr=[]
                 
                 

@@ -36,16 +36,17 @@ library(tibble)
 #quebec
 
 #Canada
-
 library(tidyhydat)
 
 # hy_default_db(hydat_path = "/tmp/Hydat.sqlite3")
 # hy_set_default_db(hydat_path = download_hydat(dl_hydat_here = "/tmp", ask = FALSE ))
-# download_hydat(dl_hydat_here = "/opt/hydroshare/Hydat.sqlite3", ask = FALSE )
-print("pulling hydat")
-download_hydat(ask = FALSE )
-hy_dir()
-hy_src()
+print('pulling hydat')
+# download_hydat(dl_hydat_here = "/tmp", ask = FALSE )
+hy_set_default_db("/opt/hydroshare/Hydat.sqlite3")
+
+# download_hydat(ask = FALSE )
+# hy_dir()
+# hy_src()
 print("finished pulling hydat")
 can = try(hy_daily_flows("02OA004"))
 if(is.error(can)){
@@ -58,7 +59,7 @@ if(is.error(can)){
   print("hydat worked")
 }
 
-
+# Sys.setenv(TMPDIR = "/app")
 
  .get_start_date <- function(start_date) {
   ## Format start date
@@ -220,21 +221,23 @@ qdownload_ch = function(site){
   return(data.table(Date=sttn$Date[order(sttn$Date)], Q=sttn$Q[order(sttn$Date)]))
 }
 #qubec
-qdownload_q=function(f){
-  location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
-  website=paste0(location,f,'_Q.txt')
-  outpath=tempfile()
-  downloading = try(download.file(website, outpath))
-  if(is.error(downloading)){return(NA)}
-  data=fread(outpath, fill=TRUE)
-  removeInfo=grep('Date', data$V2)
-  data=data[(removeInfo+1):nrow(data),2:3]
-  colnames(data)=c('Date','Q')
-  data$date=as.character(as.Date(data$Date))
-  data$Q=as.numeric(data$Q)
-  data$Station=as.character(f)
-  return(data)
-}
+# qdownload_q=function(f){
+#   location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
+#   website=paste0(location,f,'_Q.txt')
+#   outpath=tempfile()
+#   downloading = try(download.file(website, outpath))
+#   if(is.error(downloading)){return(NA)}
+#   data=fread(outpath, fill=TRUE)
+#   removeInfo=grep('Date', data$V2)
+#   data=data[(removeInfo+1):nrow(data),2:3]
+#   colnames(data)=c('Date','Q')
+#   data$date=as.character(as.Date(data$Date))
+#   data$Q=as.numeric(data$Q)
+#   data$Station=as.character(f)
+#   print(outpath)
+#   # file.remove(outpath)
+#   return(data)
+# }
 
 qdownload_b = function(site){
   link = "https://www.snirh.gov.br/hidroweb/rest/api/documento/convencionais?tipo=3&documentos="
@@ -286,10 +289,12 @@ qDownload_c = function(site){
   
   can = try(hy_daily_flows(site))
   if(is.error(can)){
+    print('can fail')
     return(NA)
   }else{
     can$Q = can$Value
     can$date =  as.character(can$Date)
+    print('can win')
     return(can)
   }
 }
@@ -302,18 +307,26 @@ qDownload_c = function(site){
 ################################################################################
 #quebec
 qdownload_q=function(f){
+  print('pulling qubec...')
   location='https://www.cehq.gouv.qc.ca/depot/historique_donnees/fichier/'
   website=paste0(location,f,'_Q.txt')
-  outpath=tempfile()
+  # outpath=tempfile()
+  outpath='/opt/hydroshare/temp.txt'
   downloading = try(download.file(website, outpath))
-  if(is.error(downloading)){return(NA)}
+  if(is.error(downloading)){
+    print('failed, removing file')
+    file.remove(outpath)
+    return(NA)}
   data=fread(outpath, fill=TRUE)
+  print('data read in, removing file')
+  file.remove(outpath)
   removeInfo=grep('Date', data$V2)
   data=data[(removeInfo+1):nrow(data),2:3]
   colnames(data)=c('Date','Q')
   data$date=as.character(as.Date(data$Date))
   data$Q=as.numeric(data$Q)
   data$Station=as.character(f)
+  print('sucess, removing file')
   return(data)
 }
 

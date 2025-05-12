@@ -248,12 +248,15 @@ class Priors:
         sos = Sos(self.cont, self.run_type, self.sos_dir, self.metadata_json, 
                   self.priors_list, self.podaac_update, self.podaac_bucket,
                   self.sos_bucket, self.swordversion)
-        try:
-            sos.download_previous_sos(self.sos_version)
-        except Exception as e:
-            print(e)
-            traceback.print_exception(*sys.exc_info())
-            exit(1)
+        if self.sos_bucket != 'local':
+            try:
+                sos.download_previous_sos(self.sos_version)
+            except Exception as e:
+                print(e)
+                traceback.print_exception(*sys.exc_info())
+                exit(1)
+        else:
+            print('Running locally, using local sos...')
 
         sos.create_new_version()
         sos_file = sos.sos_file
@@ -310,8 +313,11 @@ class Priors:
         # HWF_update(hwf_obj.data, sos_file)
 
         # Upload priors results to S3 bucket
-        print("Uploading new SoS priors version.")
-        sos.upload_file()
+        if self.sos_bucket != 'local':
+            print("Uploading new SoS priors version.")
+            sos.upload_file()
+        else:
+            print('Running locally, not uploading sos...')
 
 def create_args():
     """Create and return argparser with arguments."""
