@@ -39,12 +39,12 @@
         "continent_agency": {
             "af": [
                 "GRDC",
-                "DWA",
-                "SWOT_SHAQ"
+                "DWA"
             ],
             "as": [
                 "GRDC",
-                "MLIT"
+                "MLIT",
+                "SWOT_SHAQ"
             ],
             "eu": [
                 "GRDC",
@@ -62,7 +62,8 @@
             ],
             "oc": [
                 "GRDC",
-                "ABOM"
+                "ABOM",
+                "SWOT_SHAQ"
             ],
             "sa": [
                 "GRDC",
