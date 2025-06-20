@@ -74,7 +74,7 @@ class GBPriorsUpdate:
                 reaches_indices_with_gbpriors = np.where(rch_grp[variable][:].mask == False)[0]   # Non-missing reach-level data
 
                 for reach_index in reaches_indices_with_gbpriors:
-                    nodes_index = np.where(sos['nodes']['reach_id'][:] == sos['reaches']['reach_id'][reach_index])
+                    nodes_index = np.where(sos['nodes']['reach_id'][:] == sos['reaches']['reach_id'][reach_index])[0]
                     all_empty_node_data_index = np.where(nod_grp[variable][:].mask[nodes_index] == True)
 
                     if (all_empty_node_data_index[0].shape[0]) > 0:
