@@ -30,8 +30,8 @@ from priors.grdc.GRDC import GRDC
 from priors.sos.Sos import Sos
 from priors.usgs.USGSUpdate import USGSUpdate
 from priors.usgs.USGSPull import USGSPull
-# from priors.Riggs.RiggsUpdate import RiggsUpdate
-# from priors.Riggs.RiggsPull import RiggsPull
+from priors.Riggs.RiggsUpdate import RiggsUpdate
+from priors.Riggs.RiggsPull import RiggsPull
 from priors.HydroShare.HSPull import HSp
 from priors.HydroShare.HydroShareUpdate import HydroShareUpdate
 # from priors.height_width_fits.HWF_extract import HWF_extraqct
@@ -43,7 +43,6 @@ import numpy as np
 
 # Constants
 INPUT_DIR = Path("/mnt/data")
-INPUT_DIR = Path("/Users/tebaldi/Documents/workspace/confluence/data/modules/priors")
 
 class Priors:
     """Class that coordinates the priors to be generated and stores them in 
