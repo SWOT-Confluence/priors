@@ -429,15 +429,28 @@ qdownload_ch = function(site){
 qdownload_f =function(site){
   ##website
   ##########################################################################################################
-  station_specific = 'https://hubeau.eaufrance.fr/api/v1/hydrometrie/obs_elab?code_entite='
-  web = paste0(station_specific,site,'&date_debut_obs_elab=1800-01-01&date_fin_obs_elab=',Sys.Date(),'&grandeur_hydro_elab=QmJ&size=20000')
+  # "https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?format=json&code_entite=K060001001&size=20000"
+
+  # station_specific = 'https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?format=json&?code_entite='
+  # web = paste0(station_specific,site,'&date_debut_obs_elab=1800-01-01&date_fin_obs_elab=',Sys.Date(),'&grandeur_hydro_elab=QmnJ&size=20000')
+
+  station_specific <- 'https://hubeau.eaufrance.fr/api/v2/hydrometrie/obs_elab?format=json'
+  web <- paste0(station_specific,
+                '&code_entite=', site,
+                '&date_debut_obs_elab=1800-01-01',
+                '&date_fin_obs_elab=', Sys.Date(),
+                '&grandeur_hydro_elab=QmnJ',
+                '&size=20000')
+
   df =fromJSON(web)$data
+
   if(is.null(nrow(df))){return(NULL)}else{
-    df=data.table(Q=as.numeric(df$resultat_obs_elab)/1000,
-                  Date=as.character(as.Date(df$date_obs_elab)))
+    df=data.table(Q=as.numeric(df$resultat_obs)/1000,
+                  Date=as.character(as.Date(df$date_obs)))
     df = df[df$Q>=0,]
   }
-  # print(df)
+  # print(head(df))
+
   return(df)
 }
 ##########################################################################################################

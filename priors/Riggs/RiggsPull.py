@@ -295,7 +295,7 @@ class RiggsPull:
                         FMr = ro.conversion.rpy2py(FMr)
                         FMr = FMr.rename(columns={"Date":'ConvertedDate'})                      
                         FMr =  FMr[(FMr['ConvertedDate'] >= self.start_date) & (FMr['ConvertedDate'] <=  self.end_date)]
-                        # print('successuflly pulled gauge')
+
                         return FMr
             
                 except AttributeError:
