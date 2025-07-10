@@ -79,7 +79,7 @@ class HSp:
                             r.headers.get('Content-Type')
                             z = ZipFile(BytesIO(r.content))
                         except:
-                            print('Three retrevil attempts made and failed. Check Repo on Cuhahsi')
+                            print('Three retrieval attempts made and failed. Check Repo on Cuhahsi')
 
                 file = z.extractall( DLpathL)
                 csvpath=DLpathL+"/"+RI+"/data/contents/collection_list_"+RI+".csv"
@@ -117,10 +117,34 @@ class HSp:
                     print(resource)
                     if '_TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
                         Tstr=resource[2]
-                        res = hs.resource(Tstr)
+                        res = hs.resource(Tstr)                        
+                        try:
+                            try:
+                                NOWres=res.download(DLpath)
+                                print('resource url', DLpath)           
+                                NOWres.headers.get('Content-Type')
+                                z = ZipFile(DLpath+'/'+Tstr+'.zip')
+                            except:
+                                print('Resource file had zip or dl issue retrying 1st attempt')
+                                try:
+                                    NOWres=res.download(DLpath)
+                                    print('here are urls',DLpath)           
+                                    NOWres.headers.get('Content-Type')
+                                    z = ZipFile(DLpath+'/'+Tstr+'.zip')
+                                except:
+                                    print('Resource file had zip or dl issue retrying 1st attempt')
+                                    try:
+                                        NOWres=res.download(DLpath)
+                                        print('here are urls', DLpath)           
+                                        NOWres.headers.get('Content-Type')
+                                        z = ZipFile(DLpath+'/'+Tstr+'.zip')
+                                    except:
+                                        print('Three resource retrieval attempts made and failed. Check Repo on Cuhahsi')
+                        except:
+                            print(Tstr+' falied after collection list was retreived')
                         
-                        NOWres=res.download(DLpath)
-                        z = ZipFile(DLpath+'/'+Tstr+'.zip')   
+                                               
+                           
                         
                         file =z.extractall(DLpath)
                         z.close()
