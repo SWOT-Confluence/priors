@@ -466,9 +466,9 @@ def check_observations_node(width, d_x_area, slope2, qhat):
     """
 
     # Test validity of data
-    qhat[qhat < 0] = np.NAN 
-    slope2[slope2 < 0] = np.NaN
-    width[width < 0] = np.NaN
+    qhat[qhat < 0] = np.nan 
+    slope2[slope2 < 0] = np.nan
+    width[width < 0] = np.nan
 
     # Qhat
     if len(qhat) == 0:
@@ -560,9 +560,9 @@ def check_observations_reach(width, d_x_area, slope2, qhat):
     """
 
     # Test validity of data
-    qhat[qhat < 0] = np.NAN 
-    slope2[slope2 < 0] = np.NaN
-    width[width < 0] = np.NaN
+    qhat[qhat < 0] = np.nan 
+    slope2[slope2 < 0] = np.nan
+    width[width < 0] = np.nan
 
     # Qhat
     if len(qhat) == 0:
