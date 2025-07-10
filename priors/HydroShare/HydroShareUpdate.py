@@ -109,7 +109,10 @@ class HydroShareUpdate:
             print(len(HydroShare_ids), 'riggsids')
             same_ids = np.intersect1d(self.sos_reaches, HydroShare_ids)
             sos_ids=self.sos_reaches
-            indexes = np.where(np.isin(HydroShare_ids, same_ids))[0]
+            if np.size(np.where(np.isin(HydroShare_ids, same_ids)))>0: #make sure an empty continant doesnt kill the run
+                indexes = np.where(np.isin(HydroShare_ids, same_ids))[0]
+            else:
+                indexes=np.array([])
             # print('indexes here --------------------------')
             print(len(indexes), 'indexes here')
             
@@ -117,7 +120,7 @@ class HydroShareUpdate:
                 self.map_dict[agency] = None
             else:
                 SHAQfill= -999999999999
-                SHAQfillstr= "-999999999999"
+                SHAQfillstr= "-99999999999999999999999999999999999999999999999999999999"
 
                 #make fill
                 self.map_dict[agency]["days"] = np.array(range(1, len(self.HydroShare_dict["Qwrite"][0]) + 1))
