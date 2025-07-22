@@ -471,71 +471,11 @@ class RiggsPull:
                 # print(single_id)
                 current_parsed_agency_ids.append(single_id)
 
-
-
             # current_group_agency_reach_ids = current_group_agency_reach_ids + current_parsed_agency_ids
-
-
-
 
         # convert the above to match the riggs
         # print(current_group_agency_reach_ids)
         current = []
-
-        
-        # for each reach id
-
-
-    # working for uk
-        # for x in current_group_agency_reach_ids:
-    
-        #     # for each letter
-        #     test = []
-        #     for i in x.data:  
-        #         if i != b'':
-        #             test.append(i.decode('UTF-8'))
-        #             # single_id = ''.join(test)
-        #         else:
-        #             test.append(i)
-        #     print(test)
-        #     site_id = ''.join(test[:-11])
-        #     print(site_id)
-        #     print('this should look right')
-        #     current.append(site_id)
-
-
-        #     if 'uk' in test[0]:
-        #             split_test = test.split('/')
-        #             one = split_test[-1][:8]
-        #             two = split_test[-1][8:12]
-        #             three = split_test[-1][12:16]
-        #             four = split_test[-1][16:20]
-        #             five = split_test[-1][20:]
-
-        #             parsed_id =  '-'.join([one,two,three,four,five])
-        #             url = '/'.join(split_test[:-1])
-        #             test = '/'.join([url, parsed_id])
-
-
-        #     print(test)
-        #     single_id = ''.join(test)
-        #     print(single_id)
-        #     current.append(single_id)
-
-
-        #     print(test)
-        #     if 'uk' in test[0]:
-        #         split_test = test.split('/')
-        #         one = split_test[-1][:8]
-        #         two = split_test[-1][8:12]
-        #         three = split_test[-1][12:16]
-        #         four = split_test[-1][16:20]
-        #         five = split_test[-1][20:]
-
-        #         parsed_id =  '-'.join([one,two,three,four,five])
-        #         url = '/'.join(split_test[:-1])
-        #         test = '/'.join([url, parsed_id])
-        #     current.append(test)
 
         datariggs, reachIDR, agencyR, RIGGScal = gage_read.read(current_group_agency_reach_ids = current_parsed_agency_ids)
         # print(' reaches here should be good, this is after second pull, first was good')
@@ -636,6 +576,8 @@ class RiggsPull:
 
         Mt=list(range(1,13))
         P=list(range(1,99,5))
+
+        sos.close()
 
         self.riggs_dict = {
             "data": datariggs,
