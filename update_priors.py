@@ -311,13 +311,9 @@ class Priors:
         sos.update_time_coverage(min_qt, max_qt)
         print(f'Updated time coverage of the SoS: {min_qt.strftime("%Y-%m-%dT%H:%M:%S")} to {max_qt.strftime("%Y-%m-%dT%H:%M:%S")}')
 
-        # update HWS
-        # hwf_obj = HWF_extract(swot_dir)
-        # HWF_update(hwf_obj.data, sos_file)
-        if self.podaac_update:
-            sos.upload_file()
-        else:
-            print('Not uploading to podaac..')
+        # Upload priors results to S3 bucket
+        print("Uploading new SoS priors version.")
+        sos.upload_file()
 
 def create_args():
     """Create and return argparser with arguments."""
