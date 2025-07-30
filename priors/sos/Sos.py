@@ -376,6 +376,14 @@ class Sos:
             for index, rid in enumerate(defra_reach_ids) :
                 self._overwrite_prior(rid, sos, sos["historicQ"]["DGA"], "DGA")
 
+        # Hydroshaq, no matter the continent
+        usgs_reach_ids = sos["hydroshare"]["hydroshare_reach_id"][:]
+        usgs_cal = sos["hydroshare"]["CAL"][:]
+        for index, rid in enumerate(usgs_reach_ids) :
+            # check for cal/val
+            if usgs_cal[index] == 1:
+                self._overwrite_prior(rid, sos, sos["hydroshare"], "hydroshare")
+
 
         self._create_dims_vars(sos)
 

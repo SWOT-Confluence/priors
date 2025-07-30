@@ -62,24 +62,25 @@ class HSp:
                 try:
                     r=requests.get(URLst)
                     print('here are urls', URLst)           
-                    r.headers.get('Content-Type')
+                    # r.headers.get('Content-Type')
                     z = ZipFile(BytesIO(r.content))
                 except:
                     print('First file had zip issue retrying 1st attempt')
                     try:
                         r=requests.get(URLst)
                         print('here are urls', URLst)           
-                        r.headers.get('Content-Type')
+                        # r.headers.get('Content-Type')
                         z = ZipFile(BytesIO(r.content))
                     except:
                         print('First file had zip issue retrying 2nd attempt')
                         try:
                             r=requests.get(URLst)
                             print('here are urls', URLst)           
-                            r.headers.get('Content-Type')
+                            # r.headers.get('Content-Type')
                             z = ZipFile(BytesIO(r.content))
-                        except:
+                        except Exception as e:
                             print('Three retrieval attempts made and failed. Check Repo on Cuhahsi')
+                            print('Example error', e)
 
                 file = z.extractall( DLpathL)
                 csvpath=DLpathL+"/"+RI+"/data/contents/collection_list_"+RI+".csv"
@@ -121,27 +122,27 @@ class HSp:
                         try:
                             try:
                                 NOWres=res.download(DLpath)
-                                print('resource url', DLpath)           
-                                NOWres.headers.get('Content-Type')
+                                print('resource url', Tstr)           
+                                # NOWres.headers.get('Content-Type')
                                 z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                            except:
-                                print('Resource file had zip or dl issue retrying 1st attempt')
+                            except Exception as e:
+                                print('Resource file had zip or dl issue retrying 1st attempt', e)
                                 try:
                                     NOWres=res.download(DLpath)
-                                    print('here are urls',DLpath)           
-                                    NOWres.headers.get('Content-Type')
+                                    print('here are urls',Tstr)           
+                                    # NOWres.headers.get('Content-Type')
                                     z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                                except:
-                                    print('Resource file had zip or dl issue retrying 1st attempt')
+                                except Exception as e:
+                                    print('Resource file had zip or dl issue retrying 1st attempt', e)
                                     try:
                                         NOWres=res.download(DLpath)
-                                        print('here are urls', DLpath)           
-                                        NOWres.headers.get('Content-Type')
+                                        print('here are urls', Tstr)           
+                                        # NOWres.headers.get('Content-Type')
                                         z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                                    except:
-                                        print('Three resource retrieval attempts made and failed. Check Repo on Cuhahsi')
-                        except:
-                            print(Tstr+' falied after collection list was retreived')
+                                    except Exception as e:
+                                        print('Three resource retrieval attempts made and failed. Check Repo on Cuhahsi', e)
+                        except Exception as e:
+                            print(Tstr+' falied after collection list was retreived', e)
                         
                                                
                            
