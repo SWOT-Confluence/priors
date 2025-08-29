@@ -34,14 +34,71 @@ class HSp:
     
     def __init__(self):
         self.HydroShare_dict={}
+
+    def Tries(self):
+        URLst=self.URLst
+        try:
+            r=requests.get(URLst)
+            print('here are urls 1', URLst)           
+            r.headers.get('Content-Type')
+            z = ZipFile(BytesIO(r.content))
+            return z
+        except:
+            print('First file had zip issue retrying 1st attempt')
+            try:
+                r=requests.get(URLst)
+                print('here are urls 2', URLst)           
+                r.headers.get('Content-Type')
+                z = ZipFile(BytesIO(r.content))
+                return z
+            except:
+                print('First file had zip issue retrying 2nd attempt')
+                try:
+                    r=requests.get(URLst)
+                    print('here are urls 3', URLst)           
+                    r.headers.get('Content-Type')
+                    z = ZipFile(BytesIO(r.content))
+                    return z
+                except:
+                    print('Three retrieval attempts made and failed. Check Repo on Cuhahsi')
+    def Tries_resources(self):
+        DLpath=self.DLpath
+        Tstr=self.Tstr
+        res=self.res
+        try:
+            NOWres=res.download(DLpath)
+            print('resource url', DLpath)           
+            #NOWres.headers.get('Content-Type')
+            z = ZipFile(DLpath+'/'+Tstr+'.zip')
+            return z
+        except:
+            print('Resource file had zip or dl issue retrying 1st attempt')
+            try:
+                NOWres=res.download(DLpath)
+                print('here are urls',DLpath)           
+                #NOWres.headers.get('Content-Type')
+                z = ZipFile(DLpath+'/'+Tstr+'.zip')
+                return z
+            except:
+                print('Resource file had zip or dl issue retrying 1st attempt')
+                try:
+                    NOWres=res.download(DLpath)
+                    print('here are urls', DLpath)           
+                    #NOWres.headers.get('Content-Type')
+                    z = ZipFile(DLpath+'/'+Tstr+'.zip')
+                    return z
+                except:
+                    print('Three resource retrieval attempts made and failed. Check Repo on Cuhahsi')
+                    
         
     def pull(self):
             UN="SteveCossSWOT"
             PW="9Jn3FJNJs!!KXDj"
             RI='38feeef698ca484b907b7b3eb84ad05b'
             URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
-            DLpath='/opt/hydroshare'
-            DLpathL='/opt/hydroshare'      
+            self.URLst='https://www.hydroshare.org/hsapi/resource/' + RI +'/'
+            DLpath='/mnt/data/hydroshare'
+            DLpathL='/mnt/data/hydroshare'      
 
             def remove_files(DLdir):
                 """Remove files found in directory.
@@ -54,36 +111,24 @@ class HSp:
                 
                 for HS_file in HS_files: 
                     rmtree(DLdir +"/" +HS_file.name)
-            """ clear previous pull"""
-            remove_files(DLpathL)
-            remove_files(DLpath)
+
+                """ clear previous pull"""
+                remove_files(DLpathL)
+                remove_files(DLpath)
+                print('files removed')
 
             try:
-                try:
-                    r=requests.get(URLst)
-                    print('here are urls', URLst)           
-                    r.headers.get('Content-Type')
-                    z = ZipFile(BytesIO(r.content))
-                except:
-                    print('First file had zip issue retrying 1st attempt')
-                    try:
-                        r=requests.get(URLst)
-                        print('here are urls', URLst)           
-                        r.headers.get('Content-Type')
-                        z = ZipFile(BytesIO(r.content))
-                    except:
-                        print('First file had zip issue retrying 2nd attempt')
-                        try:
-                            r=requests.get(URLst)
-                            print('here are urls', URLst)           
-                            r.headers.get('Content-Type')
-                            z = ZipFile(BytesIO(r.content))
-                        except:
-                            print('Three retrieval attempts made and failed. Check Repo on Cuhahsi')
+                print('going into tries')
+                z=self.Tries()
+                print('made it out of tries')
+                print(z)
 
                 file = z.extractall( DLpathL)
+                print(file)
                 csvpath=DLpathL+"/"+RI+"/data/contents/collection_list_"+RI+".csv"
+                print(csvpath)
                 Collection= genfromtxt(csvpath, delimiter=',', dtype='unicode',skip_header=1, usecols=np.arange(0,5))
+                print(Collection)
                 # df = pd.read_csv(csvpath)
                 # Collection = df.values.astype('U')
                 #log in
@@ -113,38 +158,21 @@ class HSp:
                 MeanDu=[]
                 
                 for resource in Collection: #this will bug id there is fewer than 2 resources 
-                    print('resource')
-                    print(resource)
+                
                     if '_TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
+                        print('resource')
+                        print(resource)
                         Tstr=resource[2]
-                        res = hs.resource(Tstr)                        
-                        try:
-                            try:
-                                NOWres=res.download(DLpath)
-                                print('resource url', DLpath)           
-                                NOWres.headers.get('Content-Type')
-                                z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                            except:
-                                print('Resource file had zip or dl issue retrying 1st attempt')
-                                try:
-                                    NOWres=res.download(DLpath)
-                                    print('here are urls',DLpath)           
-                                    NOWres.headers.get('Content-Type')
-                                    z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                                except:
-                                    print('Resource file had zip or dl issue retrying 1st attempt')
-                                    try:
-                                        NOWres=res.download(DLpath)
-                                        print('here are urls', DLpath)           
-                                        NOWres.headers.get('Content-Type')
-                                        z = ZipFile(DLpath+'/'+Tstr+'.zip')
-                                    except:
-                                        print('Three resource retrieval attempts made and failed. Check Repo on Cuhahsi')
-                        except:
-                            print(Tstr+' falied after collection list was retreived')
+                        self.Tstr=Tstr
+                        res = hs.resource(Tstr)
+                        self.res=res
+                        self.DLpath=DLpath                                        
+                        z=self.Tries_resources()
+                        print('resource levelz')
+                        print(z)
                         
-                                               
-                           
+                                                
+                            
                         
                         file =z.extractall(DLpath)
                         z.close()
@@ -396,20 +424,21 @@ class HSp:
                     
                     }
             except:
+                print('empty SHCQ dict generated. Full fail')
                 self.HydroShare_dict = {
-                        "data": np.nan,
-                        "reachId":  np.nan,            
-                        "Qwrite": np.nan,
-                        "Twrite": np.nan,
-                        "Qmean": np.nan,
-                        "Qmax": np.nan,
-                        "Qmin": np.nan,
-                        "MONQ": np.nan,
-                        "Mt": np.nan,
-                        "P": np.nan,
-                        "FDQS": np.nan,
-                        "TwoYr": np.nan,
-                        "Agency":np.nan,
-                        "CAL":np.nan
-                }    
-           
+                            "data": np.nan,
+                            "reachId":  np.nan,            
+                            "Qwrite": np.nan,
+                            "Twrite": np.nan,
+                            "Qmean": np.nan,
+                            "Qmax": np.nan,
+                            "Qmin": np.nan,
+                            "MONQ": np.nan,
+                            "Mt": np.nan,
+                            "P": np.nan,
+                            "FDQS": np.nan,
+                            "TwoYr": np.nan,
+                            "Agency":np.nan,
+                            "CAL":np.nan
+                    }    
+            
