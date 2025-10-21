@@ -307,6 +307,13 @@ class Sos:
                 # check for cal/val
                 if wsc_cal[index] == 1:
                     self._overwrite_prior(rid, sos, sos["WSC"], "WSC")
+            # SWOT_SHAQ
+            SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            for index, rid in enumerate(SWOT_SHAQ_reach_ids):
+                # check for cal/val
+                if SWOT_SHAQ_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ")
 
         if self.continent == 'eu':
             # defra
@@ -330,22 +337,43 @@ class Sos:
                 # check for cal/val
                 if wsc_cal[index] == 1:
                     self._overwrite_prior(rid, sos, sos["EAU"], "EAU")
+            # SWOT_SHAQ
+            SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            for index, rid in enumerate(SWOT_SHAQ_reach_ids):
+                # check for cal/val
+                if SWOT_SHAQ_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ")
 
         if self.continent == 'oc':
             #ABOM
-            defra_reach_ids = sos["ABOM"]["ABOM_reach_id"][:]
-            defra_cal = sos["ABOM"]["CAL"][:]
-            for index, rid in enumerate(defra_reach_ids) :
+            abom_reach_ids = sos["ABOM"]["ABOM_reach_id"][:]
+            abom_cal = sos["ABOM"]["CAL"][:]
+            for index, rid in enumerate(abom_reach_ids) :
                 # check for cal/val
-                if defra_cal[index] == 1: 
-                    self._overwrite_prior(rid, sos, sos["ABOM"], "ABOM") 
+                if abom_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["ABOM"], "ABOM")
+            # SWOT_SHAQ
+            SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            for index, rid in enumerate(SWOT_SHAQ_reach_ids):
+                # check for cal/val
+                if SWOT_SHAQ_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ") 
         
         if self.continent == 'as':
 
             # Historic MLIT
-            historic_wsc_reach_ids = sos["historicQ"]["MLIT"]["MLIT_reach_id"][:]
-            for index, rid in enumerate(historic_wsc_reach_ids):
-                self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")  
+            historic_mlit_reach_ids = sos["historicQ"]["MLIT"]["MLIT_reach_id"][:]
+            for index, rid in enumerate(historic_mlit_reach_ids):
+                self._overwrite_prior(rid, sos, sos["historicQ"]["MLIT"], "MLIT")
+            # SWOT_SHAQ
+            SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            for index, rid in enumerate(SWOT_SHAQ_reach_ids):
+                # check for cal/val
+                if SWOT_SHAQ_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ")  
 
 
             # defra_reach_ids = sos["MLIT"]["MLIT_reach_id"][:]
@@ -355,26 +383,29 @@ class Sos:
             #     if defra_cal[index] == 1: 
             #         self._overwrite_prior(rid, sos, sos["MLIT"], "MLIT")
         
-        if self.continent == 'sa':
+        if self.continent == 'af':
 
-            # Historic Hidroweb
-            historic_wsc_reach_ids = sos["historicQ"]["Hidroweb"]["Hidroweb_reach_id"][:]
-            for index, rid in enumerate(historic_wsc_reach_ids):
-                self._overwrite_prior(rid, sos, sos["historicQ"]["Hidroweb"], "Hidroweb")  
-
-
-            defra_reach_ids = sos["Hidroweb"]["Hidroweb_reach_id"][:]
-            defra_cal = sos["Hidroweb"]["CAL"][:]
-            for index, rid in enumerate(defra_reach_ids) :
+            # # Historic DWA
+            # historic_dwa_reach_ids = sos["historicQ"]["DWA"]["DWA_reach_id"][:]
+            # for index, rid in enumerate(historic_dwa_reach_ids):
+            #     self._overwrite_prior(rid, sos, sos["historicQ"]["DWA"], "DWA")
+            #DWA
+            dwa_reach_ids = sos["DWA"]["DWA_reach_id"][:]
+            defra_cal = sos["DWA"]["CAL"][:]
+            for index, rid in enumerate(dwa_reach_ids) :
                 # check for cal/val
-                if defra_cal[index] == 1: 
-                    self._overwrite_prior(rid, sos, sos["Hidroweb"], "Hidroweb")
+                if dwa_cal[index] == 1: 
+                    self._overwrite_prior(rid, sos, sos["DWA"], "DWA") 
 
 
-            # DGA, only historic
-            defra_reach_ids = sos["historicQ"]["DGA"]["DGA_reach_id"][:]
-            for index, rid in enumerate(defra_reach_ids) :
-                self._overwrite_prior(rid, sos, sos["historicQ"]["DGA"], "DGA")
+            
+            # SWOT_SHAQ
+            SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            for index, rid in enumerate(SWOT_SHAQ_reach_ids):
+                # check for cal/val
+                if SWOT_SHAQ_cal[index] == 1:
+                    self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ")
 
 
         self._create_dims_vars(sos)
