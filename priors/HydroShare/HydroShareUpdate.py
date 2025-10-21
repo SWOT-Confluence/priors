@@ -86,8 +86,8 @@ class HydroShareUpdate:
             # we find the indexes all of the data in riggs dict associated with that agency here
             agency_indexes = np.where(np.array(self.HydroShare_dict['Agency'][:]) == agency)
 
-            print(f'there were {len(agency_indexes[0])} entries in riggs dict for {agency}')
-            print(f'there were {len(self.HydroShare_dict["Agency"][:])} entries total in riggs dict')
+            print(f'there were {len(agency_indexes[0])} entries in Hydroshare dict for {agency}')
+            print(f'there were {len(self.HydroShare_dict["Agency"][:])} entries total in Hydroshare dict')
 
 
             # Reach identifiers

@@ -281,6 +281,7 @@ class Sos:
 
         # could make this iterative based on global agency variable, also check cal/val split
         if self.continent == "na":
+            print (self.continent+' writing')
 
              # historic USGS
             historic_usgs_reach_ids = sos["historicQ"]["USGS"]["USGS_reach_id"][:]
@@ -308,11 +309,15 @@ class Sos:
                 if wsc_cal[index] == 1:
                     self._overwrite_prior(rid, sos, sos["WSC"], "WSC")
             # SWOT_SHAQ
+            print(self.continent+' SHAQ writing')
             SWOT_SHAQ_reach_ids = sos["SWOT_SHAQ"]["SWOT_SHAQ_reach_id"][:]
+            print(SWOT_SHAQ_reach_ids)
             SWOT_SHAQ_cal = sos["SWOT_SHAQ"]["CAL"][:]
+            print(SWOT_SHAQ_cal)
             for index, rid in enumerate(SWOT_SHAQ_reach_ids):
                 # check for cal/val
                 if SWOT_SHAQ_cal[index] == 1:
+                    print('boop')
                     self._overwrite_prior(rid, sos, sos["SWOT_SHAQ"], "SWOT_SHAQ")
 
         if self.continent == 'eu':
