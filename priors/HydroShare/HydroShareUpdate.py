@@ -77,6 +77,7 @@ class HydroShareUpdate:
         self.map_dict = self.nested_dict()
 
         # separate riggs dict by agency
+        print(self.HydroShare_dict)
         for agency in set(list(self.HydroShare_dict["Agency"])):
             print('processing agency', agency, '-----------------------------------------------------------')
 
