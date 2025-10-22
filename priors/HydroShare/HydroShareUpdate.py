@@ -207,8 +207,10 @@ class HydroShareUpdate:
                 self.set_variable_atts(HydroShare["num_days"], variable_atts["num_days"])
                 
                 # used f string for agency so it generalizes the sos creation for different agencies
-                
+                HydroShare[f"{agency}_reaches"][:] = self.map_dict[agency]["HydroShare_reaches"]
                 self.set_variable_atts(HydroShare[f"{agency}_reaches"], variable_atts[f"{agency}_reaches"])
+
+                HydroShare["CAL"][:] = self.map_dict[agency]["CAL"]
                 self.set_variable_atts(HydroShare["CAL"], variable_atts["CAL"])
                 
                 HydroShare[f"{agency}_reach_id"][:] = self.map_dict[agency]["HydroShare_reach_id"]
