@@ -107,11 +107,15 @@ class HydroShareUpdate:
             # print('with')
             # print(self.sos_reaches[:10])
             # print('riggs ids')
-            print(len(HydroShare_ids), 'riggsids')
+            print(len(HydroShare_ids), 'HSids')
             same_ids = np.intersect1d(self.sos_reaches, HydroShare_ids)
+            print('same_ids')
+            print(same_ids)
             sos_ids=self.sos_reaches
             if np.size(np.where(np.isin(HydroShare_ids, same_ids)))>0: #make sure an empty continant doesnt kill the run
                 indexes = np.where(np.isin(HydroShare_ids, same_ids))[0]
+                print('indexes')
+                print(indexes)
             else:
                 indexes=np.array([])
             # print('indexes here --------------------------')
@@ -138,6 +142,9 @@ class HydroShareUpdate:
                 self.map_dict[agency]["CAL"] = np.full((len(sos_ids),),SHAQfill)
                 #put data into full sos index locations
                 FULLsosindex=np.where(np.isin(sos_ids, same_ids.astype(np.int64)))[0]
+                print('FULLsosindex')
+                print(FULLsosindex)
+
 
                 self.map_dict[agency]["HydroShare_reach_id"][FULLsosindex] = np.array(self.HydroShare_dict["reachId"]).astype(np.int64)[indexes]
                 self.map_dict[agency]["fdq"][FULLsosindex] = np.array(self.HydroShare_dict["FDQS"])[indexes,:]

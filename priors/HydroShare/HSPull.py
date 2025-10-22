@@ -349,7 +349,7 @@ class HSp:
                 Q=data_q[i]
             
                 if Q.size >0:
-                    print(i)       
+                    #print(i)       
                     t=data_t[i]
                     T=[]
                     for time in t:
