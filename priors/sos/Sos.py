@@ -133,7 +133,9 @@ class Sos:
         
         # Create new SoS
         self.sos_file = Path(f"{str(self.sos_dir)}/{self.continent}{self.suffix}")
+        print(self.sos_file)
         sos = Dataset(self.sos_file, 'a')
+        print(sos)
         self.last_run_time = datetime.strptime(sos.production_date.split(' ')[0], '%d-%b-%Y').strftime('%Y-%m-%d')
         
         # Store global atts
