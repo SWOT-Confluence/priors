@@ -159,7 +159,7 @@ class HSp:
             
             for resource in Collection: #this will bug id there is fewer than 2 resources 
             
-                if '_TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
+                if 'TEST' not in  resource[0][0:4]:#this is modified so the data will get pulled "TEST" is prepended to all the dummy data, this will skip it when fixed 
                     print('resource')
                     print(resource)
                     Tstr=resource[2]
