@@ -77,6 +77,7 @@ class HydroShareUpdate:
         self.map_dict = self.nested_dict()
 
         # separate riggs dict by agency
+        print(self.HydroShare_dict)
         for agency in set(list(self.HydroShare_dict["Agency"])):
             print('processing agency', agency, '-----------------------------------------------------------')
 
@@ -85,8 +86,8 @@ class HydroShareUpdate:
             # we find the indexes all of the data in riggs dict associated with that agency here
             agency_indexes = np.where(np.array(self.HydroShare_dict['Agency'][:]) == agency)
 
-            print(f'there were {len(agency_indexes[0])} entries in riggs dict for {agency}')
-            print(f'there were {len(self.HydroShare_dict["Agency"][:])} entries total in riggs dict')
+            print(f'there were {len(agency_indexes[0])} entries in Hydroshare dict for {agency}')
+            print(f'there were {len(self.HydroShare_dict["Agency"][:])} entries total in Hydroshare dict')
 
 
             # Reach identifiers
@@ -106,11 +107,15 @@ class HydroShareUpdate:
             # print('with')
             # print(self.sos_reaches[:10])
             # print('riggs ids')
-            print(len(HydroShare_ids), 'riggsids')
+            print(len(HydroShare_ids), 'HSids')
             same_ids = np.intersect1d(self.sos_reaches, HydroShare_ids)
+            print('same_ids')
+            print(same_ids)
             sos_ids=self.sos_reaches
             if np.size(np.where(np.isin(HydroShare_ids, same_ids)))>0: #make sure an empty continant doesnt kill the run
                 indexes = np.where(np.isin(HydroShare_ids, same_ids))[0]
+                print('indexes')
+                print(indexes)
             else:
                 indexes=np.array([])
             # print('indexes here --------------------------')
@@ -137,6 +142,9 @@ class HydroShareUpdate:
                 self.map_dict[agency]["CAL"] = np.full((len(sos_ids),),SHAQfill)
                 #put data into full sos index locations
                 FULLsosindex=np.where(np.isin(sos_ids, same_ids.astype(np.int64)))[0]
+                print('FULLsosindex')
+                print(FULLsosindex)
+
 
                 self.map_dict[agency]["HydroShare_reach_id"][FULLsosindex] = np.array(self.HydroShare_dict["reachId"]).astype(np.int64)[indexes]
                 self.map_dict[agency]["fdq"][FULLsosindex] = np.array(self.HydroShare_dict["FDQS"])[indexes,:]
@@ -201,6 +209,8 @@ class HydroShareUpdate:
                 # used f string for agency so it generalizes the sos creation for different agencies
                 
                 self.set_variable_atts(HydroShare[f"{agency}_reaches"], variable_atts[f"{agency}_reaches"])
+
+                HydroShare["CAL"][:] = self.map_dict[agency]["CAL"]
                 self.set_variable_atts(HydroShare["CAL"], variable_atts["CAL"])
                 
                 HydroShare[f"{agency}_reach_id"][:] = self.map_dict[agency]["HydroShare_reach_id"]
