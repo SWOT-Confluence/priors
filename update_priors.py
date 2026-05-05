@@ -369,7 +369,7 @@ def create_args():
                             help="Name of SoS S3 bucket to upload to")
     arg_parser.add_argument("--swordversion",
                             type=str,
-                            default="16",
+                            default="17b",
                             help="Version of sword to run on")
     return arg_parser
 
